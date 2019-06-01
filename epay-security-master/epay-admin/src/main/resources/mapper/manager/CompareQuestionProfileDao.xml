@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.CompareQuestionProfileDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.CompareQuestionProfileEntity" id="compareQuestionProfileMap">
+        <result property="id" column="ID"/>
+        <result property="questionDate" column="QUESTION_DATE"/>
+        <result property="postStatus" column="POST_STATUS"/>
+        <result property="payCompanyNo" column="PAY_COMPANY_NO"/>
+    </resultMap>
+
+
+</mapper>

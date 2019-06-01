@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CS_CUST_FEE</title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+			<#if shiro.hasPermission("manager:cscustfee:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("manager:cscustfee:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("manager:cscustfee:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">受理商户/接入业务编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.acceptBizNo" placeholder="受理商户/接入业务编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">商户客户号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.merCustNo" placeholder="商户客户号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">客户类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.custType" placeholder="客户类型"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">业务类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.bizType" placeholder="业务类型"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">支付方式</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.payType" placeholder="支付方式"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">交易费率代码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.feeCode" placeholder="交易费率代码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">退款佣金标志</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.rfCommFlg" placeholder="退款佣金标志"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">退款收手续费标志</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.rfRecFeeFlg" placeholder="退款收手续费标志"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">紧急结算佣金费率代码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.urgStlCommFeeRateCode" placeholder="紧急结算佣金费率代码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">退款手续费代码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.rfRecFeeCode" placeholder="退款手续费代码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">自动结算费率代码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.autoSettlementFeeCode" placeholder="自动结算费率代码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">自助结算费率代码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.selfSettlementFeeCode" placeholder="自助结算费率代码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">紧急结算费率代码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.emergencySettlementFeeCode" placeholder="紧急结算费率代码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">订单有效期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.orderEffectiveDuration" placeholder="订单有效期"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">分润比例</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.profitPercent" placeholder="分润比例"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建柜员</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.creTlr" placeholder="创建柜员"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建日期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.creDte" placeholder="创建日期"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建机构</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.creBr" placeholder="创建机构"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建分行</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.creBk" placeholder="创建分行"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">最后更新柜员</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.updTlr" placeholder="最后更新柜员"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">最后更新日期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.updDte" placeholder="最后更新日期"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">更新机构</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.updBr" placeholder="更新机构"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">更新分行</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="csCustFee.updBk" placeholder="更新分行"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/manager/cscustfee.js?_${.now?long}"></script>
+</body>
+</html>

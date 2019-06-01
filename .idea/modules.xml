@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/epay-520.iml" filepath="$PROJECT_DIR$/.idea/epay-520.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-security-master/epay-admin/epay-admin.iml" filepath="$PROJECT_DIR$/epay-security-master/epay-admin/epay-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-security-master/epay-api/epay-api.iml" filepath="$PROJECT_DIR$/epay-security-master/epay-api/epay-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-common/epay-common.iml" filepath="$PROJECT_DIR$/epay-master/epay-common/epay-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-security-master/epay-common/epay-common (1) (io.epay).iml" filepath="$PROJECT_DIR$/epay-security-master/epay-common/epay-common (1) (io.epay).iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-config/epay-config.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-config/epay-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-dal/epay-dal.iml" filepath="$PROJECT_DIR$/epay-master/epay-dal/epay-dal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-dal2/epay-dal2.iml" filepath="$PROJECT_DIR$/epay-master/epay-dal2/epay-dal2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-dao/epay-dao.iml" filepath="$PROJECT_DIR$/epay-master/epay-dao/epay-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-security-master/epay-dynamic-datasource/epay-dynamic-datasource.iml" filepath="$PROJECT_DIR$/epay-security-master/epay-dynamic-datasource/epay-dynamic-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-gateway/epay-gateway.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-gateway/epay-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-security-master/epay-generator/epay-generator.iml" filepath="$PROJECT_DIR$/epay-security-master/epay-generator/epay-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-master.iml" filepath="$PROJECT_DIR$/epay-master/epay-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-mgr/epay-mgr.iml" filepath="$PROJECT_DIR$/epay-master/epay-mgr/epay-mgr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-security-master/epay-security.iml" filepath="$PROJECT_DIR$/epay-security-master/epay-security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-server/epay-server.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-server/epay-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-service/epay-service.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-service/epay-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-service2/epay-service2.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-service2/epay-service2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-service3/epay-service3.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-service3/epay-service3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay-test/epay-test.iml" filepath="$PROJECT_DIR$/epay-master/epay-test/epay-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-web/epay-web.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay-web/epay-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/epay-master/epay4spring-cloud/epay4spring-cloud.iml" filepath="$PROJECT_DIR$/epay-master/epay4spring-cloud/epay4spring-cloud.iml" />
+    </modules>
+  </component>
+</project>

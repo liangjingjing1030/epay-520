@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="epay-mgr:war">
+    <output-path>$PROJECT_DIR$/epay-master/epay-mgr/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>epay-mgr</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="epay-mgr-1.0.0.war">
+      <element id="artifact" artifact-name="epay-mgr:war exploded" />
+    </root>
+  </artifact>
+</component>

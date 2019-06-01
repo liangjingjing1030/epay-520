@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.ProvinceCityMapper" >
+
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.ProvinceCity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_name" property="name" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="city_level" property="level" jdbcType="BIT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, city_name, parent_id, city_level
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from epay_province_city
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByFatherId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from epay_province_city
+    where parent_id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAllProvince" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from epay_province_city
+    where parent_id = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from epay_province_city
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="org.epay.dal.dao.model.ProvinceCity" >
+    insert into epay_province_city (id, city_name, parent_id,
+      city_level)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER},
+      #{level,jdbcType=BIT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.ProvinceCity" >
+    insert into epay_province_city
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        city_name,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="level != null" >
+        city_level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.ProvinceCity" >
+    update epay_province_city
+    <set >
+      <if test="name != null" >
+        city_name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="level != null" >
+        city_level = #{level,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.ProvinceCity" >
+    update epay_province_city
+    set city_name = #{name,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      city_level = #{level,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

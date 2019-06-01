@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.EpayMchInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.EpayMchInfoEntity" id="epayMchInfoMap">
+        <result property="mchId" column="mch_id"/>
+        <result property="mchName" column="mch_name"/>
+        <result property="mchType" column="mch_type"/>
+        <result property="mchAddress" column="mch_address"/>
+        <result property="mchStatus" column="mch_status"/>
+        <result property="reqKey" column="req_key"/>
+        <result property="resKey" column="res_key"/>
+        <result property="contactPerson" column="contact_person"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="contactEmail" column="contact_email"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="auditTime" column="audit_time"/>
+        <result property="auditStatus" column="audit_status"/>
+        <result property="auditReason" column="audit_reason"/>
+        <result property="reserve1" column="reserve1"/>
+        <result property="reserve2" column="reserve2"/>
+        <result property="reserve3" column="reserve3"/>
+        <result property="reserve4" column="reserve4"/>
+        <result property="reserve5" column="reserve5"/>
+    </resultMap>
+
+
+</mapper>

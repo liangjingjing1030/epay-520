@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>订单支付表</title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+<!-- 			<#if shiro.hasPermission("manager:epaypayorder:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("manager:epaypayorder:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("manager:epaypayorder:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.pay_order_id"  placeholder="订单号">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">商户ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.mchId" placeholder="商户ID"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">账单号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.mchOrderNo" placeholder="账单号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">渠道ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.channelId" placeholder="渠道ID"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">支付金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.amount" placeholder="支付金额"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">三位货币代码 </div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.currency" placeholder="三位货币代码 "/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">支付状态 0-订单生成,1-支付中(目前未使用),2-支付成功,3-业务处理完成</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.status" placeholder="支付状态 0-订单生成,1-支付中(目前未使用),2-支付成功,3-业务处理完成"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">客户端IP</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.clientIp" placeholder="客户端IP"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">设备</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.device" placeholder="设备"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">商品标题</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.subject" placeholder="商品标题"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">商品描述信息</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.body" placeholder="商品描述信息"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">特定渠道发起时额外参数</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.extra" placeholder="特定渠道发起时额外参数"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">渠道商户ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.channelMchId" placeholder="渠道商户ID"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">渠道订单号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.channelOrderNo" placeholder="渠道订单号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">渠道支付错误码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.resCode" placeholder="渠道支付错误码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">渠道支付错误描述</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.resMsg" placeholder="渠道支付错误描述"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">扩展参数1</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.param1" placeholder="扩展参数1"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">扩展参数2</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.param2" placeholder="扩展参数2"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">通知地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.notifyUrl" placeholder="通知地址"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">通知次数</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.notifyCount" placeholder="通知次数"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">最后一次通知时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.lastNotifyTime" placeholder="最后一次通知时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">订单失效时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.expireTime" placeholder="订单失效时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">订单支付成功时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.paySuccTime" placeholder="订单支付成功时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.createTime" placeholder="创建时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">更新时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.updateTime" placeholder="更新时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段1</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.reserve1" placeholder="备用字段1"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段2</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.reserve2" placeholder="备用字段2"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段3</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.reserve3" placeholder="备用字段3"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段4</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.reserve4" placeholder="备用字段4"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段5</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayPayOrder.reserve5" placeholder="备用字段5"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/manager/epaypayorder.js?_${.now?long}"></script>
+</body>
+</html>

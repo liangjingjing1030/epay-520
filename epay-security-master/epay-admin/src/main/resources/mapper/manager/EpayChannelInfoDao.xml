@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.EpayChannelInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.EpayChannelInfoEntity" id="epayChannelInfoMap">
+        <result property="id" column="id"/>
+        <result property="mchId" column="mch_id"/>
+        <result property="channelId" column="channel_id"/>
+        <result property="channelName" column="channel_name"/>
+        <result property="channelMchid" column="channel_mchId"/>
+        <result property="channelStatus" column="channel_status"/>
+        <result property="param" column="param"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="reserve1" column="reserve1"/>
+        <result property="reserve2" column="reserve2"/>
+        <result property="reserve3" column="reserve3"/>
+        <result property="reserve4" column="reserve4"/>
+        <result property="reserve5" column="reserve5"/>
+    </resultMap>
+
+
+</mapper>

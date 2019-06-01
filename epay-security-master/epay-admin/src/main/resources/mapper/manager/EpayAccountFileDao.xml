@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.EpayAccountFileDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.EpayAccountFileEntity" id="epayAccountFileMap">
+        <result property="fileId" column="file_id"/>
+        <result property="mchId" column="mch_id"/>
+        <result property="itemsId" column="items_id"/>
+        <result property="itemsName" column="items_name"/>
+        <result property="itemsType" column="items_type"/>
+        <result property="itemsFilename" column="items_filename"/>
+        <result property="uploadDate" column="upload_date"/>
+        <result property="affectDate" column="affect_date"/>
+        <result property="expiryDate" column="expiry_date"/>
+        <result property="reserve1" column="reserve1"/>
+        <result property="reserve2" column="reserve2"/>
+        <result property="reserve3" column="reserve3"/>
+        <result property="reserve4" column="reserve4"/>
+        <result property="reserve5" column="reserve5"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>账单文件表</title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+         <div class="grid-btn">
+<!-- 			<#if shiro.hasPermission("manager:epayaccountfile:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("manager:epayaccountfile:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("manager:epayaccountfile:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.fileId"  placeholder="文件ID">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">商户号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.mchId" placeholder="商户号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">项目编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.itemsId" placeholder="项目编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">项目名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.itemsName" placeholder="项目名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">项目类别</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.itemsType" placeholder="项目类别"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">项目文件名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.itemsFilename" placeholder="项目文件名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文件上传日期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.uploadDate" placeholder="文件上传日期"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">账单生效时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.affectDate" placeholder="账单生效时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">账单失效时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.expiryDate" placeholder="账单失效时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段1</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.reserve1" placeholder="备用字段1"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段2</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.reserve2" placeholder="备用字段2"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段3</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.reserve3" placeholder="备用字段3"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段4</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.reserve4" placeholder="备用字段4"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段5</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountFile.reserve5" placeholder="备用字段5"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/manager/epayaccountfile.js?_${.now?long}"></script>
+</body>
+</html>

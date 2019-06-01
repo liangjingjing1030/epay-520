@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>账单明细表</title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+<!-- 			<#if shiro.hasPermission("manager:epayaccountbook:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("manager:epayaccountbook:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("manager:epayaccountbook:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if> -->
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.accountBookId"  placeholder="账单ID">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">商户号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.mchId" placeholder="商户号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">项目编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.itemsId" placeholder="项目编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">客户唯一标识（例如学生学号，客户身份证等）</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.userId" placeholder="客户唯一标识（例如学生学号，客户身份证等）"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">用户名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.userName" placeholder="用户名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">三位货币代码,人民币:cny</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.currency" placeholder="三位货币代码,人民币:cny"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">应缴金额，单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.itemsMoney" placeholder="应缴金额，单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">优惠金额，单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.discountsMoney" placeholder="优惠金额，单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">实际金额，单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.actualMoney" placeholder="实际金额，单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">已支付金额，单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.paidMoney" placeholder="已支付金额，单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">未支付金额，单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.surplusMoney" placeholder="未支付金额，单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">滞纳金，单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.violateMoney" placeholder="滞纳金，单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">支付次数</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.payNumber" placeholder="支付次数"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">支付时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.payTime" placeholder="支付时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">支付状态,0-失败,1-成功</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.payStatus" placeholder="支付状态,0-失败,1-成功"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">冲正状态,0-未冲正,1-已冲正</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reverseStatus" placeholder="冲正状态,0-未冲正,1-已冲正"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">冲正金额,单位分</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reverseMoney" placeholder="冲正金额,单位分"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">冲正时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reverseTime" placeholder="冲正时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段1</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reserve1" placeholder="备用字段1"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段2</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reserve2" placeholder="备用字段2"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段3</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reserve3" placeholder="备用字段3"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段4</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reserve4" placeholder="备用字段4"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备用字段5</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="epayAccountBook.reserve5" placeholder="备用字段5"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/manager/epayaccountbook.js?_${.now?long}"></script>
+</body>
+</html>

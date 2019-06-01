@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.UserMapper" >
+
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.User" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="login_act" property="loginAct" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="org_code" property="orgCode" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
+    <!--<result column="status" property="status" jdbcType="VARCHAR" />-->
+    <result column="stop_date" property="stopDate" jdbcType="VARCHAR" />
+    <result column="error_count" property="errorCount" jdbcType="VARCHAR" />
+    <result column="reset_mark" property="resetMark" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="req_key" property="reqKey" jdbcType="VARCHAR" />
+    <result column="res_key" property="resKey" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, login_name, login_act, password, org_code, user_type, stop_date, error_count,
+    reset_mark, create_by, create_time, update_by, update_time, req_key, res_key
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from epay_pt_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--根据登录名查询用户-->
+  <select id="selectUserByLoginName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from epay_pt_user
+    where login_name = #{login_name}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from epay_pt_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="org.epay.dal.dao.model.User" >
+    insert into epay_pt_user (id, login_name, login_act,
+      password, org_code, user_type,
+      stop_date, error_count,
+      reset_mark, create_by, create_time,
+      update_by, update_time, req_key,
+      res_key)
+    values (#{id,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{loginAct,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR},
+      #{stopDate,jdbcType=VARCHAR}, #{errorCount,jdbcType=VARCHAR},
+      #{resetMark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{reqKey,jdbcType=VARCHAR},
+      #{resKey,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.User" >
+    insert into epay_pt_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="loginAct != null" >
+        login_act,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="orgCode != null" >
+        org_code,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="stopDate != null" >
+        stop_date,
+      </if>
+      <if test="errorCount != null" >
+        error_count,
+      </if>
+      <if test="resetMark != null" >
+        reset_mark,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="reqKey != null" >
+        req_key,
+      </if>
+      <if test="resKey != null" >
+        res_key,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginAct != null" >
+        #{loginAct,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="stopDate != null" >
+        #{stopDate,jdbcType=VARCHAR},
+      </if>
+      <if test="errorCount != null" >
+        #{errorCount,jdbcType=VARCHAR},
+      </if>
+      <if test="resetMark != null" >
+        #{resetMark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="reqKey != null" >
+        #{reqKey,jdbcType=VARCHAR},
+      </if>
+      <if test="resKey != null" >
+        #{resKey,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.User" >
+    update epay_pt_user
+    <set >
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginAct != null" >
+        login_act = #{loginAct,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        org_code = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="stopDate != null" >
+        stop_date = #{stopDate,jdbcType=VARCHAR},
+      </if>
+      <if test="errorCount != null" >
+        error_count = #{errorCount,jdbcType=VARCHAR},
+      </if>
+      <if test="resetMark != null" >
+        reset_mark = #{resetMark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="reqKey != null" >
+        req_key = #{reqKey,jdbcType=VARCHAR},
+      </if>
+      <if test="resKey != null" >
+        res_key = #{resKey,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.User" >
+    update epay_pt_user
+    set login_name = #{loginName,jdbcType=VARCHAR},
+      login_act = #{loginAct,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      org_code = #{orgCode,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=VARCHAR},
+      stop_date = #{stopDate,jdbcType=VARCHAR},
+      error_count = #{errorCount,jdbcType=VARCHAR},
+      reset_mark = #{resetMark,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      req_key = #{reqKey,jdbcType=VARCHAR},
+      res_key = #{resKey,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--更新密钥-->
+  <update id="updateKeyByLoginActAndLoginPwd" >
+    update epay_pt_user
+    set
+      req_key = #{req_key,jdbcType=VARCHAR},
+      res_key = #{res_key,jdbcType=VARCHAR}
+    where login_name = #{loginAct} and password = #{loginPwd}
+  </update>
+
+  <!--更新密码-->
+  <update id="updatePasswordByLoginNameAndLoginPassword" >
+    update epay_pt_user
+    set
+      password = #{new_password,jdbcType=VARCHAR}
+    where login_name = #{loginName} and password = #{password}
+  </update>
+
+  <!--更新密码-->
+  <update id="updatePassword" >
+    update epay_pt_user
+    set
+      password = #{newLoginPwd,jdbcType=VARCHAR}
+    where login_name = #{mch_id}
+  </update>
+
+  <!--update@2019年6月1日23:14:35,不再使用商户号登录-->
+  <select id="selectUserByloginActAndloginPwd" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    epay_pt_user
+    WHERE
+    login_act = #{loginAct} and password = #{password}
+  </select>
+</mapper>

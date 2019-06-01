@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.epay.dal.dao.mapper.PayOrderMapper">
+
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.PayOrder">
+    <id column="pay_order_id" jdbcType="VARCHAR" property="pay_order_id" />
+    <result column="mch_id" jdbcType="VARCHAR" property="mch_id" />
+    <result column="mch_order_no" jdbcType="VARCHAR" property="mch_order_no" />
+    <result column="channel_id" jdbcType="VARCHAR" property="channel_id" />
+    <result column="user_id" jdbcType="VARCHAR" property="user_id" />
+    <result column="user_name" jdbcType="VARCHAR" property="user_name" />
+    <result column="user_channel_account" jdbcType="VARCHAR" property="user_channel_account" />
+    <result column="amount" jdbcType="BIGINT" property="amount" />
+    <result column="currency" jdbcType="VARCHAR" property="currency" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="client_ip" jdbcType="VARCHAR" property="client_ip" />
+    <result column="device" jdbcType="VARCHAR" property="device" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="extra" jdbcType="VARCHAR" property="extra" />
+    <result column="channel_mch_id" jdbcType="VARCHAR" property="channel_mch_id" />
+    <result column="channel_order_no" jdbcType="VARCHAR" property="channel_order_no" />
+    <result column="res_code" jdbcType="VARCHAR" property="res_code" />
+    <result column="res_msg" jdbcType="VARCHAR" property="res_msg" />
+    <result column="param1" jdbcType="VARCHAR" property="param1" />
+    <result column="param2" jdbcType="VARCHAR" property="param2" />
+    <result column="notify_url" jdbcType="VARCHAR" property="notify_url" />
+    <result column="notify_count" jdbcType="VARCHAR" property="notify_count" />
+    <result column="last_notify_time" jdbcType="VARCHAR" property="last_notify_time" />
+    <result column="expire_time" jdbcType="VARCHAR" property="expire_time" />
+    <result column="pay_succ_time" jdbcType="VARCHAR" property="pay_succ_time" />
+    <result column="create_time" jdbcType="VARCHAR" property="create_time" />
+    <result column="update_time" jdbcType="VARCHAR" property="update_time" />
+    <result column="reserve1" jdbcType="VARCHAR" property="reserve1" />
+    <result column="reserve2" jdbcType="VARCHAR" property="reserve2" />
+    <result column="reserve3" jdbcType="VARCHAR" property="reserve3" />
+    <result column="reserve4" jdbcType="VARCHAR" property="reserve4" />
+    <result column="reserve5" jdbcType="VARCHAR" property="reserve5" />
+  </resultMap>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Base_Column_List">
+    pay_order_id, mch_id, mch_order_no, channel_id, user_id, user_name, user_channel_account, 
+    amount, currency, status, client_ip, device, subject, body, extra, channel_mch_id, 
+    channel_order_no, res_code, res_msg, param1, param2, notify_url, notify_count, last_notify_time, 
+    expire_time, pay_succ_time, create_time, update_time, reserve1, reserve2, reserve3, 
+    reserve4, reserve5
+  </sql>
+
+  <select id="selectByExample" parameterType="org.epay.dal.dao.model.PayOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from epay_pay_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from epay_pay_order
+    where pay_order_id = #{pay_order_id,jdbcType=VARCHAR}
+  </select>
+
+  <!--查询订单（状态为已缴费）-->
+  <select id="selectByMchOrderNoAndStatus" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from epay_pay_order
+    <where>
+      status = 1 and mch_order_no in
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </where>
+  </select>
+
+  <!--查询符合要求的订单总数-->
+  <select id="getTotalByCondition" resultType="java.lang.Integer">
+    select
+    count(*)
+    from epay_pay_order
+    <where>
+      mch_id = #{mch_id}
+      <if test="pay_order_id != null and pay_order_id != ''">
+        and pay_order_id = #{pay_order_id}
+      </if>
+      <if test="mch_order_no != null and mch_order_no != ''">
+        and mch_order_no = #{mch_order_no}
+      </if>
+      <if test="channel_id != null and channel_id != ''">
+        and channel_id = #{channel_id}
+      </if>
+      <if test="user_id != null and user_id != ''">
+        and user_id = #{user_id}
+      </if>
+      <if test="user_name != null and user_name != ''">
+        and user_name = #{user_name}
+      </if>
+      <if test="user_channel_account != null and user_channel_account != ''">
+        and user_channel_account = #{user_channel_account}
+      </if>
+      <if test="status != null and status != ''">
+        and `status` = #{status}
+      </if>
+    </where>
+  </select>
+
+  <!--查询符合要求的订单总数-->
+  <select id="getTotalByConditionWhenStatusIsZero" resultType="java.lang.Integer">
+    select
+    count(*)
+    from epay_pay_order
+    <where>
+      mch_id = #{mch_id} and status = 0
+      <if test="pay_order_id != null and pay_order_id != ''">
+        and pay_order_id = #{pay_order_id}
+      </if>
+      <if test="mch_order_no != null and mch_order_no != ''">
+        and mch_order_no = #{mch_order_no}
+      </if>
+      <if test="channel_id != null and channel_id != ''">
+        and channel_id = #{channel_id}
+      </if>
+      <if test="user_id != null and user_id != ''">
+        and user_id = #{user_id}
+      </if>
+      <if test="user_name != null and user_name != ''">
+        and user_name = #{user_name}
+      </if>
+      <if test="user_channel_account != null and user_channel_account != ''">
+        and user_channel_account = #{user_channel_account}
+      </if>
+    </where>
+  </select>
+
+  <!--查询符合要求的订单-->
+  <select id="getPageList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from epay_pay_order
+    <where>
+      mch_id = #{mch_id}
+      <if test="pay_order_id != null and pay_order_id != ''">
+        and pay_order_id = #{pay_order_id}
+      </if>
+      <if test="mch_order_no != null and mch_order_no != ''">
+        and mch_order_no = #{mch_order_no}
+      </if>
+      <if test="channel_id != null and channel_id != ''">
+        and channel_id = #{channel_id}
+      </if>
+      <if test="user_id != null and user_id != ''">
+        and user_id = #{user_id}
+      </if>
+      <if test="user_name != null and user_name != ''">
+        and user_name = #{user_name}
+      </if>
+      <if test="user_channel_account != null and user_channel_account != ''">
+        and user_channel_account = #{user_channel_account}
+      </if>
+      <if test="status != null and status != ''">
+        and `status` = #{status}
+      </if>
+    </where>
+    order by pay_order_id asc
+    limit #{startIndex}, #{pageSize}
+  </select>
+
+  <!--查询符合要求的订单-->
+  <select id="getPageListWhenStatusIsZero" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from epay_pay_order
+    <where>
+      mch_id = #{mch_id} and status = 0
+      <if test="pay_order_id != null and pay_order_id != ''">
+        and pay_order_id = #{pay_order_id}
+      </if>
+      <if test="mch_order_no != null and mch_order_no != ''">
+        and mch_order_no = #{mch_order_no}
+      </if>
+      <if test="channel_id != null and channel_id != ''">
+        and channel_id = #{channel_id}
+      </if>
+      <if test="user_id != null and user_id != ''">
+        and user_id = #{user_id}
+      </if>
+      <if test="user_name != null and user_name != ''">
+        and user_name = #{user_name}
+      </if>
+      <if test="user_channel_account != null and user_channel_account != ''">
+        and user_channel_account = #{user_channel_account}
+      </if>
+    </where>
+    order by pay_order_id asc
+    limit #{startIndex}, #{pageSize}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from epay_pay_order
+    where pay_order_id = #{pay_order_id,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByExample" parameterType="org.epay.dal.dao.model.PayOrderExample">
+    delete from epay_pay_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+
+  <insert id="insert" parameterType="org.epay.dal.dao.model.PayOrder">
+    insert into epay_pay_order (pay_order_id, mch_id, mch_order_no, 
+      channel_id, user_id, user_name, 
+      user_channel_account, amount, currency, 
+      status, client_ip, device, 
+      subject, body, extra, 
+      channel_mch_id, channel_order_no, res_code, 
+      res_msg, param1, param2, 
+      notify_url, notify_count, last_notify_time, 
+      expire_time, pay_succ_time, create_time, 
+      update_time, reserve1, reserve2, 
+      reserve3, reserve4, reserve5
+      )
+    values (#{pay_order_id,jdbcType=VARCHAR}, #{mch_id,jdbcType=VARCHAR}, #{mch_order_no,jdbcType=VARCHAR}, 
+      #{channel_id,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR}, #{user_name,jdbcType=VARCHAR}, 
+      #{user_channel_account,jdbcType=VARCHAR}, #{amount,jdbcType=BIGINT}, #{currency,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{client_ip,jdbcType=VARCHAR}, #{device,jdbcType=VARCHAR}, 
+      #{subject,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, 
+      #{channel_mch_id,jdbcType=VARCHAR}, #{channel_order_no,jdbcType=VARCHAR}, #{res_code,jdbcType=VARCHAR}, 
+      #{res_msg,jdbcType=VARCHAR}, #{param1,jdbcType=VARCHAR}, #{param2,jdbcType=VARCHAR}, 
+      #{notify_url,jdbcType=VARCHAR}, #{notify_count,jdbcType=VARCHAR}, #{last_notify_time,jdbcType=VARCHAR}, 
+      #{expire_time,jdbcType=VARCHAR}, #{pay_succ_time,jdbcType=VARCHAR}, #{create_time,jdbcType=VARCHAR}, 
+      #{update_time,jdbcType=VARCHAR}, #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR}, 
+      #{reserve3,jdbcType=VARCHAR}, #{reserve4,jdbcType=VARCHAR}, #{reserve5,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.PayOrder">
+    insert into epay_pay_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pay_order_id != null">
+        pay_order_id,
+      </if>
+      <if test="mch_id != null">
+        mch_id,
+      </if>
+      <if test="mch_order_no != null">
+        mch_order_no,
+      </if>
+      <if test="channel_id != null">
+        channel_id,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="user_name != null">
+        user_name,
+      </if>
+      <if test="user_channel_account != null">
+        user_channel_account,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="currency != null">
+        currency,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="client_ip != null">
+        client_ip,
+      </if>
+      <if test="device != null">
+        device,
+      </if>
+      <if test="subject != null">
+        subject,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="extra != null">
+        extra,
+      </if>
+      <if test="channel_mch_id != null">
+        channel_mch_id,
+      </if>
+      <if test="channel_order_no != null">
+        channel_order_no,
+      </if>
+      <if test="res_code != null">
+        res_code,
+      </if>
+      <if test="res_msg != null">
+        res_msg,
+      </if>
+      <if test="param1 != null">
+        param1,
+      </if>
+      <if test="param2 != null">
+        param2,
+      </if>
+      <if test="notify_url != null">
+        notify_url,
+      </if>
+      <if test="notify_count != null">
+        notify_count,
+      </if>
+      <if test="last_notify_time != null">
+        last_notify_time,
+      </if>
+      <if test="expire_time != null">
+        expire_time,
+      </if>
+      <if test="pay_succ_time != null">
+        pay_succ_time,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+      <if test="reserve1 != null">
+        reserve1,
+      </if>
+      <if test="reserve2 != null">
+        reserve2,
+      </if>
+      <if test="reserve3 != null">
+        reserve3,
+      </if>
+      <if test="reserve4 != null">
+        reserve4,
+      </if>
+      <if test="reserve5 != null">
+        reserve5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pay_order_id != null">
+        #{pay_order_id,jdbcType=VARCHAR},
+      </if>
+      <if test="mch_id != null">
+        #{mch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="mch_order_no != null">
+        #{mch_order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="channel_id != null">
+        #{channel_id,jdbcType=VARCHAR},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=VARCHAR},
+      </if>
+      <if test="user_name != null">
+        #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_channel_account != null">
+        #{user_channel_account,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="currency != null">
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="client_ip != null">
+        #{client_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="device != null">
+        #{device,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="extra != null">
+        #{extra,jdbcType=VARCHAR},
+      </if>
+      <if test="channel_mch_id != null">
+        #{channel_mch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="channel_order_no != null">
+        #{channel_order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="res_code != null">
+        #{res_code,jdbcType=VARCHAR},
+      </if>
+      <if test="res_msg != null">
+        #{res_msg,jdbcType=VARCHAR},
+      </if>
+      <if test="param1 != null">
+        #{param1,jdbcType=VARCHAR},
+      </if>
+      <if test="param2 != null">
+        #{param2,jdbcType=VARCHAR},
+      </if>
+      <if test="notify_url != null">
+        #{notify_url,jdbcType=VARCHAR},
+      </if>
+      <if test="notify_count != null">
+        #{notify_count,jdbcType=VARCHAR},
+      </if>
+      <if test="last_notify_time != null">
+        #{last_notify_time,jdbcType=VARCHAR},
+      </if>
+      <if test="expire_time != null">
+        #{expire_time,jdbcType=VARCHAR},
+      </if>
+      <if test="pay_succ_time != null">
+        #{pay_succ_time,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve1 != null">
+        #{reserve1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve2 != null">
+        #{reserve2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve3 != null">
+        #{reserve3,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve4 != null">
+        #{reserve4,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve5 != null">
+        #{reserve5,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.epay.dal.dao.model.PayOrderExample" resultType="java.lang.Long">
+    select count(*) from epay_pay_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update epay_pay_order
+    <set>
+      <if test="record.pay_order_id != null">
+        pay_order_id = #{record.pay_order_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mch_id != null">
+        mch_id = #{record.mch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mch_order_no != null">
+        mch_order_no = #{record.mch_order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channel_id != null">
+        channel_id = #{record.channel_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.user_id != null">
+        user_id = #{record.user_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.user_name != null">
+        user_name = #{record.user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.user_channel_account != null">
+        user_channel_account = #{record.user_channel_account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amount != null">
+        amount = #{record.amount,jdbcType=BIGINT},
+      </if>
+      <if test="record.currency != null">
+        currency = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.client_ip != null">
+        client_ip = #{record.client_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.device != null">
+        device = #{record.device,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subject != null">
+        subject = #{record.subject,jdbcType=VARCHAR},
+      </if>
+      <if test="record.body != null">
+        body = #{record.body,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extra != null">
+        extra = #{record.extra,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channel_mch_id != null">
+        channel_mch_id = #{record.channel_mch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channel_order_no != null">
+        channel_order_no = #{record.channel_order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.res_code != null">
+        res_code = #{record.res_code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.res_msg != null">
+        res_msg = #{record.res_msg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.param1 != null">
+        param1 = #{record.param1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.param2 != null">
+        param2 = #{record.param2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notify_url != null">
+        notify_url = #{record.notify_url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notify_count != null">
+        notify_count = #{record.notify_count,jdbcType=VARCHAR},
+      </if>
+      <if test="record.last_notify_time != null">
+        last_notify_time = #{record.last_notify_time,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expire_time != null">
+        expire_time = #{record.expire_time,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pay_succ_time != null">
+        pay_succ_time = #{record.pay_succ_time,jdbcType=VARCHAR},
+      </if>
+      <if test="record.create_time != null">
+        create_time = #{record.create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="record.update_time != null">
+        update_time = #{record.update_time,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reserve1 != null">
+        reserve1 = #{record.reserve1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reserve2 != null">
+        reserve2 = #{record.reserve2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reserve3 != null">
+        reserve3 = #{record.reserve3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reserve4 != null">
+        reserve4 = #{record.reserve4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reserve5 != null">
+        reserve5 = #{record.reserve5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update epay_pay_order
+    set pay_order_id = #{record.pay_order_id,jdbcType=VARCHAR},
+      mch_id = #{record.mch_id,jdbcType=VARCHAR},
+      mch_order_no = #{record.mch_order_no,jdbcType=VARCHAR},
+      channel_id = #{record.channel_id,jdbcType=VARCHAR},
+      user_id = #{record.user_id,jdbcType=VARCHAR},
+      user_name = #{record.user_name,jdbcType=VARCHAR},
+      user_channel_account = #{record.user_channel_account,jdbcType=VARCHAR},
+      amount = #{record.amount,jdbcType=BIGINT},
+      currency = #{record.currency,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      client_ip = #{record.client_ip,jdbcType=VARCHAR},
+      device = #{record.device,jdbcType=VARCHAR},
+      subject = #{record.subject,jdbcType=VARCHAR},
+      body = #{record.body,jdbcType=VARCHAR},
+      extra = #{record.extra,jdbcType=VARCHAR},
+      channel_mch_id = #{record.channel_mch_id,jdbcType=VARCHAR},
+      channel_order_no = #{record.channel_order_no,jdbcType=VARCHAR},
+      res_code = #{record.res_code,jdbcType=VARCHAR},
+      res_msg = #{record.res_msg,jdbcType=VARCHAR},
+      param1 = #{record.param1,jdbcType=VARCHAR},
+      param2 = #{record.param2,jdbcType=VARCHAR},
+      notify_url = #{record.notify_url,jdbcType=VARCHAR},
+      notify_count = #{record.notify_count,jdbcType=VARCHAR},
+      last_notify_time = #{record.last_notify_time,jdbcType=VARCHAR},
+      expire_time = #{record.expire_time,jdbcType=VARCHAR},
+      pay_succ_time = #{record.pay_succ_time,jdbcType=VARCHAR},
+      create_time = #{record.create_time,jdbcType=VARCHAR},
+      update_time = #{record.update_time,jdbcType=VARCHAR},
+      reserve1 = #{record.reserve1,jdbcType=VARCHAR},
+      reserve2 = #{record.reserve2,jdbcType=VARCHAR},
+      reserve3 = #{record.reserve3,jdbcType=VARCHAR},
+      reserve4 = #{record.reserve4,jdbcType=VARCHAR},
+      reserve5 = #{record.reserve5,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.PayOrder">
+    update epay_pay_order
+    <set>
+      <if test="mch_id != null">
+        mch_id = #{mch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="mch_order_no != null">
+        mch_order_no = #{mch_order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="channel_id != null">
+        channel_id = #{channel_id,jdbcType=VARCHAR},
+      </if>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=VARCHAR},
+      </if>
+      <if test="user_name != null">
+        user_name = #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_channel_account != null">
+        user_channel_account = #{user_channel_account,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="currency != null">
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="client_ip != null">
+        client_ip = #{client_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="device != null">
+        device = #{device,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="extra != null">
+        extra = #{extra,jdbcType=VARCHAR},
+      </if>
+      <if test="channel_mch_id != null">
+        channel_mch_id = #{channel_mch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="channel_order_no != null">
+        channel_order_no = #{channel_order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="res_code != null">
+        res_code = #{res_code,jdbcType=VARCHAR},
+      </if>
+      <if test="res_msg != null">
+        res_msg = #{res_msg,jdbcType=VARCHAR},
+      </if>
+      <if test="param1 != null">
+        param1 = #{param1,jdbcType=VARCHAR},
+      </if>
+      <if test="param2 != null">
+        param2 = #{param2,jdbcType=VARCHAR},
+      </if>
+      <if test="notify_url != null">
+        notify_url = #{notify_url,jdbcType=VARCHAR},
+      </if>
+      <if test="notify_count != null">
+        notify_count = #{notify_count,jdbcType=VARCHAR},
+      </if>
+      <if test="last_notify_time != null">
+        last_notify_time = #{last_notify_time,jdbcType=VARCHAR},
+      </if>
+      <if test="expire_time != null">
+        expire_time = #{expire_time,jdbcType=VARCHAR},
+      </if>
+      <if test="pay_succ_time != null">
+        pay_succ_time = #{pay_succ_time,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        create_time = #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve1 != null">
+        reserve1 = #{reserve1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve2 != null">
+        reserve2 = #{reserve2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve3 != null">
+        reserve3 = #{reserve3,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve4 != null">
+        reserve4 = #{reserve4,jdbcType=VARCHAR},
+      </if>
+      <if test="reserve5 != null">
+        reserve5 = #{reserve5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pay_order_id = #{pay_order_id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.PayOrder">
+    update epay_pay_order
+    set mch_id = #{mch_id,jdbcType=VARCHAR},
+      mch_order_no = #{mch_order_no,jdbcType=VARCHAR},
+      channel_id = #{channel_id,jdbcType=VARCHAR},
+      user_id = #{user_id,jdbcType=VARCHAR},
+      user_name = #{user_name,jdbcType=VARCHAR},
+      user_channel_account = #{user_channel_account,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=BIGINT},
+      currency = #{currency,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      client_ip = #{client_ip,jdbcType=VARCHAR},
+      device = #{device,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      extra = #{extra,jdbcType=VARCHAR},
+      channel_mch_id = #{channel_mch_id,jdbcType=VARCHAR},
+      channel_order_no = #{channel_order_no,jdbcType=VARCHAR},
+      res_code = #{res_code,jdbcType=VARCHAR},
+      res_msg = #{res_msg,jdbcType=VARCHAR},
+      param1 = #{param1,jdbcType=VARCHAR},
+      param2 = #{param2,jdbcType=VARCHAR},
+      notify_url = #{notify_url,jdbcType=VARCHAR},
+      notify_count = #{notify_count,jdbcType=VARCHAR},
+      last_notify_time = #{last_notify_time,jdbcType=VARCHAR},
+      expire_time = #{expire_time,jdbcType=VARCHAR},
+      pay_succ_time = #{pay_succ_time,jdbcType=VARCHAR},
+      create_time = #{create_time,jdbcType=VARCHAR},
+      update_time = #{update_time,jdbcType=VARCHAR},
+      reserve1 = #{reserve1,jdbcType=VARCHAR},
+      reserve2 = #{reserve2,jdbcType=VARCHAR},
+      reserve3 = #{reserve3,jdbcType=VARCHAR},
+      reserve4 = #{reserve4,jdbcType=VARCHAR},
+      reserve5 = #{reserve5,jdbcType=VARCHAR}
+    where pay_order_id = #{pay_order_id,jdbcType=VARCHAR}
+  </update>
+</mapper>

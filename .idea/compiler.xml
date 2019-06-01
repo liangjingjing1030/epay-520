@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="epay-admin" />
+        <module name="epay-api" />
+        <module name="epay-common" />
+        <module name="epay-common (1) (io.epay)" />
+        <module name="epay-config" />
+        <module name="epay-dal" />
+        <module name="epay-dal2" />
+        <module name="epay-dao" />
+        <module name="epay-dynamic-datasource" />
+        <module name="epay-gateway" />
+        <module name="epay-generator" />
+        <module name="epay-mgr" />
+        <module name="epay-server" />
+        <module name="epay-service" />
+        <module name="epay-service2" />
+        <module name="epay-service3" />
+        <module name="epay-test" />
+        <module name="epay-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="epay-admin" target="1.7" />
+      <module name="epay-api" target="1.7" />
+      <module name="epay-common" target="6" />
+      <module name="epay-common (1) (io.epay)" target="1.7" />
+      <module name="epay-config" target="1.8" />
+      <module name="epay-dal" target="1.6" />
+      <module name="epay-dal2" target="1.6" />
+      <module name="epay-dao" target="7" />
+      <module name="epay-dynamic-datasource" target="8" />
+      <module name="epay-gateway" target="1.8" />
+      <module name="epay-generator" target="1.8" />
+      <module name="epay-master" target="1.5" />
+      <module name="epay-mgr" target="1.8" />
+      <module name="epay-security" target="1.7" />
+      <module name="epay-server" target="1.8" />
+      <module name="epay-service" target="1.8" />
+      <module name="epay-service2" target="1.8" />
+      <module name="epay-service3" target="1.8" />
+      <module name="epay-test" target="1.8" />
+      <module name="epay-web" target="1.8" />
+      <module name="epay4spring-cloud" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="epay-admin" options="-parameters" />
+      <module name="epay-api" options="-parameters" />
+      <module name="epay-common (1) (io.epay)" options="-parameters" />
+      <module name="epay-dynamic-datasource" options="-parameters" />
+      <module name="epay-generator" options="-parameters" />
+    </option>
+  </component>
+</project>

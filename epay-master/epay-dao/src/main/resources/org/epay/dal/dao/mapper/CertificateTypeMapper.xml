@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.CertificateTypeMapper" >
+
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.CertificateType" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="cer_type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, cer_type
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from epay_certificate_type
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+   <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from epay_certificate_type
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from epay_certificate_type
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="org.epay.dal.dao.model.CertificateType" >
+    insert into epay_certificate_type (id, cer_type)
+    values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.CertificateType" >
+    insert into epay_certificate_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        cer_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.CertificateType" >
+    update epay_certificate_type
+    <set >
+      <if test="type != null" >
+        cer_type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.CertificateType" >
+    update epay_certificate_type
+    set cer_type = #{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

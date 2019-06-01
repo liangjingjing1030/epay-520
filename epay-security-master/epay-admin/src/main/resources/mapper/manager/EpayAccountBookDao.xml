@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.EpayAccountBookDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.EpayAccountBookEntity" id="epayAccountBookMap">
+        <result property="accountBookId" column="account_book_id"/>
+        <result property="mchId" column="mch_id"/>
+        <result property="itemsId" column="items_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="currency" column="currency"/>
+        <result property="itemsMoney" column="items_money"/>
+        <result property="discountsMoney" column="discounts_money"/>
+        <result property="actualMoney" column="actual_money"/>
+        <result property="paidMoney" column="paid_money"/>
+        <result property="surplusMoney" column="surplus_money"/>
+        <result property="violateMoney" column="violate_money"/>
+        <result property="payNumber" column="pay_number"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="reverseStatus" column="reverse_status"/>
+        <result property="reverseMoney" column="reverse_money"/>
+        <result property="reverseTime" column="reverse_time"/>
+        <result property="reserve1" column="reserve1"/>
+        <result property="reserve2" column="reserve2"/>
+        <result property="reserve3" column="reserve3"/>
+        <result property="reserve4" column="reserve4"/>
+        <result property="reserve5" column="reserve5"/>
+    </resultMap>
+
+
+</mapper>

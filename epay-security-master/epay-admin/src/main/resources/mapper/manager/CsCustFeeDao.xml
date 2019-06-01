@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.CsCustFeeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.CsCustFeeEntity" id="csCustFeeMap">
+        <result property="seqNo" column="SEQ_NO"/>
+        <result property="acceptBizNo" column="ACCEPT_BIZ_NO"/>
+        <result property="merCustNo" column="MER_CUST_NO"/>
+        <result property="custType" column="CUST_TYPE"/>
+        <result property="bizType" column="BIZ_TYPE"/>
+        <result property="payType" column="PAY_TYPE"/>
+        <result property="feeCode" column="FEE_CODE"/>
+        <result property="rfCommFlg" column="RF_COMM_FLG"/>
+        <result property="rfRecFeeFlg" column="RF_REC_FEE_FLG"/>
+        <result property="urgStlCommFeeRateCode" column="URG_STL_COMM_FEE_RATE_CODE"/>
+        <result property="rfRecFeeCode" column="RF_REC_FEE_CODE"/>
+        <result property="autoSettlementFeeCode" column="AUTO_SETTLEMENT_FEE_CODE"/>
+        <result property="selfSettlementFeeCode" column="SELF_SETTLEMENT_FEE_CODE"/>
+        <result property="emergencySettlementFeeCode" column="EMERGENCY_SETTLEMENT_FEE_CODE"/>
+        <result property="orderEffectiveDuration" column="ORDER_EFFECTIVE_DURATION"/>
+        <result property="profitPercent" column="PROFIT_PERCENT"/>
+        <result property="creTlr" column="CRE_TLR"/>
+        <result property="creDte" column="CRE_DTE"/>
+        <result property="creBr" column="CRE_BR"/>
+        <result property="creBk" column="CRE_BK"/>
+        <result property="updTlr" column="UPD_TLR"/>
+        <result property="updDte" column="UPD_DTE"/>
+        <result property="updBr" column="UPD_BR"/>
+        <result property="updBk" column="UPD_BK"/>
+    </resultMap>
+
+
+</mapper>

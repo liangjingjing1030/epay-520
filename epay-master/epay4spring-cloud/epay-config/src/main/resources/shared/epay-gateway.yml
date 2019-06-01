@@ -1,0 +1,34 @@
+server:
+  port: 3020
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  eureka:
+     enabled: true
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+
+  routes:
+    epay-service:
+        path: /epay/**
+        serviceId: epay-web
+
+    epay-web:
+        path: /notify/**
+        serviceId: epay-service
+
+logging:
+  file: ./log/epay-gateway.log

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.PaycompanyOrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.PaycompanyOrderEntity" id="paycompanyOrderMap">
+        <result property="seqNo" column="SEQ_NO"/>
+        <result property="payCompanyNo" column="PAY_COMPANY_NO"/>
+        <result property="payCompanyClearDate" column="PAY_COMPANY_CLEAR_DATE"/>
+        <result property="payCompanyTxDate" column="PAY_COMPANY_TX_DATE"/>
+        <result property="payeeName" column="PAYEE_NAME"/>
+        <result property="payeeAcc" column="PAYEE_ACC"/>
+        <result property="payName" column="PAY_NAME"/>
+        <result property="payAcc" column="PAY_ACC"/>
+        <result property="payBankcode" column="PAY_BANKCODE"/>
+        <result property="txAmt" column="TX_AMT"/>
+        <result property="txFee" column="TX_FEE"/>
+        <result property="txType" column="TX_TYPE"/>
+        <result property="mername" column="MERNAME"/>
+        <result property="merno" column="MERNO"/>
+        <result property="txSerialNo" column="TX_SERIAL_NO"/>
+        <result property="platTxDate" column="PLAT_TX_DATE"/>
+        <result property="platTxTime" column="PLAT_TX_TIME"/>
+        <result property="importDate" column="IMPORT_DATE"/>
+        <result property="remoteTxJournalNo" column="REMOTE_TX_JOURNAL_NO"/>
+        <result property="trandeCode" column="TRANDE_CODE"/>
+        <result property="targetDate" column="TARGET_DATE"/>
+    </resultMap>
+
+
+</mapper>

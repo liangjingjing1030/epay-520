@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.manager.dao.EpayRefundOrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.manager.entity.EpayRefundOrderEntity" id="epayRefundOrderMap">
+        <result property="refundOrderId" column="refund_order_id"/>
+        <result property="payOrderid" column="pay_orderid"/>
+        <result property="channelPayOrderNo" column="channel_pay_order_no"/>
+        <result property="mchId" column="mch_id"/>
+        <result property="mchRefundNo" column="mch_refund_no"/>
+        <result property="channelId" column="channel_id"/>
+        <result property="payAmount" column="pay_amount"/>
+        <result property="refundAmount" column="refund_amount"/>
+        <result property="currency" column="currency"/>
+        <result property="ctatus" column="ctatus"/>
+        <result property="result" column="result"/>
+        <result property="clientIp" column="client_ip"/>
+        <result property="device" column="device"/>
+        <result property="remarkInfo" column="remark_info"/>
+        <result property="channelUser" column="channel_user"/>
+        <result property="userName" column="user_name"/>
+        <result property="channelMchId" column="channel_mch_id"/>
+        <result property="channelOrderNo" column="channel_order_no"/>
+        <result property="channelResCode" column="channel_res_code"/>
+        <result property="channelResMsg" column="channel_res_msg"/>
+        <result property="extra" column="extra"/>
+        <result property="notifyurl" column="notifyurl"/>
+        <result property="param1" column="param1"/>
+        <result property="param2" column="param2"/>
+        <result property="expireTime" column="expire_time"/>
+        <result property="refundSuccTime" column="refund_succ_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="reserve1" column="reserve1"/>
+        <result property="reserve2" column="reserve2"/>
+        <result property="reserve3" column="reserve3"/>
+        <result property="reserve4" column="reserve4"/>
+        <result property="reserve5" column="reserve5"/>
+    </resultMap>
+
+
+</mapper>
