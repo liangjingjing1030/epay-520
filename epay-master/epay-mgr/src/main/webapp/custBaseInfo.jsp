@@ -72,7 +72,7 @@
 						$("#content3").html(html);
 
 					} else {
-						html2 += "<span style='color:red;'>未绑定渠道信息!</span>";
+						// html2 += "<span style='color:red;'>未绑定渠道信息!</span>";
 						$("#thead3").html(html2);
 					}
 

@@ -11,7 +11,9 @@ import org.epay.dal.dao.mapper.AccountBookMapper;
 import org.epay.dal.dao.model.AccountBook;
 import org.epay.dal.dao.model.AccountFile;
 import org.epay.dal.dao.model.AccountFileForCount;
+import org.epay.dal.dao.model.Activity;
 import org.epay.service.service.AccountBookService;
+import org.epay.service.service.ActivityService;
 import org.epay.service.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,9 @@ public class BillServiceController {
 
     @Autowired
     private AccountBookService accountBookService;
+
+    @Autowired
+    private ActivityService activityService;
 
     // 修改单条accountBook
     @RequestMapping(value = "/bill/updateSingleAccountBookById")
@@ -170,6 +175,43 @@ public class BillServiceController {
 
         // 查询项目编号集合
         List<String> itemsIdList = accountFileService.queryItemsIdListByMchId(mch_id);
+
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+        if(itemsIdList == null) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "数据对象不存在");
+            return retObj.toJSONString();
+        }
+
+        retObj.put("result", JSON.toJSON(itemsIdList));
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
+
+    /**
+     * 查询当前商户下所有的活动的items_id
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/bill/queryAllActivityItemsIdByMchId")
+    public String queryAllActivityItemsIdByMchId(@RequestParam String jsonParam) {
+        _log.info("queryAllActivityItemsIdByMchId << {}", jsonParam);
+
+        String param = new String(MyBase64.decode(jsonParam));
+        JSONObject paramObj = JSON.parseObject(param);
+
+        String mch_id = paramObj.getString("mch_id");
+
+        // 查询项目编号集合
+        List<String> itemsIdList = activityService.queryAllActivityItemsId(mch_id);
 
         JSONObject retObj = new JSONObject();
         retObj.put("code", "0000");
@@ -350,7 +392,66 @@ public class BillServiceController {
         return retObj.toJSONString();
     }
 
-    // 判断是否可以删除账单
+    /**
+     * 创建活动
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/bill/user_create_activity")
+    public String createActivity(@RequestParam String jsonParam) {
+        _log.info("user_create_activity << {}", jsonParam);
+
+        String param = new String(MyBase64.decode(jsonParam));
+        JSONObject paramObj = JSON.parseObject(param);
+
+        String mch_Id = paramObj.getString("mch_Id");
+        String activity_name = paramObj.getString("activity_name");
+        String items_id = paramObj.getString("items_id");
+        String activity_type = paramObj.getString("activity_type");
+        String start_time = paramObj.getString("start_time");
+        String end_time = paramObj.getString("end_time");
+
+        String time = "AC" + DateUtils.getCurrentTimeStrDefault() + (int)((Math.random()*9+1)*1000000);
+        Activity activity = new Activity();
+        activity.setActivityId(time);
+        activity.setMchId(mch_Id);
+        activity.setItemsId(items_id);
+        activity.setActivityName(activity_name);
+        if(StringUtils.isNotBlank(activity_type)) {
+            activity.setActivityType(activity_type);
+        }
+        activity.setStartTime(start_time);
+        activity.setEndTime(end_time);
+        activity.setCreateTime(new Date().toString());
+
+        // 创建活动
+        int saveCount = activityService.save(activity);
+
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+        if(saveCount < 1) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "创建活动失败！");
+            return retObj.toJSONString();
+        }
+
+        retObj.put("result" , saveCount);
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
+
+    /**
+     * 判断是否可以删除账单
+     * @param jsonParam
+     * @return
+     */
     @RequestMapping(value = "/bill/checkIfCanDeleteAccountFile")
     public String checkIfCanDeleteAccountFile(@RequestParam String jsonParam) {
         _log.info("checkIfCanDeleteAccountFile << {}", jsonParam);

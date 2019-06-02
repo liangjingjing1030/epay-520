@@ -168,7 +168,7 @@
 				var mchType = myselect.options[index].value;
 					var myselect = document.getElementById("range");
 					var index=myselect.selectedIndex;
-				var range = $.trim(myselect.options[index].text);
+				var range = $.trim(myselect.options[index].value);
             // var range = $.trim($("#range").val());
             var mchAddress = $.trim($("#mchAddress").val());
 			var contactName = $.trim($("#contactName").val());

@@ -232,6 +232,69 @@ public class BillController {
         }
     }
 
+    /**
+     * 查询当前商户下所有的活动的items_id
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/bill/queryAllAccountItemsId")
+    @ResponseBody
+    public Object queryAllAccountItemsId(HttpServletRequest request) {
+
+        // 从session域中取值
+        User user = (User) request.getSession().getAttribute("user");
+        String mch_id = user.getLoginName();
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        // TODO 临时写为 WX_APP = "微信APP支付";
+        requestHeaderMap.put("request_channel", "WX_APP");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("mch_id", mch_id);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("查询活动的项目编号,请求数据:" + reqData);
+
+        String url = baseUrl + "/bill_query_all_activity_itemsId?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("查询活动的项目编号,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            List<String> itemsIdList = (List<String>) retBody.get("result");
+
+            // 返回商户信息
+            if(itemsIdList != null) {
+                returnMap.put("OK", true);
+                returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+                returnMap.put("itemsIdList", itemsIdList);
+                return returnMap;
+            } else {
+                returnMap.put("OK", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "查询活动的项目编号失败，请稍后再试");
+                return returnMap;
+            }
+
+        } else {
+            returnMap.put("OK", false);
+            returnMap.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试");
+            return returnMap;
+        }
+    }
+
     // 删除单条accountBook
     @RequestMapping(value = "/bill/deleteAccountSingleAccountBook")
     @ResponseBody
@@ -521,6 +584,77 @@ public class BillController {
                 System.err.println("=========支付中心下单验签失败=========");
                 return null;
             }*/
+        } else {
+            // 查询失败
+            returnMap.put("ok", false);
+            returnMap.put(Constant.ERROR_MESSAGE,"系统繁忙，请稍后再试！");
+            return returnMap;
+        }
+    }
+
+    /**
+     * 创建活动
+     * 2019年6月2日14:25:16
+     * GaoLiang
+     */
+    @RequestMapping("/bill/createActivity")
+    @ResponseBody
+    public Object createActivity(HttpServletRequest request,
+                              @RequestParam(value = "activity_name", required = true)String activity_name,
+                              @RequestParam(value = "items_id", required = true)String items_id,
+                              @RequestParam(value = "activity_type", required = false)String activity_type,
+                              @RequestParam(value = "start_time", required = true)String start_time,
+                              @RequestParam(value = "end_time", required = true)String end_time) {
+
+        // 从session域中取值
+        User user = (User) request.getSession().getAttribute("user");
+        String mch_Id = user.getLoginName();
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        // TODO 临时写为 WX_APP = "微信APP支付";
+        requestHeaderMap.put("request_channel", "WX_APP");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("mch_Id", mch_Id);
+        requestBodyMap.put("activity_name", activity_name);
+        requestBodyMap.put("items_id", items_id);
+        requestBodyMap.put("activity_type", activity_type);
+        requestBodyMap.put("start_time", start_time);
+        requestBodyMap.put("end_time", end_time);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("创建活动,请求数据:" + reqData);
+
+        String url = baseUrl + "/create_activity?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("创建活动,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            // 查询结果
+            int count = (int) retBody.get("result");
+            if(count == 1) {
+                returnMap.put("ok", true);
+                returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+                return returnMap;
+            } else {
+                returnMap.put("ok", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "创建活动失败！");
+                return returnMap;
+            }
         } else {
             // 查询失败
             returnMap.put("ok", false);

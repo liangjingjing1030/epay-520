@@ -275,13 +275,15 @@ public class UserController {
         requestBodyMap.put("pswd", loginPwd);
         requestBodyMap.put("mch_name", mchName);
         // 1:个人商户；2:企业商户；3:小微商户
-        if("1".equals(mchType)) {
+        /*if("1".equals(mchType)) {
             requestBodyMap.put("mch_type", "个人商户");
         } else if("2".equals(mchType)) {
             requestBodyMap.put("mch_type", "企业商户");
         } else if("3".equals(mchType)) {
             requestBodyMap.put("mch_type", "小微商户");
-        }
+        }*/
+        requestBodyMap.put("mch_type", mchType);
+
         requestBodyMap.put("mch_range", range);
         requestBodyMap.put("mch_address", mchAddress);
         requestBodyMap.put("contact_person", contactName);

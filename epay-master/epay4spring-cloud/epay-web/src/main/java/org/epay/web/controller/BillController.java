@@ -1523,6 +1523,80 @@ public class BillController {
         }
     }
 
+
+    /**
+     * 查询当前商户下所有的活动的items_id
+     */
+    @RequestMapping(value = "/bill_query_all_activity_itemsId")
+    public String queryAllActivityItemsId(@RequestParam String params) {
+        _log.info("###### 查询项目编号请求 ######");
+        JSONObject object;
+        String logPrefix = "【查询活动的项目编号】";
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        // 获取本地服务实例(获取service工程)
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/bill_query_all_activity_itemsId, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            // 将请求参数转换为JSONObject对象
+            object = JSONObject.parseObject(params);
+            // 获取请求头
+            JSONObject channelObj = object.getJSONObject("request_header");
+            // 从请求头中获取渠道信息
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+            // 要删除的accountFile的所有主键
+            String mch_id = requestBody.getString("mch_id");
+
+            payContext.put("mch_id", mch_id);
+            // 查询活动的项目编号
+            String retStr = accountFileServiceClient.queryAllActivityItemsId(payContext.toJSONString());
+            // 将商户账单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}查询活动的项目编号,结果:{}", logPrefix, retObj);
+
+            // 0000表示查询成功
+            if(!"0000".equals(retObj.getString("code"))) {
+            	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+            	response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "查询活动的项目编号失败", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            // 结果对象
+            JSONArray itemsList = retObj.getJSONArray("result");
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "查询项目编号成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("result", itemsList);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("查询活动的项目编号成功,channel={}", response);
+            _log.info("###### 查询活动的项目编号处理完成 ######");
+            // 管理平台账单
+            if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }
+
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
     /**
      * 检查是否可以删除账单
      */
@@ -1768,6 +1842,98 @@ public class BillController {
             	return EPayUtil.makeRetData(response);
             }*/
             return EPayUtil.makeRetData(response);//JSON.toJSONString
+
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
+    /**
+     * 创建活动
+     */
+    @RequestMapping(value = "/create_activity")
+    public String createActivity(@RequestParam String params) {
+        _log.info("###### 创建活动请求 ######");
+        JSONObject object;
+        String logPrefix = "【创建活动】";
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        // 获取本地服务实例(获取service工程)
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/create_activity, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            // 将请求参数转换为JSONObject对象
+            object = JSONObject.parseObject(params);
+            // 获取请求头
+            JSONObject channelObj = object.getJSONObject("request_header");
+            // 从请求头中获取渠道信息
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            /*String errorMessage = validateParams(object, payContext);//携带请求参数+响应私钥
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            _log.debug("请求参数及签名校验通过");*/
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+
+            String mch_Id = requestBody.getString("mch_Id");
+            String activity_name = requestBody.getString("activity_name");
+            String items_id = requestBody.getString("items_id");
+            String activity_type = requestBody.getString("activity_type");
+            String start_time = requestBody.getString("start_time");
+            String end_time = requestBody.getString("end_time");
+
+            payContext.put("mch_Id", mch_Id);
+            payContext.put("activity_name", activity_name);
+            payContext.put("items_id", items_id);
+            payContext.put("activity_type", activity_type);
+            payContext.put("start_time", start_time);
+            payContext.put("end_time", end_time);
+            // 查询商户账单信息list
+            String retStr = accountFileServiceClient.createActivity(payContext.toJSONString());
+            // 将商户账单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}创建活动,结果:{}", logPrefix, retObj);
+
+            // 0000表示查询成功
+            if(!"0000".equals(retObj.getString("code"))) {
+            	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+            	response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "创建活动失败", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            // 结果对象
+            int count = retObj.getInteger("result");
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "创建活动成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("result", count);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("创建活动成功,channel={}", response);
+            _log.info("###### 创建活动处理完成 ######");
+            // 管理平台账单
+            if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }
 
         }catch (Exception e) {
             _log.error(e, "");

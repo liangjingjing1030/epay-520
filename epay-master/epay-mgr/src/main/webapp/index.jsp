@@ -71,7 +71,7 @@
 								</c:when>
 								<c:otherwise>
 									<!-- 判断用户是否登录：已登录，显示欢迎 -->
-									<span style="font-size:18px;color:#135ca1;vertical-align:bottom;">${user.loginName}，欢迎您</span>
+									<span style="font-size:18px;color:#135ca1;vertical-align:bottom;">${user.loginAct}，欢迎您</span>
 									<dl class="layui-nav-child">
 										<dd>
 											<a href="personalMessage.jsp"><i class="fa fa-id-card" aria-hidden="true"></i> 个人信息</a>

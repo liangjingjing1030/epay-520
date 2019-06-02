@@ -71,6 +71,9 @@
 		if("" == loginAct) {
 			$("#showId").html("请输入商户号");
 			return false;
+		}  else if(!/^[0-9]*$/.test(loginAct)) {
+			$("#showId").html("商户号必须为纯数字");
+			return false;
 		} else {
 			$("#showId").html("");
 		}

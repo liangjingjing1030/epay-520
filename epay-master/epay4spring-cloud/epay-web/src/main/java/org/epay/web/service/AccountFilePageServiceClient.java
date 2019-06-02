@@ -98,6 +98,14 @@ public class AccountFilePageServiceClient {
         return " query queryAllItemsId error";
     }
 
+    @HystrixCommand(fallbackMethod = "queryAllActivityItemsIdFallback")
+    public String queryAllActivityItemsId(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/bill/queryAllActivityItemsIdByMchId?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String queryAllActivityItemsIdFallback(String jsonParam) {
+        return " query queryAllItemsId error";
+    }
+
     @HystrixCommand(fallbackMethod = "importAccountFileFallback")
     public String importAccountFile(String jsonParam) {
         return restTemplate.getForEntity("http://EPAY-SERVICE/bill/importAccountFile?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
@@ -111,6 +119,14 @@ public class AccountFilePageServiceClient {
         return restTemplate.getForEntity("http://EPAY-SERVICE/bill/checkIsDuplicate?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
     }
     public String checkIsDuplicateFallback(String jsonParam) {
+        return " check IsDuplicate error";
+    }
+
+    @HystrixCommand(fallbackMethod = "createActivityFallback")
+    public String createActivity(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/bill/user_create_activity?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String createActivityFallback(String jsonParam) {
         return " check IsDuplicate error";
     }
 

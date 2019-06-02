@@ -5,8 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import org.epay.common.constant.Constant;
 import org.epay.common.constant.PayConstant;
 import org.epay.common.util.EPayUtil;
+import org.epay.dal.dao.model.BusinessRange;
+import org.epay.dal.dao.model.CertificateType;
 import org.epay.dal.dao.model.MchInfo;
 import org.epay.dal.dao.model.User;
+import org.epay.mgr.service.BusinessRangeService;
+import org.epay.mgr.service.CertificateTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +31,12 @@ public class MchInfoController {
 
     @Value("${web.path}")
     String baseUrl;
+
+    @Autowired
+    private BusinessRangeService businessRangeService;
+
+    @Autowired
+    private CertificateTypeService certificateTypeService;
 
     @RequestMapping(value = "/mch/queryMchInfo", method = RequestMethod.GET)
     @ResponseBody
@@ -66,14 +77,22 @@ public class MchInfoController {
             mchInfo.setMch_id(mch_id);
             mchInfo.setMch_name(bodyMap.get("mch_name").toString());
             mchInfo.setMch_type(bodyMap.get("mch_type").toString());
-            mchInfo.setMch_range(bodyMap.get("mch_range").toString());
+            // 处理经营范围
+            String mch_range_id = bodyMap.get("mch_range").toString();
+            // 根据经营范围主键查询经营范围
+            BusinessRange businessRange = businessRangeService.queryBusinessRange(mch_range_id);
+            mchInfo.setMch_range(businessRange.getBusinessRange());
             mchInfo.setMch_city(bodyMap.get("mch_city").toString());
             mchInfo.setMch_address(bodyMap.get("mch_address").toString());
             mchInfo.setMch_status(Byte.parseByte(bodyMap.get("mch_status").toString()));
             mchInfo.setContact_person(bodyMap.get("contact_person").toString());
             mchInfo.setContact_phone(bodyMap.get("contact_phone").toString());
             mchInfo.setContact_email(bodyMap.get("contact_email").toString());
-            mchInfo.setCertificate_type(bodyMap.get("certificate_type").toString());
+            // 处理证件类型
+            String certificate_type_id = bodyMap.get("certificate_type").toString();
+            // 根据证件类型主键查询证件类型
+            CertificateType c = certificateTypeService.queryCertificateType(certificate_type_id);
+            mchInfo.setCertificate_type(c.getType());
             mchInfo.setCertificate_number(bodyMap.get("certificate_number").toString());
             mchInfo.setBusiness_license(bodyMap.get("business_license").toString());
             mchInfo.setReq_key(bodyMap.get("req_key").toString());
