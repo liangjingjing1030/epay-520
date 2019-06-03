@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.epay.dal.dao.mapper.AccountBookMapper;
 import org.epay.dal.dao.model.AccountBook;
 import org.epay.dal.dao.model.AccountBookExample;
+import org.epay.dal.dao.model.PayOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -145,6 +146,25 @@ public class AccountBookService {
      */
     public List<AccountBook> selectByMchIdAndItemsId(String mch_id, String items_id) {
         return accountBookMapper.selectByMchIdAndItemsIdAndPayStatus(mch_id, items_id);
+    }
+
+    /**
+     * 创建支付订单对应的账单信息
+     * @param payOrder
+     * @return
+     */
+    public int createAccountBook(AccountBook accountBook) {
+        return accountBookMapper.insertSelective(accountBook);
+    }
+    
+    /**
+     * 根据账单号删除账单信息
+     * @param account_book_id
+     * @return
+     */
+    public int deleteAccountBookByPrimaryKey(String account_book_id) {
+    	int accountBook = accountBookMapper.deleteByPrimaryKey(account_book_id);
+    	return accountBook;
     }
 
     /**

@@ -293,12 +293,12 @@
 
 <div class="btn-toolbar" role="toolbar" style="margin:10px; margin-left: 5px;margin-top: 5px;">
     <form class="form-inline" role="form">
-        <div class="form-group" style="margin-right: 10px;">
+        <%--<div class="form-group" style="margin-right: 10px;">
             <div class="input-group">
                 <div class="input-group-addon" style="width: 90px;">项目编号</div>
                 <input class="form-control" type="text" id="items_id" placeholder="">
             </div>
-        </div>
+        </div>--%>
 
         <div class="form-group">
             <div class="input-group">

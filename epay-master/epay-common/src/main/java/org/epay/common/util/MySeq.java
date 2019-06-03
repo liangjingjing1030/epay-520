@@ -16,6 +16,9 @@ public class MySeq {
 	private static String trans_seq_prefix = "T";
 	private static AtomicLong refund_seq = new AtomicLong(0L);
 	private static String refund_seq_prefix = "R";
+	
+	private static AtomicLong account_seq = new AtomicLong(0L);
+	private static String account_seq_prefix = "A";
 
 	private static String node = "00";
 	static {
@@ -41,11 +44,17 @@ public class MySeq {
 		return getSeq(refund_seq_prefix, refund_seq);
 	}
 
+	public static String getAccount() {
+		return getSeq(account_seq_prefix, account_seq);
+	}
+	
 	private static String getSeq(String prefix, AtomicLong seq) {
 		prefix += node;
 		int random = (int)(Math.random()*9+1)*100000;
 		return String.format("%s%s%06d", prefix, DateUtil.getSeqString(), random);
 	}
+	
+	
 
 	public static void main(String[] args) {
 		for (int i = 0; i < 10; i++) {

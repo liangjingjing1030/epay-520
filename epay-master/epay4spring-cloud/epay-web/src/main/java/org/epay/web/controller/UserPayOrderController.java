@@ -8,6 +8,7 @@ import org.epay.common.constant.PayConstant;
 import org.epay.common.util.EPayUtil;
 import org.epay.common.util.MyLog;
 import org.epay.web.service.AccountBookServiceClient;
+import org.epay.web.service.PayOrderServiceClient;
 import org.epay.web.service.UserPayOrderServiceClient;
 import org.epay.web.utils.PayOrderValidateParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class UserPayOrderController {
     
     @Autowired
     private UserPayOrderServiceClient payOrderServiceClient;
+    
+    @Autowired
+    private PayOrderServiceClient payOrderClient;
     
     @Autowired
     private AccountBookServiceClient accountBookServiceClient;
@@ -124,7 +128,15 @@ public class UserPayOrderController {
             }
             //创建支付订单====================================End
             payOrder.put("res_key", res_key);
-            return payOrderServiceClient.sendPayRequest(getJsonParam("payOrder", payOrder));
+            String payResponse = payOrderServiceClient.sendPayRequest(getJsonParam("payOrder", payOrder));
+            JSONObject responseObj = JSON.parseObject(payResponse);
+            JSONObject resHeader = responseObj.getJSONObject("response_header");
+            String responseCode = resHeader.getString("retCode");
+            if(!"SUCCESS".equals(responseCode)) {
+            	String pay_order_id = payOrder.getString("pay_order_id");
+            	String delRet = payOrderClient.deletePayOrderByPrimaryKey(getJsonParam("pay_order_id", pay_order_id));
+            }
+            return payResponse;
         }catch (Exception e) {
             _log.error(e, "");
             retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);

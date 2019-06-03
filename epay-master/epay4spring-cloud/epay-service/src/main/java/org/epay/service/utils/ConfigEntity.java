@@ -38,6 +38,10 @@ public class ConfigEntity {
     @Value("${epay.alipay_settle_cost}")
     private String alipay_settle_cost;
     
+    //文件生成地址
+    @Value("${epay.make_file}")
+    private String make_file;
+    
     // 编码
     public static String CHARSET = "UTF-8";
     
@@ -106,6 +110,14 @@ public class ConfigEntity {
 
 	public void setAlipay_settle_cost(String alipay_settle_cost) {
 		this.alipay_settle_cost = alipay_settle_cost;
+	}
+
+	public String getMake_file() {
+		return make_file;
+	}
+
+	public void setMake_file(String make_file) {
+		this.make_file = make_file;
 	}
     
 

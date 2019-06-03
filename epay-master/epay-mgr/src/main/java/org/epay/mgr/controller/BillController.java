@@ -2,6 +2,7 @@ package org.epay.mgr.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.epay.common.constant.Constant;
 import org.epay.common.constant.PayConstant;
@@ -824,6 +825,106 @@ public class BillController {
         // 导出excel
         WriteExcel<AccountBook> we = new WriteExcel<>();
         HSSFWorkbook workbook = we.getWorkbookModel(accountBookModelList, "账单模板", AccountBook.class);
+
+        // 响应到浏览器
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // 编辑账单模板
+    @RequestMapping("/bill/modelEdit")
+    @ResponseBody
+    public void modelEdit(HttpServletResponse response,HttpServletRequest request,
+                          @RequestParam(value = "user_id", required = true)String user_id,
+                          @RequestParam(value = "userIdPosition", required = true)String userIdPosition,
+                          @RequestParam(value = "items_money", required = true)String items_money,
+                          @RequestParam(value = "items_money_position", required = true)String items_money_position,
+                          @RequestParam(value = "select1", required = false)String select1,
+                          @RequestParam(value = "select2", required = false)String select2,
+                          @RequestParam(value = "select3", required = false)String select3,
+                          @RequestParam(value = "select4", required = false)String select4,
+                          @RequestParam(value = "select5", required = false)String select5,
+                          @RequestParam(value = "select6", required = false)String select6,
+                          @RequestParam(value = "select7", required = false)String select7,
+                          @RequestParam(value = "select8", required = false)String select8,
+                          @RequestParam(value = "select9", required = false)String select9,
+                          @RequestParam(value = "select10", required = false)String select10,
+                          @RequestParam(value = "position1", required = false)String position1,
+                          @RequestParam(value = "position2", required = false)String position2,
+                          @RequestParam(value = "position3", required = false)String position3,
+                          @RequestParam(value = "position4", required = false)String position4,
+                          @RequestParam(value = "position5", required = false)String position5,
+                          @RequestParam(value = "position6", required = false)String position6,
+                          @RequestParam(value = "position7", required = false)String position7,
+                          @RequestParam(value = "position8", required = false)String position8,
+                          @RequestParam(value = "position9", required = false)String position9,
+                          @RequestParam(value = "position10", required = false)String position10) {
+
+        // 设置响应的内容类型为下载excel文件
+        response.setContentType("application/vnd.ms-excel");
+        // 设置响应头信息
+        response.setHeader("Content-disposition", "attachment;filename="+System.currentTimeMillis()+".xls");
+
+        // 从session域中获取当前登录商户的信息
+        User user = (User) request.getSession().getAttribute("user");
+        String mchId = user.getLoginName();
+
+        // 列位置信息
+        Map<String, Integer> map = new HashMap<>();
+        map.put("userIdPosition", Integer.parseInt(userIdPosition) - 1);
+        map.put("items_money_position", Integer.parseInt(items_money_position) - 1);
+        // 组装模板ModelKey
+        ModelKey modelKey = new ModelKey();
+        modelKey.setUserId(user_id);
+        modelKey.setItemsMoney(items_money);
+        if(StringUtils.isNotBlank(select1)) {
+            modelKey.setSelect1(select1);
+            map.put("position1", Integer.parseInt(position1) - 1);
+        }
+        if(StringUtils.isNotBlank(select2)) {
+            modelKey.setSelect2(select2);
+            map.put("position2", Integer.parseInt(position2) - 1);
+        }
+        if(StringUtils.isNotBlank(select3)) {
+            modelKey.setSelect3(select3);
+            map.put("position3", Integer.parseInt(position3) - 1);
+        }
+        if(StringUtils.isNotBlank(select4)) {
+            modelKey.setSelect4(select4);
+            map.put("position4", Integer.parseInt(position4) - 1);
+        }
+        if(StringUtils.isNotBlank(select5)) {
+            modelKey.setSelect5(select5);
+            map.put("position5", Integer.parseInt(position5) - 1);
+        }
+        if(StringUtils.isNotBlank(select6)) {
+            modelKey.setSelect6(select6);
+            map.put("position6", Integer.parseInt(position6) - 1);
+        }
+        if(StringUtils.isNotBlank(select7)) {
+            modelKey.setSelect7(select7);
+            map.put("position7", Integer.parseInt(position7) - 1);
+        }
+        if(StringUtils.isNotBlank(select8)) {
+            modelKey.setSelect8(select8);
+            map.put("position8", Integer.parseInt(position8) - 1);
+        }
+        if(StringUtils.isNotBlank(select9)) {
+            modelKey.setSelect9(select9);
+            map.put("position9", Integer.parseInt(position9) - 1);
+        }
+        if(StringUtils.isNotBlank(select10)) {
+            modelKey.setSelect10(select10);
+            map.put("position10", Integer.parseInt(position10) - 1);
+        }
+
+        // 导出excel
+        WriteExcel<ModelKey> we = new WriteExcel<>();
+        HSSFWorkbook workbook = we.getEditWorkbookModel(modelKey, map, "账单模板", ModelKey.class);
 
         // 响应到浏览器
         try {

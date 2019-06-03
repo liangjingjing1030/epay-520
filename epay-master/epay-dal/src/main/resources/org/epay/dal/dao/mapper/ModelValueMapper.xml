@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.ModelValueMapper" >
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.ModelValue" >
+    <id column="model_value_id" property="modelValueId" jdbcType="VARCHAR" />
+    <result column="model_key_id" property="modelKeyId" jdbcType="VARCHAR" />
+    <result column="user_id_value" property="userIdValue" jdbcType="VARCHAR" />
+    <result column="items_money_value" property="itemsMoneyValue" jdbcType="BIGINT" />
+    <result column="value1" property="value1" jdbcType="VARCHAR" />
+    <result column="value2" property="value2" jdbcType="VARCHAR" />
+    <result column="value3" property="value3" jdbcType="VARCHAR" />
+    <result column="value4" property="value4" jdbcType="VARCHAR" />
+    <result column="value5" property="value5" jdbcType="VARCHAR" />
+    <result column="value6" property="value6" jdbcType="VARCHAR" />
+    <result column="value7" property="value7" jdbcType="VARCHAR" />
+    <result column="value8" property="value8" jdbcType="VARCHAR" />
+    <result column="value9" property="value9" jdbcType="VARCHAR" />
+    <result column="value10" property="value10" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    model_value_id, model_key_id, user_id_value, items_money_value, value1, value2, value3, 
+    value4, value5, value6, value7, value8, value9, value10
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from epay_account_model_value
+    where model_value_id = #{modelValueId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from epay_account_model_value
+    where model_value_id = #{modelValueId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.epay.dal.dao.model.ModelValue" >
+    insert into epay_account_model_value (model_value_id, model_key_id, user_id_value, 
+      items_money_value, value1, value2, 
+      value3, value4, value5, 
+      value6, value7, value8, 
+      value9, value10)
+    values (#{modelValueId,jdbcType=VARCHAR}, #{modelKeyId,jdbcType=VARCHAR}, #{userIdValue,jdbcType=VARCHAR}, 
+      #{itemsMoneyValue,jdbcType=BIGINT}, #{value1,jdbcType=VARCHAR}, #{value2,jdbcType=VARCHAR}, 
+      #{value3,jdbcType=VARCHAR}, #{value4,jdbcType=VARCHAR}, #{value5,jdbcType=VARCHAR}, 
+      #{value6,jdbcType=VARCHAR}, #{value7,jdbcType=VARCHAR}, #{value8,jdbcType=VARCHAR}, 
+      #{value9,jdbcType=VARCHAR}, #{value10,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.ModelValue" >
+    insert into epay_account_model_value
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="modelValueId != null" >
+        model_value_id,
+      </if>
+      <if test="modelKeyId != null" >
+        model_key_id,
+      </if>
+      <if test="userIdValue != null" >
+        user_id_value,
+      </if>
+      <if test="itemsMoneyValue != null" >
+        items_money_value,
+      </if>
+      <if test="value1 != null" >
+        value1,
+      </if>
+      <if test="value2 != null" >
+        value2,
+      </if>
+      <if test="value3 != null" >
+        value3,
+      </if>
+      <if test="value4 != null" >
+        value4,
+      </if>
+      <if test="value5 != null" >
+        value5,
+      </if>
+      <if test="value6 != null" >
+        value6,
+      </if>
+      <if test="value7 != null" >
+        value7,
+      </if>
+      <if test="value8 != null" >
+        value8,
+      </if>
+      <if test="value9 != null" >
+        value9,
+      </if>
+      <if test="value10 != null" >
+        value10,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="modelValueId != null" >
+        #{modelValueId,jdbcType=VARCHAR},
+      </if>
+      <if test="modelKeyId != null" >
+        #{modelKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdValue != null" >
+        #{userIdValue,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsMoneyValue != null" >
+        #{itemsMoneyValue,jdbcType=BIGINT},
+      </if>
+      <if test="value1 != null" >
+        #{value1,jdbcType=VARCHAR},
+      </if>
+      <if test="value2 != null" >
+        #{value2,jdbcType=VARCHAR},
+      </if>
+      <if test="value3 != null" >
+        #{value3,jdbcType=VARCHAR},
+      </if>
+      <if test="value4 != null" >
+        #{value4,jdbcType=VARCHAR},
+      </if>
+      <if test="value5 != null" >
+        #{value5,jdbcType=VARCHAR},
+      </if>
+      <if test="value6 != null" >
+        #{value6,jdbcType=VARCHAR},
+      </if>
+      <if test="value7 != null" >
+        #{value7,jdbcType=VARCHAR},
+      </if>
+      <if test="value8 != null" >
+        #{value8,jdbcType=VARCHAR},
+      </if>
+      <if test="value9 != null" >
+        #{value9,jdbcType=VARCHAR},
+      </if>
+      <if test="value10 != null" >
+        #{value10,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.ModelValue" >
+    update epay_account_model_value
+    <set >
+      <if test="modelKeyId != null" >
+        model_key_id = #{modelKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdValue != null" >
+        user_id_value = #{userIdValue,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsMoneyValue != null" >
+        items_money_value = #{itemsMoneyValue,jdbcType=BIGINT},
+      </if>
+      <if test="value1 != null" >
+        value1 = #{value1,jdbcType=VARCHAR},
+      </if>
+      <if test="value2 != null" >
+        value2 = #{value2,jdbcType=VARCHAR},
+      </if>
+      <if test="value3 != null" >
+        value3 = #{value3,jdbcType=VARCHAR},
+      </if>
+      <if test="value4 != null" >
+        value4 = #{value4,jdbcType=VARCHAR},
+      </if>
+      <if test="value5 != null" >
+        value5 = #{value5,jdbcType=VARCHAR},
+      </if>
+      <if test="value6 != null" >
+        value6 = #{value6,jdbcType=VARCHAR},
+      </if>
+      <if test="value7 != null" >
+        value7 = #{value7,jdbcType=VARCHAR},
+      </if>
+      <if test="value8 != null" >
+        value8 = #{value8,jdbcType=VARCHAR},
+      </if>
+      <if test="value9 != null" >
+        value9 = #{value9,jdbcType=VARCHAR},
+      </if>
+      <if test="value10 != null" >
+        value10 = #{value10,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where model_value_id = #{modelValueId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.ModelValue" >
+    update epay_account_model_value
+    set model_key_id = #{modelKeyId,jdbcType=VARCHAR},
+      user_id_value = #{userIdValue,jdbcType=VARCHAR},
+      items_money_value = #{itemsMoneyValue,jdbcType=BIGINT},
+      value1 = #{value1,jdbcType=VARCHAR},
+      value2 = #{value2,jdbcType=VARCHAR},
+      value3 = #{value3,jdbcType=VARCHAR},
+      value4 = #{value4,jdbcType=VARCHAR},
+      value5 = #{value5,jdbcType=VARCHAR},
+      value6 = #{value6,jdbcType=VARCHAR},
+      value7 = #{value7,jdbcType=VARCHAR},
+      value8 = #{value8,jdbcType=VARCHAR},
+      value9 = #{value9,jdbcType=VARCHAR},
+      value10 = #{value10,jdbcType=VARCHAR}
+    where model_value_id = #{modelValueId,jdbcType=VARCHAR}
+  </update>
+</mapper>

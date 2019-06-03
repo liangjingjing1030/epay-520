@@ -147,5 +147,11 @@ public class RefundOrderService {
     public int updateRefundOrder(RefundOrder refundOrder) {
     	return refundOrderMapper.updateByPrimaryKeySelective(refundOrder);
     }
-
+    
+    /**
+     * 根据主键删除退款订单
+     */
+    public int deleteRefundOrderByPrimaryKey(String refund_order_id) {
+    	return refundOrderMapper.deleteByPrimaryKey(refund_order_id);
+    }
 }

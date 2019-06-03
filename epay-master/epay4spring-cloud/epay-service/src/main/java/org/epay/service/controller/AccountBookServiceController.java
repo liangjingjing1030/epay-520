@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.epay.common.util.MyBase64;
 import org.epay.common.util.MyLog;
 import org.epay.dal.dao.model.AccountBook;
+import org.epay.dal.dao.model.PayOrder;
 import org.epay.service.service.AccountBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -172,6 +173,63 @@ public class AccountBookServiceController {
         return CollectionUtils.isEmpty(retObj) ? null : retObj.toJSONString();
     }
     
+    /**
+     * 创建支付订单对应的账单信息
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/account_book/createAccountBook")
+    public String createAccountBook(@RequestParam String jsonParam) {
+        _log.info("MyBase64》》接收创建支付订单对应的账单信息请求,jsonParam={}", jsonParam);
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001");
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+        try {
+        	JSONObject object = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
+        	_log.info("接收创建支付订单对应的账单信息请求,jsonParam={}", object.toString());
+        	
+        	AccountBook accountBook = JSON.parseObject(object.toJSONString(), AccountBook.class);
+            int result = accountBookService.createAccountBook(accountBook);
+            retObj.put("result", result);
+        }catch (Exception e) {
+            retObj.put("code", "9999"); // 系统错误
+            retObj.put("msg", "系统错误");
+        }
+        return retObj.toJSONString();
+    }
     
+    /**
+     * 根据账单号删除账单信息
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/account_book/deleteAccountBookByPrimaryKey")
+    public String deleteAccountBookByPrimaryKey(@RequestParam String jsonParam) {
+        _log.info("deleteAccountBookByPrimaryKey << {}", jsonParam);
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+        JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
+        String account_book_id = paramObj.getString("account_book_id"); // 账单号
+        
+        int accountBook = accountBookService.deleteAccountBookByPrimaryKey(account_book_id);
+
+        if(accountBook != 1) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "删除账单信息失败");
+            return retObj.toJSONString();
+        }
+        retObj.put("result", accountBook);
+        _log.info("deleteAccountBookByPrimaryKey >> {}", retObj);
+        return CollectionUtils.isEmpty(retObj) ? null : retObj.toJSONString();
+    }
     
 }

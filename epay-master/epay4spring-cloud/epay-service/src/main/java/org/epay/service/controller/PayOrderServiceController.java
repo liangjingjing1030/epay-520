@@ -283,4 +283,35 @@ public class PayOrderServiceController {
         return retObj.toJSONString();
     }
 
+    /**
+     * 根据订单号删除订单信息
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/pay_order/deletePayOrderByPrimaryKey")
+    public String deletePayOrderByPrimaryKey(@RequestParam String jsonParam) {
+        _log.info("MyBase64>>deletePayOrderByPrimaryKey << {}", jsonParam);
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+        JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
+        _log.info("deletePayOrderByPrimaryKey << {}", paramObj.toString());
+        String pay_order_id = paramObj.getString("pay_order_id"); // 订单号
+        
+        int i = payOrderService.deletePayOrderByPrimaryKey(pay_order_id);
+
+        if(i <= 0) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "支付订单信息不存在,删除失败");
+            return retObj.toJSONString();
+        }
+        retObj.put("result", i);
+        _log.info("deletePayOrderByPrimaryKey >> {}", retObj);
+        return retObj.toJSONString();
+    }
+
 }

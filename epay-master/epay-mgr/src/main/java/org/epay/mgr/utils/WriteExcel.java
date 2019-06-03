@@ -4,12 +4,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.epay.dal.dao.model.AccountBookAndPayOrder;
+import org.epay.dal.dao.model.ModelKey;
 
 public class WriteExcel<T> {
 	public static void main(String[] args) {
@@ -96,7 +99,8 @@ public class WriteExcel<T> {
 					if(value != null) {
 						v = value.toString();
 					}
-					//单独处理支付状态：0-未支付,1-支付成功,2-支付失败,3-账单退款
+					//单独处理 支付状态,0-未支付,1-支付成功,2-支付失败,3-账单退款,4-支付中
+					//
 					if ("getPay_status".equals(getMethodName)) {
 						if("0".equals(v)) {
 							v = "未缴费";
@@ -106,6 +110,8 @@ public class WriteExcel<T> {
 							v = "缴费失败";
 						} else if("3".equals(v)) {
 							v = "账单退款";
+						} else if("4".equals(v)) {
+							v = "支付中";
 						}
 					}
 					cell.setCellValue(value == null ? "" : v);
@@ -352,4 +358,86 @@ public class WriteExcel<T> {
 			return null;
 		}
 	}
+
+	/**
+	 * 自定义账单模板
+	 * @param modelKey
+	 * @param sheetName
+	 * @param c
+	 * @return
+	 */
+	public HSSFWorkbook getEditWorkbookModel(ModelKey modelKey, Map<String, Integer> positionMap, String sheetName , Class c) {
+		try {
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			// 创建一个sheet
+			HSSFSheet hssfSheet = workbook.createSheet(sheetName);
+			// 创建第一行
+			HSSFRow row0 = hssfSheet.createRow(0);
+			// 获取实体类ModelKey的所有字段 13个
+			Field[] fields = c.getDeclaredFields();
+			for (int i = 0; i < fields.length; i++) {
+				// 获取第一行标题列名
+				String fieldName = fields[i].getName();
+				if("userId".equals(fieldName)) {
+					fieldName = modelKey.getUserId();
+					// 创建第一行标题列
+					HSSFCell cell0 = row0.createCell(positionMap.get("userIdPosition"));
+					// 设置标题列的内容
+					cell0.setCellValue(fieldName);
+				} else if("itemsMoney".equals(fieldName)) {
+					fieldName = modelKey.getItemsMoney();
+					HSSFCell cell0 = row0.createCell(positionMap.get("items_money_position"));
+					cell0.setCellValue(fieldName);
+				} else if("select1".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect1())) {
+					fieldName = modelKey.getSelect1();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position1"));
+					cell0.setCellValue(fieldName);
+				} else if("select2".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect2())) {
+					fieldName = modelKey.getSelect2();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position2"));
+					cell0.setCellValue(fieldName);
+				} else if("select3".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect3())) {
+					fieldName = modelKey.getSelect3();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position3"));
+					cell0.setCellValue(fieldName);
+				} else if("select4".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect4())) {
+					fieldName = modelKey.getSelect4();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position4"));
+					cell0.setCellValue(fieldName);
+				} else if("select5".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect5())) {
+					fieldName = modelKey.getSelect5();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position5"));
+					cell0.setCellValue(fieldName);
+				} else if("select6".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect6())) {
+					fieldName = modelKey.getSelect6();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position6"));
+					cell0.setCellValue(fieldName);
+				} else if("select7".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect7())) {
+					fieldName = modelKey.getSelect7();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position7"));
+					cell0.setCellValue(fieldName);
+				} else if("select8".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect8())) {
+					fieldName = modelKey.getSelect8();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position8"));
+					cell0.setCellValue(fieldName);
+				} else if("select9".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect9())) {
+					fieldName = modelKey.getSelect9();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position9"));
+					cell0.setCellValue(fieldName);
+				} else if("select10".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect10())) {
+					fieldName = modelKey.getSelect10();
+					HSSFCell cell0 = row0.createCell(positionMap.get("position10"));
+					cell0.setCellValue(fieldName);
+				} else {
+					continue; // 其他字段不做处理
+				}
+			}
+
+			return workbook;
+		} catch (SecurityException | IllegalArgumentException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

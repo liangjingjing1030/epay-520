@@ -15,7 +15,7 @@
     <result column="currency" jdbcType="VARCHAR" property="currency" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="channel_pay_order_no" jdbcType="VARCHAR" property="channel_pay_order_no" />
-    <result column="result" jdbcType="TINYINT" property="result" />
+    <result column="refund_result" jdbcType="TINYINT" property="result" />
     <result column="client_ip" jdbcType="VARCHAR" property="client_ip" />
     <result column="device" jdbcType="VARCHAR" property="device" />
     <result column="remark_info" jdbcType="VARCHAR" property="remark_info" />
@@ -97,11 +97,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    refund_order_id, pay_orderid, mch_id, channel_id, mch_refund_no, user_id, user_name, 
-    user_channel_account, pay_amount, refund_amount, currency, status, channel_pay_order_no, 
-    result, client_ip, device, remark_info, channel_user, channel_mch_id, channel_order_no, 
-    channel_res_code, channel_res_msg, extra, notifyurl, param1, param2, expire_time, 
-    refund_succ_time, create_time, update_time, reserve1, reserve2, reserve3, reserve4, 
+    refund_order_id, pay_orderid, mch_id, channel_id, mch_refund_no, user_id, user_name,
+    user_channel_account, pay_amount, refund_amount, currency, status, channel_pay_order_no,
+    refund_result, client_ip, device, remark_info, channel_user, channel_mch_id, channel_order_no,
+    channel_res_code, channel_res_msg, extra, notifyurl, param1, param2, expire_time,
+    refund_succ_time, create_time, update_time, reserve1, reserve2, reserve3, reserve4,
     reserve5
   </sql>
   <select id="selectByExample" parameterType="org.epay.dal.dao.model.RefundOrderExample" resultMap="BaseResultMap">
@@ -127,7 +127,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from epay_refund_order
     where refund_order_id = #{refund_order_id,jdbcType=VARCHAR}
@@ -143,29 +143,29 @@
     </if>
   </delete>
   <insert id="insert" parameterType="org.epay.dal.dao.model.RefundOrder">
-    insert into epay_refund_order (refund_order_id, pay_orderid, mch_id, 
-      channel_id, mch_refund_no, user_id, 
-      user_name, user_channel_account, pay_amount, 
-      refund_amount, currency, status, 
-      channel_pay_order_no, result, client_ip, 
-      device, remark_info, channel_user, 
-      channel_mch_id, channel_order_no, channel_res_code, 
-      channel_res_msg, extra, notifyurl, 
-      param1, param2, expire_time, 
-      refund_succ_time, create_time, update_time, 
-      reserve1, reserve2, reserve3, 
+    insert into epay_refund_order (refund_order_id, pay_orderid, mch_id,
+      channel_id, mch_refund_no, user_id,
+      user_name, user_channel_account, pay_amount,
+      refund_amount, currency, status,
+      channel_pay_order_no, refund_result, client_ip,
+      device, remark_info, channel_user,
+      channel_mch_id, channel_order_no, channel_res_code,
+      channel_res_msg, extra, notifyurl,
+      param1, param2, expire_time,
+      refund_succ_time, create_time, update_time,
+      reserve1, reserve2, reserve3,
       reserve4, reserve5)
-    values (#{refund_order_id,jdbcType=VARCHAR}, #{pay_orderid,jdbcType=VARCHAR}, #{mch_id,jdbcType=VARCHAR}, 
-      #{channel_id,jdbcType=VARCHAR}, #{mch_refund_no,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR}, 
-      #{user_name,jdbcType=VARCHAR}, #{user_channel_account,jdbcType=VARCHAR}, #{pay_amount,jdbcType=BIGINT}, 
-      #{refund_amount,jdbcType=BIGINT}, #{currency,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{channel_pay_order_no,jdbcType=VARCHAR}, #{result,jdbcType=TINYINT}, #{client_ip,jdbcType=VARCHAR}, 
-      #{device,jdbcType=VARCHAR}, #{remark_info,jdbcType=VARCHAR}, #{channel_user,jdbcType=VARCHAR}, 
-      #{channel_mch_id,jdbcType=VARCHAR}, #{channel_order_no,jdbcType=VARCHAR}, #{channel_res_code,jdbcType=VARCHAR}, 
-      #{channel_res_msg,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, #{notifyurl,jdbcType=VARCHAR}, 
-      #{param1,jdbcType=VARCHAR}, #{param2,jdbcType=VARCHAR}, #{expire_time,jdbcType=VARCHAR}, 
-      #{refund_succ_time,jdbcType=VARCHAR}, #{create_time,jdbcType=VARCHAR}, #{update_time,jdbcType=VARCHAR}, 
-      #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR}, #{reserve3,jdbcType=VARCHAR}, 
+    values (#{refund_order_id,jdbcType=VARCHAR}, #{pay_orderid,jdbcType=VARCHAR}, #{mch_id,jdbcType=VARCHAR},
+      #{channel_id,jdbcType=VARCHAR}, #{mch_refund_no,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR},
+      #{user_name,jdbcType=VARCHAR}, #{user_channel_account,jdbcType=VARCHAR}, #{pay_amount,jdbcType=BIGINT},
+      #{refund_amount,jdbcType=BIGINT}, #{currency,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
+      #{channel_pay_order_no,jdbcType=VARCHAR}, #{result,jdbcType=TINYINT}, #{client_ip,jdbcType=VARCHAR},
+      #{device,jdbcType=VARCHAR}, #{remark_info,jdbcType=VARCHAR}, #{channel_user,jdbcType=VARCHAR},
+      #{channel_mch_id,jdbcType=VARCHAR}, #{channel_order_no,jdbcType=VARCHAR}, #{channel_res_code,jdbcType=VARCHAR},
+      #{channel_res_msg,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, #{notifyurl,jdbcType=VARCHAR},
+      #{param1,jdbcType=VARCHAR}, #{param2,jdbcType=VARCHAR}, #{expire_time,jdbcType=VARCHAR},
+      #{refund_succ_time,jdbcType=VARCHAR}, #{create_time,jdbcType=VARCHAR}, #{update_time,jdbcType=VARCHAR},
+      #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR}, #{reserve3,jdbcType=VARCHAR},
       #{reserve4,jdbcType=VARCHAR}, #{reserve5,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.epay.dal.dao.model.RefundOrder">
@@ -211,7 +211,7 @@
         channel_pay_order_no,
       </if>
       <if test="result != null">
-        result,
+        refund_result,
       </if>
       <if test="client_ip != null">
         client_ip,
@@ -434,7 +434,7 @@
         channel_pay_order_no = #{record.channel_pay_order_no,jdbcType=VARCHAR},
       </if>
       <if test="record.result != null">
-        result = #{record.result,jdbcType=TINYINT},
+        refund_result = #{record.result,jdbcType=TINYINT},
       </if>
       <if test="record.client_ip != null">
         client_ip = #{record.client_ip,jdbcType=VARCHAR},
@@ -507,40 +507,40 @@
   <update id="updateByExample" parameterType="map">
     update epay_refund_order
     set refund_order_id = #{record.refund_order_id,jdbcType=VARCHAR},
-      pay_orderid = #{record.pay_orderid,jdbcType=VARCHAR},
-      mch_id = #{record.mch_id,jdbcType=VARCHAR},
-      channel_id = #{record.channel_id,jdbcType=VARCHAR},
-      mch_refund_no = #{record.mch_refund_no,jdbcType=VARCHAR},
-      user_id = #{record.user_id,jdbcType=VARCHAR},
-      user_name = #{record.user_name,jdbcType=VARCHAR},
-      user_channel_account = #{record.user_channel_account,jdbcType=VARCHAR},
-      pay_amount = #{record.pay_amount,jdbcType=BIGINT},
-      refund_amount = #{record.refund_amount,jdbcType=BIGINT},
-      currency = #{record.currency,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=TINYINT},
-      channel_pay_order_no = #{record.channel_pay_order_no,jdbcType=VARCHAR},
-      result = #{record.result,jdbcType=TINYINT},
-      client_ip = #{record.client_ip,jdbcType=VARCHAR},
-      device = #{record.device,jdbcType=VARCHAR},
-      remark_info = #{record.remark_info,jdbcType=VARCHAR},
-      channel_user = #{record.channel_user,jdbcType=VARCHAR},
-      channel_mch_id = #{record.channel_mch_id,jdbcType=VARCHAR},
-      channel_order_no = #{record.channel_order_no,jdbcType=VARCHAR},
-      channel_res_code = #{record.channel_res_code,jdbcType=VARCHAR},
-      channel_res_msg = #{record.channel_res_msg,jdbcType=VARCHAR},
-      extra = #{record.extra,jdbcType=VARCHAR},
-      notifyurl = #{record.notifyurl,jdbcType=VARCHAR},
-      param1 = #{record.param1,jdbcType=VARCHAR},
-      param2 = #{record.param2,jdbcType=VARCHAR},
-      expire_time = #{record.expire_time,jdbcType=VARCHAR},
-      refund_succ_time = #{record.refund_succ_time,jdbcType=VARCHAR},
-      create_time = #{record.create_time,jdbcType=VARCHAR},
-      update_time = #{record.update_time,jdbcType=VARCHAR},
-      reserve1 = #{record.reserve1,jdbcType=VARCHAR},
-      reserve2 = #{record.reserve2,jdbcType=VARCHAR},
-      reserve3 = #{record.reserve3,jdbcType=VARCHAR},
-      reserve4 = #{record.reserve4,jdbcType=VARCHAR},
-      reserve5 = #{record.reserve5,jdbcType=VARCHAR}
+    pay_orderid = #{record.pay_orderid,jdbcType=VARCHAR},
+    mch_id = #{record.mch_id,jdbcType=VARCHAR},
+    channel_id = #{record.channel_id,jdbcType=VARCHAR},
+    mch_refund_no = #{record.mch_refund_no,jdbcType=VARCHAR},
+    user_id = #{record.user_id,jdbcType=VARCHAR},
+    user_name = #{record.user_name,jdbcType=VARCHAR},
+    user_channel_account = #{record.user_channel_account,jdbcType=VARCHAR},
+    pay_amount = #{record.pay_amount,jdbcType=BIGINT},
+    refund_amount = #{record.refund_amount,jdbcType=BIGINT},
+    currency = #{record.currency,jdbcType=VARCHAR},
+    status = #{record.status,jdbcType=TINYINT},
+    channel_pay_order_no = #{record.channel_pay_order_no,jdbcType=VARCHAR},
+    refund_result = #{record.result,jdbcType=TINYINT},
+    client_ip = #{record.client_ip,jdbcType=VARCHAR},
+    device = #{record.device,jdbcType=VARCHAR},
+    remark_info = #{record.remark_info,jdbcType=VARCHAR},
+    channel_user = #{record.channel_user,jdbcType=VARCHAR},
+    channel_mch_id = #{record.channel_mch_id,jdbcType=VARCHAR},
+    channel_order_no = #{record.channel_order_no,jdbcType=VARCHAR},
+    channel_res_code = #{record.channel_res_code,jdbcType=VARCHAR},
+    channel_res_msg = #{record.channel_res_msg,jdbcType=VARCHAR},
+    extra = #{record.extra,jdbcType=VARCHAR},
+    notifyurl = #{record.notifyurl,jdbcType=VARCHAR},
+    param1 = #{record.param1,jdbcType=VARCHAR},
+    param2 = #{record.param2,jdbcType=VARCHAR},
+    expire_time = #{record.expire_time,jdbcType=VARCHAR},
+    refund_succ_time = #{record.refund_succ_time,jdbcType=VARCHAR},
+    create_time = #{record.create_time,jdbcType=VARCHAR},
+    update_time = #{record.update_time,jdbcType=VARCHAR},
+    reserve1 = #{record.reserve1,jdbcType=VARCHAR},
+    reserve2 = #{record.reserve2,jdbcType=VARCHAR},
+    reserve3 = #{record.reserve3,jdbcType=VARCHAR},
+    reserve4 = #{record.reserve4,jdbcType=VARCHAR},
+    reserve5 = #{record.reserve5,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -585,7 +585,7 @@
         channel_pay_order_no = #{channel_pay_order_no,jdbcType=VARCHAR},
       </if>
       <if test="result != null">
-        result = #{result,jdbcType=TINYINT},
+        refund_result = #{result,jdbcType=TINYINT},
       </if>
       <if test="client_ip != null">
         client_ip = #{client_ip,jdbcType=VARCHAR},
@@ -667,7 +667,7 @@
       currency = #{currency,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
       channel_pay_order_no = #{channel_pay_order_no,jdbcType=VARCHAR},
-      result = #{result,jdbcType=TINYINT},
+      refund_result = #{result,jdbcType=TINYINT},
       client_ip = #{client_ip,jdbcType=VARCHAR},
       device = #{device,jdbcType=VARCHAR},
       remark_info = #{remark_info,jdbcType=VARCHAR},

@@ -58,5 +58,18 @@ public class PayOrderServiceClient {
     public String payOrderPageByConfitionFallback(String jsonParam) {
         return "select payOrderPageByConfition Fallback error";
     }
+    
+    /**
+     * 删除单个支付订单信息
+     * @param jsonParam
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "deletePayOrderByPrimaryKeyFallback")
+    public String deletePayOrderByPrimaryKey(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/pay_order/deletePayOrderByPrimaryKey?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String deletePayOrderByPrimaryKeyFallback(String jsonParam) {
+        return "delete pay_order by primary_key Fallback error";
+    }
 
 }

@@ -29,6 +29,10 @@
     <result column="last_notify_time" jdbcType="VARCHAR" property="last_notify_time" />
     <result column="expire_time" jdbcType="VARCHAR" property="expire_time" />
     <result column="pay_succ_time" jdbcType="VARCHAR" property="pay_succ_time" />
+    <result column="branch_id" jdbcType="VARCHAR" property="branch_id" />
+    <result column="branch_name" jdbcType="VARCHAR" property="branch_name" />
+    <result column="staff_id" jdbcType="VARCHAR" property="staff_id" />
+    <result column="stall_name" jdbcType="VARCHAR" property="stall_name" />
     <result column="create_time" jdbcType="VARCHAR" property="create_time" />
     <result column="update_time" jdbcType="VARCHAR" property="update_time" />
     <result column="reserve1" jdbcType="VARCHAR" property="reserve1" />
@@ -101,7 +105,7 @@
     pay_order_id, mch_id, mch_order_no, channel_id, user_id, user_name, user_channel_account, 
     amount, currency, status, client_ip, device, subject, body, extra, channel_mch_id, 
     channel_order_no, res_code, res_msg, param1, param2, notify_url, notify_count, last_notify_time, 
-    expire_time, pay_succ_time, create_time, update_time, reserve1, reserve2, reserve3, 
+    expire_time, pay_succ_time, branch_id, branch_name, staff_id, stall_name, create_time, update_time, reserve1, reserve2, reserve3, 
     reserve4, reserve5
   </sql>
 
@@ -291,7 +295,8 @@
       channel_mch_id, channel_order_no, res_code, 
       res_msg, param1, param2, 
       notify_url, notify_count, last_notify_time, 
-      expire_time, pay_succ_time, create_time, 
+      expire_time, pay_succ_time, branch_id, branch_name, 
+      staff_id, stall_name, create_time, 
       update_time, reserve1, reserve2, 
       reserve3, reserve4, reserve5
       )
@@ -303,10 +308,11 @@
       #{channel_mch_id,jdbcType=VARCHAR}, #{channel_order_no,jdbcType=VARCHAR}, #{res_code,jdbcType=VARCHAR}, 
       #{res_msg,jdbcType=VARCHAR}, #{param1,jdbcType=VARCHAR}, #{param2,jdbcType=VARCHAR}, 
       #{notify_url,jdbcType=VARCHAR}, #{notify_count,jdbcType=VARCHAR}, #{last_notify_time,jdbcType=VARCHAR}, 
-      #{expire_time,jdbcType=VARCHAR}, #{pay_succ_time,jdbcType=VARCHAR}, #{create_time,jdbcType=VARCHAR}, 
-      #{update_time,jdbcType=VARCHAR}, #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR}, 
-      #{reserve3,jdbcType=VARCHAR}, #{reserve4,jdbcType=VARCHAR}, #{reserve5,jdbcType=VARCHAR}
-      )
+      #{expire_time,jdbcType=VARCHAR}, #{pay_succ_time,jdbcType=VARCHAR}, #{branch_id,jdbcType=VARCHAR}, 
+      #{branch_name,jdbcType=VARCHAR}, #{staff_id,jdbcType=VARCHAR}, #{stall_name,jdbcType=VARCHAR}, 
+      #{create_time,jdbcType=VARCHAR}, #{update_time,jdbcType=VARCHAR}, #{reserve1,jdbcType=VARCHAR}, 
+      #{reserve2,jdbcType=VARCHAR}, #{reserve3,jdbcType=VARCHAR}, #{reserve4,jdbcType=VARCHAR}, 
+      #{reserve5,jdbcType=VARCHAR} )
   </insert>
   <insert id="insertSelective" parameterType="org.epay.dal.dao.model.PayOrder">
     insert into epay_pay_order
@@ -388,6 +394,18 @@
       </if>
       <if test="pay_succ_time != null">
         pay_succ_time,
+      </if>
+      <if test="branch_id != null">
+        branch_id,
+      </if>
+      <if test="branch_name != null">
+        branch_name,
+      </if>
+      <if test="staff_id != null">
+        staff_id,
+      </if>
+      <if test="stall_name != null">
+        stall_name,
       </if>
       <if test="create_time != null">
         create_time,
@@ -489,6 +507,18 @@
       </if>
       <if test="pay_succ_time != null">
         #{pay_succ_time,jdbcType=VARCHAR},
+      </if>
+      <if test="branch_id != null">
+        #{branch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="branch_name != null">
+        #{branch_name,jdbcType=VARCHAR},
+      </if>
+      <if test="staff_id != null">
+        #{staff_id,jdbcType=VARCHAR},
+      </if>
+      <if test="stall_name != null">
+        #{stall_name,jdbcType=VARCHAR},
       </if>
       <if test="create_time != null">
         #{create_time,jdbcType=VARCHAR},
@@ -600,6 +630,18 @@
       <if test="record.pay_succ_time != null">
         pay_succ_time = #{record.pay_succ_time,jdbcType=VARCHAR},
       </if>
+      <if test="record.branch_id != null">
+        branch_id = #{record.branch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.branch_name != null">
+        branch_name = #{record.branch_name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staff_id != null">
+        staff_id = #{record.staff_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stall_name != null">
+        stall_name = #{record.stall_name,jdbcType=VARCHAR},
+      </if>
       <if test="record.create_time != null">
         create_time = #{record.create_time,jdbcType=VARCHAR},
       </if>
@@ -654,6 +696,10 @@
       last_notify_time = #{record.last_notify_time,jdbcType=VARCHAR},
       expire_time = #{record.expire_time,jdbcType=VARCHAR},
       pay_succ_time = #{record.pay_succ_time,jdbcType=VARCHAR},
+      branch_id = #{record.branch_id,jdbcType=VARCHAR},
+      branch_name = #{record.branch_name,jdbcType=VARCHAR},
+      staff_id = #{record.staff_id,jdbcType=VARCHAR},
+      stall_name = #{record.stall_name,jdbcType=VARCHAR},
       create_time = #{record.create_time,jdbcType=VARCHAR},
       update_time = #{record.update_time,jdbcType=VARCHAR},
       reserve1 = #{record.reserve1,jdbcType=VARCHAR},
@@ -743,6 +789,18 @@
       <if test="pay_succ_time != null">
         pay_succ_time = #{pay_succ_time,jdbcType=VARCHAR},
       </if>
+      <if test="branch_id != null">
+        branch_id = #{branch_id,jdbcType=VARCHAR},
+      </if>
+      <if test="branch_name != null">
+        branch_name = #{branch_name,jdbcType=VARCHAR},
+      </if>
+      <if test="staff_id != null">
+        staff_id = #{staff_id,jdbcType=VARCHAR},
+      </if>
+      <if test="stall_name != null">
+        stall_name = #{stall_name,jdbcType=VARCHAR},
+      </if>
       <if test="create_time != null">
         create_time = #{create_time,jdbcType=VARCHAR},
       </if>
@@ -794,6 +852,10 @@
       last_notify_time = #{last_notify_time,jdbcType=VARCHAR},
       expire_time = #{expire_time,jdbcType=VARCHAR},
       pay_succ_time = #{pay_succ_time,jdbcType=VARCHAR},
+      branch_id = #{branch_id,jdbcType=VARCHAR},
+      branch_name = #{branch_name,jdbcType=VARCHAR},
+      staff_id = #{staff_id,jdbcType=VARCHAR},
+      stall_name = #{stall_name,jdbcType=VARCHAR},
       create_time = #{create_time,jdbcType=VARCHAR},
       update_time = #{update_time,jdbcType=VARCHAR},
       reserve1 = #{reserve1,jdbcType=VARCHAR},

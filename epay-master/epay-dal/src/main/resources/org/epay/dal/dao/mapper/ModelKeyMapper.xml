@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.ModelKeyMapper" >
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.ModelKey" >
+    <id column="model_key_id" property="modelKeyId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="items_money" property="itemsMoney" jdbcType="VARCHAR" />
+    <result column="select1" property="select1" jdbcType="VARCHAR" />
+    <result column="select2" property="select2" jdbcType="VARCHAR" />
+    <result column="select3" property="select3" jdbcType="VARCHAR" />
+    <result column="select4" property="select4" jdbcType="VARCHAR" />
+    <result column="select5" property="select5" jdbcType="VARCHAR" />
+    <result column="select6" property="select6" jdbcType="VARCHAR" />
+    <result column="select7" property="select7" jdbcType="VARCHAR" />
+    <result column="select8" property="select8" jdbcType="VARCHAR" />
+    <result column="select9" property="select9" jdbcType="VARCHAR" />
+    <result column="select10" property="select10" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    model_key_id, user_id, items_money, select1, select2, select3, select4, select5, 
+    select6, select7, select8, select9, select10
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from epay_account_model_key
+    where model_key_id = #{modelKeyId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from epay_account_model_key
+    where model_key_id = #{modelKeyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.epay.dal.dao.model.ModelKey" >
+    insert into epay_account_model_key (model_key_id, user_id, items_money, 
+      select1, select2, select3, 
+      select4, select5, select6, 
+      select7, select8, select9, 
+      select10)
+    values (#{modelKeyId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{itemsMoney,jdbcType=VARCHAR}, 
+      #{select1,jdbcType=VARCHAR}, #{select2,jdbcType=VARCHAR}, #{select3,jdbcType=VARCHAR}, 
+      #{select4,jdbcType=VARCHAR}, #{select5,jdbcType=VARCHAR}, #{select6,jdbcType=VARCHAR}, 
+      #{select7,jdbcType=VARCHAR}, #{select8,jdbcType=VARCHAR}, #{select9,jdbcType=VARCHAR}, 
+      #{select10,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.ModelKey" >
+    insert into epay_account_model_key
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="modelKeyId != null" >
+        model_key_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="itemsMoney != null" >
+        items_money,
+      </if>
+      <if test="select1 != null" >
+        select1,
+      </if>
+      <if test="select2 != null" >
+        select2,
+      </if>
+      <if test="select3 != null" >
+        select3,
+      </if>
+      <if test="select4 != null" >
+        select4,
+      </if>
+      <if test="select5 != null" >
+        select5,
+      </if>
+      <if test="select6 != null" >
+        select6,
+      </if>
+      <if test="select7 != null" >
+        select7,
+      </if>
+      <if test="select8 != null" >
+        select8,
+      </if>
+      <if test="select9 != null" >
+        select9,
+      </if>
+      <if test="select10 != null" >
+        select10,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="modelKeyId != null" >
+        #{modelKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsMoney != null" >
+        #{itemsMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="select1 != null" >
+        #{select1,jdbcType=VARCHAR},
+      </if>
+      <if test="select2 != null" >
+        #{select2,jdbcType=VARCHAR},
+      </if>
+      <if test="select3 != null" >
+        #{select3,jdbcType=VARCHAR},
+      </if>
+      <if test="select4 != null" >
+        #{select4,jdbcType=VARCHAR},
+      </if>
+      <if test="select5 != null" >
+        #{select5,jdbcType=VARCHAR},
+      </if>
+      <if test="select6 != null" >
+        #{select6,jdbcType=VARCHAR},
+      </if>
+      <if test="select7 != null" >
+        #{select7,jdbcType=VARCHAR},
+      </if>
+      <if test="select8 != null" >
+        #{select8,jdbcType=VARCHAR},
+      </if>
+      <if test="select9 != null" >
+        #{select9,jdbcType=VARCHAR},
+      </if>
+      <if test="select10 != null" >
+        #{select10,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.ModelKey" >
+    update epay_account_model_key
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsMoney != null" >
+        items_money = #{itemsMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="select1 != null" >
+        select1 = #{select1,jdbcType=VARCHAR},
+      </if>
+      <if test="select2 != null" >
+        select2 = #{select2,jdbcType=VARCHAR},
+      </if>
+      <if test="select3 != null" >
+        select3 = #{select3,jdbcType=VARCHAR},
+      </if>
+      <if test="select4 != null" >
+        select4 = #{select4,jdbcType=VARCHAR},
+      </if>
+      <if test="select5 != null" >
+        select5 = #{select5,jdbcType=VARCHAR},
+      </if>
+      <if test="select6 != null" >
+        select6 = #{select6,jdbcType=VARCHAR},
+      </if>
+      <if test="select7 != null" >
+        select7 = #{select7,jdbcType=VARCHAR},
+      </if>
+      <if test="select8 != null" >
+        select8 = #{select8,jdbcType=VARCHAR},
+      </if>
+      <if test="select9 != null" >
+        select9 = #{select9,jdbcType=VARCHAR},
+      </if>
+      <if test="select10 != null" >
+        select10 = #{select10,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where model_key_id = #{modelKeyId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.ModelKey" >
+    update epay_account_model_key
+    set user_id = #{userId,jdbcType=VARCHAR},
+      items_money = #{itemsMoney,jdbcType=VARCHAR},
+      select1 = #{select1,jdbcType=VARCHAR},
+      select2 = #{select2,jdbcType=VARCHAR},
+      select3 = #{select3,jdbcType=VARCHAR},
+      select4 = #{select4,jdbcType=VARCHAR},
+      select5 = #{select5,jdbcType=VARCHAR},
+      select6 = #{select6,jdbcType=VARCHAR},
+      select7 = #{select7,jdbcType=VARCHAR},
+      select8 = #{select8,jdbcType=VARCHAR},
+      select9 = #{select9,jdbcType=VARCHAR},
+      select10 = #{select10,jdbcType=VARCHAR}
+    where model_key_id = #{modelKeyId,jdbcType=VARCHAR}
+  </update>
+</mapper>

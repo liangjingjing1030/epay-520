@@ -186,6 +186,34 @@ public class PayOrder implements Serializable {
     private String pay_succ_time;
 
     /**
+     * 拓展网点号
+     *
+     * @mbg.generated
+     */
+    private String branch_id;
+
+    /**
+     * 拓展网点名称
+     *
+     * @mbg.generated
+     */
+    private String branch_name;
+
+    /**
+     * 拓展员工号
+     *
+     * @mbg.generated
+     */
+    private String staff_id;
+
+    /**
+     * 拓展员工名称
+     *
+     * @mbg.generated
+     */
+    private String stall_name;
+
+    /**
      * 创建时间
      *
      * @mbg.generated
@@ -233,8 +261,10 @@ public class PayOrder implements Serializable {
      * @mbg.generated
      */
     private String reserve5;
+
+    private static final long serialVersionUID = 1L;
     
-    //add by HappyDan ====================================Start
+//add by HappyDan ====================================Start
     
     private String tradeType;//交易类型
     private String start_time;//开始时间
@@ -277,9 +307,7 @@ public class PayOrder implements Serializable {
 		this.offset = offset;
 	}
 	
-	//add by HappyDan ====================================End
-
-	private static final long serialVersionUID = 1L;
+//add by HappyDan ====================================End
 
     public String getPay_order_id() {
         return pay_order_id;
@@ -489,6 +517,38 @@ public class PayOrder implements Serializable {
         this.pay_succ_time = pay_succ_time == null ? null : pay_succ_time.trim();
     }
 
+    public String getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(String branch_id) {
+        this.branch_id = branch_id == null ? null : branch_id.trim();
+    }
+
+    public String getBranch_name() {
+        return branch_name;
+    }
+
+    public void setBranch_name(String branch_name) {
+        this.branch_name = branch_name == null ? null : branch_name.trim();
+    }
+
+    public String getStaff_id() {
+        return staff_id;
+    }
+
+    public void setStaff_id(String staff_id) {
+        this.staff_id = staff_id == null ? null : staff_id.trim();
+    }
+
+    public String getStall_name() {
+        return stall_name;
+    }
+
+    public void setStall_name(String stall_name) {
+        this.stall_name = stall_name == null ? null : stall_name.trim();
+    }
+
     public String getCreate_time() {
         return create_time;
     }
@@ -577,6 +637,10 @@ public class PayOrder implements Serializable {
         sb.append(", last_notify_time=").append(last_notify_time);
         sb.append(", expire_time=").append(expire_time);
         sb.append(", pay_succ_time=").append(pay_succ_time);
+        sb.append(", branch_id=").append(branch_id);
+        sb.append(", branch_name=").append(branch_name);
+        sb.append(", staff_id=").append(staff_id);
+        sb.append(", stall_name=").append(stall_name);
         sb.append(", create_time=").append(create_time);
         sb.append(", update_time=").append(update_time);
         sb.append(", reserve1=").append(reserve1);
@@ -626,6 +690,10 @@ public class PayOrder implements Serializable {
             && (this.getLast_notify_time() == null ? other.getLast_notify_time() == null : this.getLast_notify_time().equals(other.getLast_notify_time()))
             && (this.getExpire_time() == null ? other.getExpire_time() == null : this.getExpire_time().equals(other.getExpire_time()))
             && (this.getPay_succ_time() == null ? other.getPay_succ_time() == null : this.getPay_succ_time().equals(other.getPay_succ_time()))
+            && (this.getBranch_id() == null ? other.getBranch_id() == null : this.getBranch_id().equals(other.getBranch_id()))
+            && (this.getBranch_name() == null ? other.getBranch_name() == null : this.getBranch_name().equals(other.getBranch_name()))
+            && (this.getStaff_id() == null ? other.getStaff_id() == null : this.getStaff_id().equals(other.getStaff_id()))
+            && (this.getStall_name() == null ? other.getStall_name() == null : this.getStall_name().equals(other.getStall_name()))
             && (this.getCreate_time() == null ? other.getCreate_time() == null : this.getCreate_time().equals(other.getCreate_time()))
             && (this.getUpdate_time() == null ? other.getUpdate_time() == null : this.getUpdate_time().equals(other.getUpdate_time()))
             && (this.getReserve1() == null ? other.getReserve1() == null : this.getReserve1().equals(other.getReserve1()))
@@ -665,6 +733,10 @@ public class PayOrder implements Serializable {
         result = prime * result + ((getLast_notify_time() == null) ? 0 : getLast_notify_time().hashCode());
         result = prime * result + ((getExpire_time() == null) ? 0 : getExpire_time().hashCode());
         result = prime * result + ((getPay_succ_time() == null) ? 0 : getPay_succ_time().hashCode());
+        result = prime * result + ((getBranch_id() == null) ? 0 : getBranch_id().hashCode());
+        result = prime * result + ((getBranch_name() == null) ? 0 : getBranch_name().hashCode());
+        result = prime * result + ((getStaff_id() == null) ? 0 : getStaff_id().hashCode());
+        result = prime * result + ((getStall_name() == null) ? 0 : getStall_name().hashCode());
         result = prime * result + ((getCreate_time() == null) ? 0 : getCreate_time().hashCode());
         result = prime * result + ((getUpdate_time() == null) ? 0 : getUpdate_time().hashCode());
         result = prime * result + ((getReserve1() == null) ? 0 : getReserve1().hashCode());

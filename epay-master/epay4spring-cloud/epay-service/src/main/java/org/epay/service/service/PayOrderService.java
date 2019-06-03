@@ -130,6 +130,10 @@ public class PayOrderService {
     public int updateStatus(PayOrder payOrder) {
     	return payOrderMapper.updateByPrimaryKey(payOrder);
     }
+    
+    public int deletePayOrderByPrimaryKey(String pay_order_id) {
+    	return payOrderMapper.deleteByPrimaryKey(pay_order_id);
+    }
 
     /**
      * 查询订单（状态为已缴费）

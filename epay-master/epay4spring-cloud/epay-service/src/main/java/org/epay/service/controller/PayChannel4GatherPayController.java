@@ -3,6 +3,7 @@ package org.epay.service.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -11,8 +12,12 @@ import org.apache.commons.lang.StringUtils;
 import org.epay.common.util.EPayUtil;
 import org.epay.common.util.MyBase64;
 import org.epay.common.util.MyLog;
+import org.epay.dal.dao.model.CustomerInfo;
+import org.epay.dal.dao.model.MchInfo;
 import org.epay.dal.dao.model.PayOrder;
+import org.epay.service.service.CustomerInfoService;
 import org.epay.service.service.GatherPayService;
+import org.epay.service.service.MchInfoService;
 import org.epay.service.service.PayOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +43,12 @@ public class PayChannel4GatherPayController{
 
     @Resource
     private GatherPayService gatherPayService;
+    
+    @Autowired
+    private MchInfoService mchInfoService;
+    
+    @Autowired
+    private CustomerInfoService customerInfoService;
 
     /**
      * 方法名: 发起支付，连接聚合支付
@@ -82,13 +93,20 @@ public class PayChannel4GatherPayController{
                 return response.toJSONString();
             }
             buildPayOrderRequest.remove("code");
+            String pay_order_id = (String) buildPayOrderRequest.get("merOrderNo");
             String requestParam = JSON.toJSONString(buildPayOrderRequest);
             //组装发送往支付平台数据====================================End
             
             //发送数据到支付平台支付====================================Start
+            String mweb_url = "";
             try {
             	String result = gatherPayService.sendPayRequest(requestParam);
-            	if(!"SUCCESS".equals(result)) {
+            	JSONObject object = JSONObject.parseObject(result);
+        		String retCode = object.getString("retCode");// 支付结果代码
+        		mweb_url = object.getString("mweb_url");
+            	if(!"SUCCESS".equals(retCode)) {
+            		int i = payOrderService.deletePayOrderByPrimaryKey(pay_order_id);
+            		System.out.println("=============支付失败，删除订单条数为：" + i);
             		retHeader.put("request_channel", paramObj.getString("channel_id"));
                 	retHeader.put("retCode", "0007");
                 	retHeader.put("retMsg", "订单支付系统调用处理异常");
@@ -105,6 +123,7 @@ public class PayChannel4GatherPayController{
             //发送数据到支付平台支付====================================End
             
             //更新支付结果到数据库表====================================Start
+            paramObj.remove("res_key");
             PayOrder payOlder = JSON.parseObject(paramObj.toJSONString(), PayOrder.class);
             payOlder.setPay_order_id(paramObj.getString("pay_order_id"));
             payOlder.setStatus((byte)4);
@@ -119,12 +138,46 @@ public class PayChannel4GatherPayController{
             	response.put("response_header", retHeader);
                 return response.toJSONString();
             }
+            //更新支付结果到数据库表====================================End
+            
+            //将客户对应信息存入数据库====================================Start
+            String mch_id = payOlder.getMch_id();
+            String user_id = payOlder.getUser_id();
+            String user_name = payOlder.getUser_name();
+            String user_channel_account = payOlder.getUser_channel_account();
+            MchInfo mchInfo = mchInfoService.selectMchInfoByMchId(mch_id);
+            String mch_city = mchInfo.getMch_city();
+            String mch_range = mchInfo.getMch_range();
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddHHmmss");
+        	String myDate1 = format1.format(new Date());
+        	CustomerInfo customerInfo = new CustomerInfo();
+        	customerInfo.setMch_id(mch_id);
+        	customerInfo.setMch_city(mch_city);
+        	customerInfo.setMch_range(mch_range);
+        	customerInfo.setUser_id(user_id);
+        	customerInfo.setUser_name(user_name);
+        	customerInfo.setUser_channel_account(user_channel_account);
+        	customerInfo.setCreate_time(myDate1);
+        	List<CustomerInfo> customerInfos = customerInfoService.selectCustomerInfoByPrimaryKey(customerInfo);
+        	CustomerInfo customeer = customerInfos.get(0);
+        	if(customeer == null) {
+        		int i = customerInfoService.createCustomerInfo(customerInfo);
+            	if(i <= 0) {
+                	retHeader.put("request_channel", paramObj.getString("channel_id"));
+                	retHeader.put("retCode", "0118");
+                	retHeader.put("retMsg", "添加客户信息失败");
+                	response.put("response_header", retHeader);
+                    return response.toJSONString();
+                }
+        	}
+            //将客户对应信息存入数据库====================================End
             
             retHeader.put("request_channel", paramObj.getString("channel_id"));
         	retHeader.put("retCode", "SUCCESS");
         	retHeader.put("retMsg", "订单正在支付中");
         	response.put("response_header", retHeader);
         	retBody.put("pay_order_id", paramObj.getString("pay_order_id"));
+        	retBody.put("mweb_url", mweb_url);
         	response.put("response_body", retBody);
         	
             _log.info("{} >>> 支付订单更新数量", result);

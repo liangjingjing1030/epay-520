@@ -74,5 +74,33 @@ public class AccountBookServiceClient {
     public String exportMchCheckOutDetailFallback(String jsonParam) {
         return "error";
     }
+    
+    /**
+     * 创建支付订单对应的账单信息
+     * @param jsonParam
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "createAccountBookFallback")
+    public String createAccountBook(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/account_book/createAccountBook?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
 
+    public String createAccountBookFallback(String jsonParam) {
+        return "error";
+    }
+
+    /**
+     * 根据账单号删除账单信息
+     * @param jsonParam
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "deleteAccountBookByPrimaryKeyFallback")
+    public String deleteAccountBookByPrimaryKey(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/account_book/deleteAccountBookByPrimaryKey?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+
+    public String deleteAccountBookByPrimaryKeyFallback(String jsonParam) {
+        return "error";
+    }
+    
 }

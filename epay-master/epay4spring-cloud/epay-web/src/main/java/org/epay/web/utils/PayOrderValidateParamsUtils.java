@@ -156,6 +156,10 @@ public class PayOrderValidateParamsUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
     	String myDate = format.format(new Date());
         payOrder.put("create_time", myDate);
+        payOrder.put("branch_id", mchInfo.getString("branch_id"));
+        payOrder.put("branch_name", mchInfo.getString("branch_name"));
+        payOrder.put("staff_id", mchInfo.getString("staff_id"));
+        payOrder.put("stall_name", mchInfo.getString("stall_name"));
         
         if("MGR".equals(request_channel)) {
         	//商户请求私钥

@@ -8,18 +8,18 @@ import org.epay.common.util.DateUtils;
 import org.epay.common.util.MyBase64;
 import org.epay.common.util.MyLog;
 import org.epay.dal.dao.mapper.AccountBookMapper;
-import org.epay.dal.dao.model.AccountBook;
-import org.epay.dal.dao.model.AccountFile;
-import org.epay.dal.dao.model.AccountFileForCount;
-import org.epay.dal.dao.model.Activity;
+import org.epay.dal.dao.model.*;
 import org.epay.service.service.AccountBookService;
 import org.epay.service.service.ActivityService;
 import org.epay.service.service.BillService;
+import org.epay.service.service.MchInfoService;
+import org.epay.service.utils.MakeFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -38,6 +38,12 @@ public class BillServiceController {
 
     @Autowired
     private AccountBookService accountBookService;
+
+    @Autowired
+    private MchInfoService mchInfoService;
+    
+    @Autowired
+    private MakeFile makeFile;
 
     @Autowired
     private ActivityService activityService;
@@ -517,7 +523,7 @@ public class BillServiceController {
     @RequestMapping(value = "/bill/importAccountFile")
     public String importAccountFile(@RequestParam String jsonParam) {
         _log.info("importAccountFile << {}", jsonParam);
-
+        String mchId = "";
         //String param = new String(MyBase64.decode(jsonParam));
         JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
         // 1.json转bean对象
@@ -580,6 +586,7 @@ public class BillServiceController {
                 }
             }
             accountBookList.add(accountBook);
+            mchId = accountBook.getMch_id();
         }
 
 
@@ -592,6 +599,17 @@ public class BillServiceController {
         retObj.put("result", importOK);
 
         _log.info("result:{}", retObj.toJSONString());
+        
+        MchInfo mchInfo = mchInfoService.selectMchInfoByMchId(mchId);
+        String mch_range = mchInfo.getMch_range();
+        try {
+			String retFile = makeFile.makeFile(mchId, mch_range);
+			System.out.println("生成文件结果==========" + retFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         return retObj.toJSONString();
     }
     // 导入账单end——————————————————————————————————————————————————————————————————————————
