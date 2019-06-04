@@ -7,6 +7,7 @@ import org.epay.common.util.MyBase64;
 import org.epay.common.util.MyLog;
 import org.epay.dal.dao.model.AccountFile;
 import org.epay.dal.dao.model.MchCheckOut;
+import org.epay.dal.dao.model.MchCheckOutDetail;
 import org.epay.dal.dao.model.RefundOrder;
 import org.epay.service.service.MchChannelService;
 import org.epay.service.service.MchCheckOutService;
@@ -54,10 +55,9 @@ public class MchCheckOutServiceController {
         }
         JSONObject object = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
         String mch_id  = "";		// 商户ID
-        String items_id  = "";		// 项目编号
+        String pay_channel  = "";	// 支付渠道
         String start_time = "";		// 开始时间
         String end_time = "";		// 结束时间
-        String settle_status = "";	// 结算状态
         String startIndex = "";		// 页码
         String pageSize = "";		// 每页数量
         
@@ -76,9 +76,9 @@ public class MchCheckOutServiceController {
             return retObj.toJSONString();
 		}
         try {
-            items_id = object.getString("items_id").trim();// 项目编号
+            pay_channel = object.getString("pay_channel").trim();//
 		} catch (Exception e) {
-            items_id = "";// 项目编号
+            pay_channel = "";//
 		}
         try {
         	start_time = object.getString("start_time").trim();// 开始时间
@@ -89,11 +89,6 @@ public class MchCheckOutServiceController {
         	end_time = object.getString("end_time").trim();// 结束时间
 		} catch (Exception e) {
 			end_time = "";// 结束时间
-		}
-        try {
-            settle_status = object.getString("settle_status").trim();// 结算状态
-		} catch (Exception e) {
-            settle_status = "";// 结算状态
 		}
         try {
             startIndex = object.getString("startIndex").trim();// 页码
@@ -108,10 +103,9 @@ public class MchCheckOutServiceController {
 
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("mch_id", mch_id);
-        conditionMap.put("items_id", items_id);
+        conditionMap.put("pay_channel", pay_channel);
         conditionMap.put("start_time", start_time);
         conditionMap.put("end_time", end_time);
-        conditionMap.put("settle_status", settle_status);
         conditionMap.put("startIndex", Integer.parseInt(startIndex));
         conditionMap.put("pageSize", Integer.parseInt(pageSize));
 
@@ -126,12 +120,12 @@ public class MchCheckOutServiceController {
         }
 
         retObj.put("total", total);
-        List<MchCheckOut> mchCheckOutList = (List<MchCheckOut>) dataMap.get("pageList");
+        List<MchCheckOutDetail> mchCheckOutList = (List<MchCheckOutDetail>) dataMap.get("pageList");
         retObj.put("count", mchCheckOutList.size());
         int i = 1;
         // 遍历list
-        for(MchCheckOut mchCheckOut : mchCheckOutList) {
-            retObj.put("result" + (i++), JSON.toJSON(mchCheckOut));
+        for(MchCheckOutDetail mchCheckOutDetail : mchCheckOutList) {
+            retObj.put("result" + (i++), JSON.toJSON(mchCheckOutDetail));
         }
 
         _log.info("result:{}", retObj.toJSONString());

@@ -17,16 +17,27 @@
     <result column="value9" property="value9" jdbcType="VARCHAR" />
     <result column="value10" property="value10" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     model_value_id, model_key_id, user_id_value, items_money_value, value1, value2, value3, 
     value4, value5, value6, value7, value8, value9, value10
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from epay_account_model_value
     where model_value_id = #{modelValueId,jdbcType=VARCHAR}
   </select>
+
+  <!--根据模板主键与唯一标识查询-->
+  <select id="selectByModelKeyIdAndUserId" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from epay_account_model_value
+    where model_key_id = #{modelKeyId} and user_id_value = #{userIdValue}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from epay_account_model_value
     where model_value_id = #{modelValueId,jdbcType=VARCHAR}

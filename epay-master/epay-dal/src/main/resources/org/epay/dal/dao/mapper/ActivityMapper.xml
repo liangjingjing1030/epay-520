@@ -10,6 +10,7 @@
     <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="start_time" property="startTime" jdbcType="VARCHAR" />
     <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="activity_status" property="activityStatus" jdbcType="TINYINT" />
     <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
     <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
     <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
@@ -19,7 +20,7 @@
 
   <sql id="Base_Column_List" >
     activity_id, items_id, mch_id, activity_name, activity_type, create_time, start_time,
-    end_time, reserve1, reserve2, reserve3, reserve4, reserve5
+    end_time, activity_status, reserve1, reserve2, reserve3, reserve4, reserve5
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -29,30 +30,47 @@
     where activity_id = #{activityId,jdbcType=VARCHAR}
   </select>
 
-  <!--根据商户号查询所有活动的项目编号-->
+  <!--根据商户号查询所有活动的项目编号,只查询状态可用的-->
   <select id="selectByMchId" resultType="java.lang.String" >
     select
     items_id
     from epay_activity
+    where mch_id = #{mch_id} and activity_status = 1
+  </select>
+
+  <!--分页总数-->
+  <select id="getTotalByMchId" resultType="java.lang.Integer" >
+    select
+    count(*)
+    from epay_activity
     where mch_id = #{mch_id}
+  </select>
+
+  <!--分页查询-->
+  <select id="getPageList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from epay_activity
+    where mch_id = #{mch_id}
+    order by create_time desc
+    limit #{start_index}, #{page_size}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from epay_activity
     where activity_id = #{activityId,jdbcType=VARCHAR}
   </delete>
-
   <insert id="insert" parameterType="org.epay.dal.dao.model.Activity" >
     insert into epay_activity (activity_id, items_id, mch_id,
       activity_name, activity_type, create_time,
-      start_time, end_time, reserve1,
-      reserve2, reserve3, reserve4,
-      reserve5)
+      start_time, end_time, activity_status,
+      reserve1, reserve2, reserve3,
+      reserve4, reserve5)
     values (#{activityId,jdbcType=VARCHAR}, #{itemsId,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR},
       #{activityName,jdbcType=VARCHAR}, #{activityType,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
-      #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{reserve1,jdbcType=VARCHAR},
-      #{reserve2,jdbcType=VARCHAR}, #{reserve3,jdbcType=VARCHAR}, #{reserve4,jdbcType=VARCHAR},
-      #{reserve5,jdbcType=VARCHAR})
+      #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{activityStatus,jdbcType=TINYINT},
+      #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR}, #{reserve3,jdbcType=VARCHAR},
+      #{reserve4,jdbcType=VARCHAR}, #{reserve5,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.epay.dal.dao.model.Activity" >
     insert into epay_activity
@@ -80,6 +98,9 @@
       </if>
       <if test="endTime != null" >
         end_time,
+      </if>
+      <if test="activityStatus != null" >
+        activity_status,
       </if>
       <if test="reserve1 != null" >
         reserve1,
@@ -122,6 +143,9 @@
       <if test="endTime != null" >
         #{endTime,jdbcType=VARCHAR},
       </if>
+      <if test="activityStatus != null" >
+        #{activityStatus,jdbcType=TINYINT},
+      </if>
       <if test="reserve1 != null" >
         #{reserve1,jdbcType=VARCHAR},
       </if>
@@ -163,6 +187,9 @@
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=VARCHAR},
       </if>
+      <if test="activityStatus != null" >
+        activity_status = #{activityStatus,jdbcType=TINYINT},
+      </if>
       <if test="reserve1 != null" >
         reserve1 = #{reserve1,jdbcType=VARCHAR},
       </if>
@@ -190,6 +217,7 @@
       create_time = #{createTime,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=VARCHAR},
       end_time = #{endTime,jdbcType=VARCHAR},
+      activity_status = #{activityStatus,jdbcType=TINYINT},
       reserve1 = #{reserve1,jdbcType=VARCHAR},
       reserve2 = #{reserve2,jdbcType=VARCHAR},
       reserve3 = #{reserve3,jdbcType=VARCHAR},

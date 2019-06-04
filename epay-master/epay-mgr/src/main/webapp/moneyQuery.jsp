@@ -55,7 +55,51 @@
                 clearQuery();
             });
 
+            queryChannelInfo();
+
+            // 汇总统计
+            $("#summaryBtn").click(function () {
+                $.get(
+                    "bill/moneySummary",
+                    function(json){
+                        if(json.errorMessage == "OK"){
+                            var html = "";
+                            html += '<tr>';
+                            html += '<td>账单汇总金额:'+json.dealMoney+'元</td>';
+                            html += '</tr>';
+                            html += '<tr>';
+                            html += '<td>银行应结算金额:'+json.checkoutMoney+'元</td>';
+                            html += '</tr>';
+                            $("#bookTbody3").html(html);
+                            // 显示模态窗口
+                            $("#summaryModal").modal("show");
+                        }else{
+                            alert(json.errorMessage);
+                        }
+                    }
+                );
+            });
+
         });//————————————————————————————————————————————————————————————————————————————————————————
+
+        // 进入页面查询渠道信息
+        function queryChannelInfo() {
+            $.ajax({
+                type: "get",
+                url: "mch/queryMchChannel",
+                success: function (jsonObject) {
+                    if(jsonObject.errorMessage == "OK") {
+                        var html="<option value='' disabled selected hidden style='height: 30px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=全部渠道=</option>";
+                        $.each(jsonObject.mchChannelList, function(i,n){
+                            html += "<option value="+n.channel_id+" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+n.channel_name+"</option>"
+                        });
+                        $("#pay_channel").html(html);
+                    } else {
+                        alert(jsonObject.errorMessage);
+                    }
+                }
+            });
+        }
 
         function checkLogin() {
             var loginName = "${user.loginName}"
@@ -68,23 +112,23 @@
         function clearQuery() {
             $("#start_time").val("");
             $("#end_time").val("");
-            $("#items_id").val("");
+            queryChannelInfo();
         }
 
+        // 结算显示
         function display(pageNo, pageSize){
-            var items_id = $.trim($("#items_id").val());
+                var myselect = document.getElementById("pay_channel");
+                var index=myselect.selectedIndex;
+            var pay_channel = myselect.options[index].value;
+            // alert(pay_channel);
             var start_time = $.trim($("#start_time").val());
             var end_time = $.trim($("#end_time").val());
-                /*var myselect = document.getElementById("moneyStates");
-                var index=myselect.selectedIndex;
-            var moneyStates = myselect.options[index].value;*/
             $.get(
                 "count/countPage",
                 {
-                    "items_id" : items_id,
+                    "pay_channel" : pay_channel,
                     "start_time" : start_time,
                     "end_time" : end_time,
-                    // "moneyStates" : moneyStates,
                     "pageNo" : pageNo,
                     "pageSize" : pageSize
                 },
@@ -94,8 +138,7 @@
                         $.each(json.mchCheckOutList, function(i, n){
                             html+='<tr>';
                             html+='<td>'+(i + 1)+'</td>';
-                            html+='<td>'+(n.itemsId == null ? "" : n.itemsId)+'</td>';
-                            // html+='<td>'+(n.channelName == null ? "" : n.channelName)+'</td>';
+                            html+='<td>'+(n.payChannel == null ? "" : n.payChannel)+'</td>';
                             html+='<td>'+(n.currency == null ? "" : n.currency)+'</td>';
                             html+='<td>'+(n.dealMoney == null ? "" : n.dealMoney)+'元</td>';
                             html+='<td>'+(n.checkoutMoney == null ? "" : n.checkoutMoney)+'元</td>';
@@ -103,7 +146,7 @@
                             html+='<td>'+(n.checkoutDate == null ? "" : n.checkoutDate)+'</td>';
                             //结算状态,0-未结算,1-结算成功,2-结算失败
                             html += '<td>'+(n.settleStatus == 0 ? '未结算' : n.settleStatus == 1 ? '结算成功' : '结算失败')+'</td>';
-                            html += '<td><input id="detail"'+n.mchCheckoutId+' '+(n.settleStatus == 1 ? "" : "disabled")+' type="button" onclick=detail("'+n.itemsId+'","'+ 1 +'","'+ 10 +'") name="id" class="btn btn-danger" value="明 细" style="height: 25px;border-width:0px;background-color: '+(n.settleStatus == 1  ? "#135ca1" : "darkgray")+'"></td>';
+                            // html += '<td><input id="detail"'+n.mchCheckoutId+' '+(n.settleStatus == 1 ? "" : "disabled")+' type="button" onclick=detail("'+n.itemsId+'","'+ 1 +'","'+ 10 +'") name="id" class="btn btn-danger" value="明 细" style="height: 25px;border-width:0px;background-color: '+(n.settleStatus == 1  ? "#135ca1" : "darkgray")+'"></td>';
                             html+='</tr>';
                         });
                         $("#billTbody").html(html);
@@ -230,6 +273,42 @@
 
 <body>
 
+<!-- 汇总数据模态窗口 -->
+<div class="modal fade" id="summaryModal" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 30%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">汇总统计</h4>
+            </div>
+
+            <div class="modal-body" style="height: 150px;margin-top: -10px;">
+
+                <div style="margin-top: 0px;">
+                    <table class="table table-hover">
+                        <thead align="center">
+                        <tr style="color: #B3B3B3;">
+                            <th style="text-align: center;">当日数据统计</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bookTbody3" align="center">
+
+                        </tbody>
+                    </table>
+                    <div id="bookPagination3"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style="left: 200px; bottom: -400px">
+                <%--<button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #135ca1;color: white;">关闭</button>--%>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 结算明细的模态窗口 -->
 <div class="modal fade" id="checkOutDetailModal" role="dialog">
     <div class="modal-dialog" role="document" style="width: 80%;">
@@ -295,10 +374,19 @@
     <form class="form-inline" role="form">
         <%--<div class="form-group" style="margin-right: 10px;">
             <div class="input-group">
-                <div class="input-group-addon" style="width: 90px;">项目编号</div>
-                <input class="form-control" type="text" id="items_id" placeholder="">
+                <div class="input-group-addon" style="width: 90px;">支付渠道</div>
+                <input class="form-control" type="text" id="pay_channel" placeholder="">
             </div>
         </div>--%>
+
+        <div class="form-group" style="margin-right: 10px;">
+            <div class="input-group">
+                <div class="input-group-addon" style="width: 90px;">支付渠道</div>
+                <select id="pay_channel" lay-search="" style="width: 200px;height: 35px;border-radius: 3px;">
+                    <%--<option value='' disabled selected hidden style='height: 30px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=全部渠道=</option>--%>
+                </select>
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="input-group">
@@ -337,6 +425,9 @@
         <button type="button" class="btn btn-default" id="clearBtn" style="width: 110px;background-color: #d9534f;color: white;margin-top: 0px;">
             <span class="glyphicon glyphicon-trash"></span>&nbsp;清空条件
         </button>
+        <button type="button" class="btn btn-default" id="summaryBtn" style="width: 110px;background-color: #135ca1;color: white;margin-top: 2px;">
+            <span class="glyphicon glyphicon-search"></span>&nbsp;汇总统计
+        </button>
     </form>
 </div>
 
@@ -351,15 +442,14 @@
         <thead align="center">
         <tr>
             <th style="text-align: center;">序号</th>
-            <th style="text-align: center;">项目编号</th>
-            <%--<th style="text-align: center;">渠道名称</th>--%>
+            <th style="text-align: center;">支付渠道</th>
             <th style="text-align: center;">货币种类</th>
             <th style="text-align: center;">交易金额</th>
             <th style="text-align: center;">结算金额</th>
             <th style="text-align: center;">结算费率</th>
             <th style="text-align: center;">结算日期</th>
             <th style="text-align: center;">结算状态</th>
-            <th style="text-align: center;">操作</th>
+            <%--<th style="text-align: center;">操作</th>--%>
         </tr>
         </thead>
         <tbody id="billTbody" align="center">

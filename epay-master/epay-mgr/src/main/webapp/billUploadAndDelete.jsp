@@ -53,9 +53,6 @@
                 pickerPosition : "bottom-right"
             });
 
-            //活动名称自动获得焦点
-            $("#activity_name").focus();
-
             display(1, 5);
 
             checkLogin();
@@ -63,11 +60,6 @@
             /*// 点击导入账单后，关闭模态窗口，防止重复点击
             $("#importFileBtn").click(function () {
                 $("#importClueModal").modal("hide");
-            });
-
-            // 点击创建活动后，关闭模态窗口，防止重复点击
-            $("#createActivityBtn").click(function () {
-                $("#createActivityModal").modal("hide");
             });*/
 
             // 下载账单模板
@@ -79,11 +71,11 @@
             $("#firstCheckBox").click(function(){
                 $(":checkbox[name='id']").prop("checked", this.checked);
             });
-
             $("#billTbody").on("click", $(":checkbox[name='id']"), function(){
                 $("#firstCheckBox").prop("checked", $(":checkbox[name='id']:checked").size() == $(":checkbox[name='id']").size() ? "checked" : "");
             });
 
+            // 删除账单
             $("#deleteBtn").click(function(){
                 var checked = $(":checkbox[name='id']:checked");
                 if(checked.size() == 0){
@@ -116,36 +108,6 @@
                                 }
                             } else {
                                 alert(json.errorMessage);
-                            }
-                        }
-                    );
-                }
-            });
-
-            // 创建活动
-            $("#createActivityBtn").click(function () {
-                if(checkActivityName() && checkItemsId() && checkTime()) {
-                    var activity_name = $.trim($("#activity_name").val());
-                    var items_id = $.trim($("#items_id").val());
-                    var activity_type = $.trim($("#activity_type").val());
-                    var start_time = $.trim($("#start_time").val());
-                    var end_time = $.trim($("#end_time").val());
-                    $.post(
-                        "bill/createActivity",
-                        {
-                            "activity_name": activity_name,
-                            "items_id": items_id,
-                            "activity_type": activity_type,
-                            "start_time": start_time,
-                            "end_time": end_time
-                        },
-                        function(json){
-                            if(json.ok){
-                                alert("创建活动成功");
-                                $("#createActivityModal").modal("hide");
-                            }else{
-                                alert(json.errorMessage);
-                                $("#createActivityModal").modal("hide");
                             }
                         }
                     );
@@ -320,6 +282,7 @@
             }*/
         }
 
+        // 显示账单文件
         function display(pageNo, pageSize){
             $.get(
                 "bill/accountFilePage",
@@ -373,50 +336,6 @@
                     }
                 }
             );
-        }
-
-        // 检查活动名称
-        function checkActivityName() {
-            var activity_name = $.trim($("#activity_name").val());
-
-            if("" == activity_name) {
-                $("#activity_errorMsg").html("请输入活动名称");
-                return false;
-            } else {
-                $("#activity_errorMsg").html("");
-            }
-            return true;
-        }
-        // 检查活动编号
-        function checkItemsId() {
-            var items_id = $.trim($("#items_id").val());
-
-            if("" == items_id) {
-                $("#activity_errorMsg").html("请输入活动编号");
-                return false;
-            } else {
-                $("#activity_errorMsg").html("");
-            }
-            return true;
-        }
-        // 检查时间
-        function checkTime() {
-            var start_time = $.trim($("#start_time").val());
-            var end_time = $.trim($("#end_time").val());
-
-            if("" == start_time) {
-                $("#activity_errorMsg").html("请选择活动开始时间");
-                return false;
-            } else if("" == end_time) {
-                $("#activity_errorMsg").html("请选择活动结束时间");
-                return false;
-            } else if(start_time > end_time) {
-                $("#activity_errorMsg").html("活动结束时间必须晚于开始时间");
-                return false;
-            } else {
-                $("#activity_errorMsg").html("");
-            }
-            return true;
         }
 
         // 检查模板编辑——唯一标识
@@ -1014,64 +933,9 @@
     </div>
 </div>
 
-<!-- 创建活动的模态窗口 -->
-<div class="modal fade" id="createActivityModal" role="dialog">
-    <div class="modal-dialog" role="document" style="width: 35%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">×</span>
-                </button>
-                <h4 class="modal-title">创建活动</h4>
-            </div>
-
-            <div class="modal-body" style="height: 300px; float: left;">
-
-                <div  style="top: 100px;left: 70px;width: 350px">
-
-                    <div class="layui-form-item">
-                        <span class="nameSpan"><span class="xingSpan">✲</span>活动名称:</span>
-                        <input id="activity_name" type="text" autocomplete="off" placeholder="*请输入活动名称" class="layui-input">
-                    </div>
-
-                    <div class="layui-form-item">
-                        <span class="nameSpan">活动类型:</span>
-                        <input id="activity_type" type="text" autocomplete="off" placeholder="-请输入活动类型" class="layui-input">
-                    </div>
-
-                    <div class="layui-form-item">
-                        <span class="nameSpan"><span class="xingSpan">✲</span>活动编号:</span>
-                        <input id="items_id" type="text" autocomplete="off" placeholder="*请输入活动编号" class="layui-input">
-                    </div>
-
-                    <div class="layui-form-item">
-                        <span class="nameSpan"><span class="xingSpan">✲</span>开始时间:</span>
-                        <input id="start_time" type="text" autocomplete="off" placeholder="*请输入开始时间" class="layui-input time2">
-                    </div>
-
-                    <div class="layui-form-item">
-                        <span class="nameSpan"><span class="xingSpan">✲</span>结束时间:</span>
-                        <input id="end_time" type="text" autocomplete="off" placeholder="*请输入结束时间" class="layui-input time2">
-                    </div>
-                </div>
-
-                <button id="createActivityBtn" style="margin-top: 40px;margin-left:153px;bottom: 20px;background-color: #135ca1;width: 190px;" class="btn btn-primary">创 建</button>
-                <span id="activity_errorMsg" style="color: red;font-size: 16px;position: absolute;bottom: 40px;left: 70px"></span>
-            </div>
-            <div class="modal-footer" style="left: 200px; bottom: -400px">
-                <%--<button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #135ca1;color: white;">关闭</button>--%>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div style="position: relative; left: 10px; top: 0px;">
     <div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 0px;">
         <h3>点击导入/删除账单</h3>
-
-        <div class="btn-group" style="position: relative; top: 18%;">
-            <button id="openActivityMotileBtn" type="button" class="btn btn-default" data-toggle="modal" data-target="#createActivityModal" style="background-color: #135ca1;color: white;"><span class="glyphicon glyphicon-file"></span> 创建活动</button>
-        </div>
 
         <div class="btn-group" style="position: relative; top: 18%;">
             <button id="importAccountMotileBtn" type="button" class="btn btn-default" data-toggle="modal" data-target="#importClueModal" style="background-color: #135ca1;color: white;"><span class="glyphicon glyphicon-import"></span> 导入账单</button>
@@ -1092,9 +956,9 @@
     </div>
 </div>
 
-<div style="position: relative; top: 20px; left: 0px; width: 100%; height: 100%;margin-top: 50px;">
+<div style="position: relative; top: 20px; left: 0px; width: 100%; margin-top: 50px;">
     <%--<div style="width: 100%; position: absolute;top: 25px; left: 10px;">--%>
-    <div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 0px;">
+    <div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px;">
         <h3 style="margin-left: 10px;">已导入账单</h3>
         <div style="position: relative;top: 0px;">
             <table class="table table-hover">
@@ -1114,13 +978,9 @@
                 <tbody id="billTbody" style="text-align: center;">
 
                 </tbody>
-
             </table>
-
             <div id="cluePagination"></div>
-
         </div>
-
     </div>
 </div>
 

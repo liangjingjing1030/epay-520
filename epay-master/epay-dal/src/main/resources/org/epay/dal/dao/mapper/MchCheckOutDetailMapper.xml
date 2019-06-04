@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.epay.dal.dao.mapper.MchCheckOutMapper" >
-  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.MchCheckOut" >
-    <id column="checkout_id" property="checkoutId" jdbcType="VARCHAR" />
+<mapper namespace="org.epay.dal.dao.mapper.MchCheckOutDetailMapper" >
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.MchCheckOutDetail" >
+    <id column="mch_checkout_id" property="mchCheckoutId" jdbcType="VARCHAR" />
     <result column="mch_id" property="mchId" jdbcType="VARCHAR" />
     <result column="mch_name" property="mchName" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="TINYINT" />
     <result column="currency" property="currency" jdbcType="VARCHAR" />
     <result column="deal_money" property="dealMoney" jdbcType="BIGINT" />
     <result column="checkout_money" property="checkoutMoney" jdbcType="BIGINT" />
     <result column="checkout_rate" property="checkoutRate" jdbcType="INTEGER" />
     <result column="checkout_date" property="checkoutDate" jdbcType="VARCHAR" />
     <result column="settle_status" property="settleStatus" jdbcType="TINYINT" />
+    <result column="pay_channel" property="payChannel" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
@@ -19,56 +21,95 @@
     <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
     <result column="reserve5" property="reserve5" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
-    checkout_id, mch_id, mch_name, currency, deal_money, checkout_money, checkout_rate,
-    checkout_date, settle_status, create_time, update_time, reserve1, reserve2, reserve3,
-    reserve4, reserve5
+    mch_checkout_id, mch_id, mch_name, order_type, currency, deal_money, checkout_money, 
+    checkout_rate, checkout_date, settle_status, pay_channel, create_time, update_time, 
+    reserve1, reserve2, reserve3, reserve4, reserve5
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
+    select 
     <include refid="Base_Column_List" />
-    from epay_mch_checkout
-    where checkout_id = #{checkoutId,jdbcType=VARCHAR}
+    from epay_mch_checkout_detail
+    where mch_checkout_id = #{mchCheckoutId,jdbcType=VARCHAR}
   </select>
 
-  <!--商户号 + 支付时间 查询唯一一条数据-->
-  <select id="selectByMchIdAndUpdateTime" resultMap="BaseResultMap"  >
+  <!--查询当前商户的所有结算总数-->
+  <select id="getTotalByCondition" resultType="java.lang.Integer">
+    select
+    count(*)
+    from epay_mch_checkout_detail
+    <where>
+      mch_id = #{mch_id}
+      <if test="pay_channel != null and pay_channel != ''">
+        and pay_channel = #{pay_channel}
+      </if>
+      <if test="start_time != null and start_time != ''">
+        and checkout_date &gt;= #{start_time}
+      </if>
+      <if test="end_time != null and end_time != ''">
+        and checkout_date &lt;= #{end_time}
+      </if>
+    </where>
+  </select>
+
+  <!--查询当前商户的所有结算数据-->
+  <select id="getPageListByCondition" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from epay_mch_checkout
-    where mch_id = #{mch_id} and update_time = #{updateTime}
+    from epay_mch_checkout_detail
+    <where>
+      mch_id = #{mch_id}
+      <if test="pay_channel != null and pay_channel != ''">
+        and pay_channel = #{pay_channel}
+      </if>
+      <if test="start_time != null and start_time != ''">
+        and checkout_date &gt;= #{start_time}
+      </if>
+      <if test="end_time != null and end_time != ''">
+        and checkout_date &lt;= #{end_time}
+      </if>
+    </where>
+    order by checkout_date desc
+    limit #{startIndex}, #{pageSize}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from epay_mch_checkout
-    where checkout_id = #{checkoutId,jdbcType=VARCHAR}
+    delete from epay_mch_checkout_detail
+    where mch_checkout_id = #{mchCheckoutId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="org.epay.dal.dao.model.MchCheckOut" >
-    insert into epay_mch_checkout (checkout_id, mch_id, mch_name,
-      currency, deal_money, checkout_money,
-      checkout_rate, checkout_date, settle_status,
-      create_time, update_time, reserve1,
-      reserve2, reserve3, reserve4,
-      reserve5)
-    values (#{checkoutId,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR}, #{mchName,jdbcType=VARCHAR},
-      #{currency,jdbcType=VARCHAR}, #{dealMoney,jdbcType=BIGINT}, #{checkoutMoney,jdbcType=BIGINT},
-      #{checkoutRate,jdbcType=INTEGER}, #{checkoutDate,jdbcType=VARCHAR}, #{settleStatus,jdbcType=TINYINT},
-      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{reserve1,jdbcType=VARCHAR},
-      #{reserve2,jdbcType=VARCHAR}, #{reserve3,jdbcType=VARCHAR}, #{reserve4,jdbcType=VARCHAR},
-      #{reserve5,jdbcType=VARCHAR})
+
+  <insert id="insert" parameterType="org.epay.dal.dao.model.MchCheckOutDetail" >
+    insert into epay_mch_checkout_detail (mch_checkout_id, mch_id, mch_name, 
+      order_type, currency, deal_money, 
+      checkout_money, checkout_rate, checkout_date, 
+      settle_status, pay_channel, create_time, 
+      update_time, reserve1, reserve2, 
+      reserve3, reserve4, reserve5
+      )
+    values (#{mchCheckoutId,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR}, #{mchName,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=TINYINT}, #{currency,jdbcType=VARCHAR}, #{dealMoney,jdbcType=BIGINT}, 
+      #{checkoutMoney,jdbcType=BIGINT}, #{checkoutRate,jdbcType=INTEGER}, #{checkoutDate,jdbcType=VARCHAR}, 
+      #{settleStatus,jdbcType=TINYINT}, #{payChannel,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=VARCHAR}, #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR}, 
+      #{reserve3,jdbcType=VARCHAR}, #{reserve4,jdbcType=VARCHAR}, #{reserve5,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.MchCheckOut" >
-    insert into epay_mch_checkout
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.MchCheckOutDetail" >
+    insert into epay_mch_checkout_detail
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="checkoutId != null" >
-        checkout_id,
+      <if test="mchCheckoutId != null" >
+        mch_checkout_id,
       </if>
       <if test="mchId != null" >
         mch_id,
       </if>
       <if test="mchName != null" >
         mch_name,
+      </if>
+      <if test="orderType != null" >
+        order_type,
       </if>
       <if test="currency != null" >
         currency,
@@ -87,6 +128,9 @@
       </if>
       <if test="settleStatus != null" >
         settle_status,
+      </if>
+      <if test="payChannel != null" >
+        pay_channel,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -111,14 +155,17 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="checkoutId != null" >
-        #{checkoutId,jdbcType=VARCHAR},
+      <if test="mchCheckoutId != null" >
+        #{mchCheckoutId,jdbcType=VARCHAR},
       </if>
       <if test="mchId != null" >
         #{mchId,jdbcType=VARCHAR},
       </if>
       <if test="mchName != null" >
         #{mchName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=TINYINT},
       </if>
       <if test="currency != null" >
         #{currency,jdbcType=VARCHAR},
@@ -137,6 +184,9 @@
       </if>
       <if test="settleStatus != null" >
         #{settleStatus,jdbcType=TINYINT},
+      </if>
+      <if test="payChannel != null" >
+        #{payChannel,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=VARCHAR},
@@ -161,14 +211,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.MchCheckOut" >
-    update epay_mch_checkout
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.MchCheckOutDetail" >
+    update epay_mch_checkout_detail
     <set >
       <if test="mchId != null" >
         mch_id = #{mchId,jdbcType=VARCHAR},
       </if>
       <if test="mchName != null" >
         mch_name = #{mchName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=TINYINT},
       </if>
       <if test="currency != null" >
         currency = #{currency,jdbcType=VARCHAR},
@@ -187,6 +240,9 @@
       </if>
       <if test="settleStatus != null" >
         settle_status = #{settleStatus,jdbcType=TINYINT},
+      </if>
+      <if test="payChannel != null" >
+        pay_channel = #{payChannel,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=VARCHAR},
@@ -210,18 +266,20 @@
         reserve5 = #{reserve5,jdbcType=VARCHAR},
       </if>
     </set>
-    where checkout_id = #{checkoutId,jdbcType=VARCHAR}
+    where mch_checkout_id = #{mchCheckoutId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.MchCheckOut" >
-    update epay_mch_checkout
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.MchCheckOutDetail" >
+    update epay_mch_checkout_detail
     set mch_id = #{mchId,jdbcType=VARCHAR},
       mch_name = #{mchName,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=TINYINT},
       currency = #{currency,jdbcType=VARCHAR},
       deal_money = #{dealMoney,jdbcType=BIGINT},
       checkout_money = #{checkoutMoney,jdbcType=BIGINT},
       checkout_rate = #{checkoutRate,jdbcType=INTEGER},
       checkout_date = #{checkoutDate,jdbcType=VARCHAR},
       settle_status = #{settleStatus,jdbcType=TINYINT},
+      pay_channel = #{payChannel,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=VARCHAR},
       reserve1 = #{reserve1,jdbcType=VARCHAR},
@@ -229,6 +287,6 @@
       reserve3 = #{reserve3,jdbcType=VARCHAR},
       reserve4 = #{reserve4,jdbcType=VARCHAR},
       reserve5 = #{reserve5,jdbcType=VARCHAR}
-    where checkout_id = #{checkoutId,jdbcType=VARCHAR}
+    where mch_checkout_id = #{mchCheckoutId,jdbcType=VARCHAR}
   </update>
 </mapper>

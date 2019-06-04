@@ -547,65 +547,65 @@ public class MchInfoExample implements Serializable {
             return (Criteria) this;
         }
 
-        public Criteria andMch_statusIsNull() {
+        /*public Criteria andMch_statusIsNull() {
             addCriterion("mch_status is null");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusIsNotNull() {
+        /*public Criteria andMch_statusIsNotNull() {
             addCriterion("mch_status is not null");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusEqualTo(Byte value) {
+        /*public Criteria andMch_statusEqualTo(Byte value) {
             addCriterion("mch_status =", value, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusNotEqualTo(Byte value) {
+        /*public Criteria andMch_statusNotEqualTo(Byte value) {
             addCriterion("mch_status <>", value, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusGreaterThan(Byte value) {
+        /*public Criteria andMch_statusGreaterThan(Byte value) {
             addCriterion("mch_status >", value, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusGreaterThanOrEqualTo(Byte value) {
+        /*public Criteria andMch_statusGreaterThanOrEqualTo(Byte value) {
             addCriterion("mch_status >=", value, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusLessThan(Byte value) {
+        /*public Criteria andMch_statusLessThan(Byte value) {
             addCriterion("mch_status <", value, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusLessThanOrEqualTo(Byte value) {
+        /*public Criteria andMch_statusLessThanOrEqualTo(Byte value) {
             addCriterion("mch_status <=", value, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusIn(List<Byte> values) {
+        /*public Criteria andMch_statusIn(List<Byte> values) {
             addCriterion("mch_status in", values, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusNotIn(List<Byte> values) {
+        /*public Criteria andMch_statusNotIn(List<Byte> values) {
             addCriterion("mch_status not in", values, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusBetween(Byte value1, Byte value2) {
+        /*public Criteria andMch_statusBetween(Byte value1, Byte value2) {
             addCriterion("mch_status between", value1, value2, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
-        public Criteria andMch_statusNotBetween(Byte value1, Byte value2) {
+        /*public Criteria andMch_statusNotBetween(Byte value1, Byte value2) {
             addCriterion("mch_status not between", value1, value2, "mch_status");
             return (Criteria) this;
-        }
+        }*/
 
         public Criteria andContact_personIsNull() {
             addCriterion("contact_person is null");

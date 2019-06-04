@@ -420,6 +420,208 @@ public class BillController {
 
 
 
+    // 删除活动
+    @RequestMapping(value = "/bill/deleteActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Object deleteActivity(HttpServletRequest request) {
+
+        String[] ids = request.getParameterValues("id");
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        requestHeaderMap.put("request_channel", "MGR");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("ids", ids);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("删除活动,请求数据:" + reqData);
+
+        String url = baseUrl + "/bill_delete_activity?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("删除活动,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+//        Map<String, Object> returnMap = new HashMap<>();
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            boolean deleteOK = (boolean) retBody.get("result");
+
+            // 返回商户信息
+            if(deleteOK) {
+                returnMap.put("deleteOK", true);
+                returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+                return returnMap;
+            } else {
+                returnMap.put("deleteOK", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "删除活动失败，请稍后再试");
+                return returnMap;
+            }
+
+            // 验签
+            /*String checkSign = PayDigestUtil.getSign(retMap, resKey, "sign", "payParams");
+            String retSign = (String) retMap.get("sign");
+            if(checkSign.equals(retSign)) {
+                System.out.println("=========支付中心下单验签成功=========");
+            }else {
+                System.err.println("=========支付中心下单验签失败=========");
+                return null;
+            }*/
+        } else {
+            returnMap.put("deleteOK", false);
+            returnMap.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试");
+            return returnMap;
+        }
+    }
+
+
+    // 停止活动
+    @RequestMapping(value = "/bill/stopActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Object stopActivity(HttpServletRequest request) {
+
+        String[] ids = request.getParameterValues("id");
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        requestHeaderMap.put("request_channel", "MGR");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("ids", ids);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("停止活动,请求数据:" + reqData);
+
+        String url = baseUrl + "/bill_stop_activity?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("停止活动,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+//        Map<String, Object> returnMap = new HashMap<>();
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            boolean deleteOK = (boolean) retBody.get("result");
+
+            // 返回商户信息
+            if(deleteOK) {
+                returnMap.put("deleteOK", true);
+                returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+                return returnMap;
+            } else {
+                returnMap.put("deleteOK", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "停止活动失败，请稍后再试");
+                return returnMap;
+            }
+
+            // 验签
+            /*String checkSign = PayDigestUtil.getSign(retMap, resKey, "sign", "payParams");
+            String retSign = (String) retMap.get("sign");
+            if(checkSign.equals(retSign)) {
+                System.out.println("=========支付中心下单验签成功=========");
+            }else {
+                System.err.println("=========支付中心下单验签失败=========");
+                return null;
+            }*/
+        } else {
+            returnMap.put("deleteOK", false);
+            returnMap.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试");
+            return returnMap;
+        }
+    }
+
+
+    // 恢复活动
+    @RequestMapping(value = "/bill/restartActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Object restartActivity(HttpServletRequest request) {
+
+        String[] ids = request.getParameterValues("id");
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        requestHeaderMap.put("request_channel", "MGR");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("ids", ids);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("恢复活动,请求数据:" + reqData);
+
+        String url = baseUrl + "/bill_restart_activity?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("恢复活动,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+//        Map<String, Object> returnMap = new HashMap<>();
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            boolean deleteOK = (boolean) retBody.get("result");
+
+            // 返回商户信息
+            if(deleteOK) {
+                returnMap.put("deleteOK", true);
+                returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+                return returnMap;
+            } else {
+                returnMap.put("deleteOK", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "恢复活动失败，请稍后再试");
+                return returnMap;
+            }
+
+            // 验签
+            /*String checkSign = PayDigestUtil.getSign(retMap, resKey, "sign", "payParams");
+            String retSign = (String) retMap.get("sign");
+            if(checkSign.equals(retSign)) {
+                System.out.println("=========支付中心下单验签成功=========");
+            }else {
+                System.err.println("=========支付中心下单验签失败=========");
+                return null;
+            }*/
+        } else {
+            returnMap.put("deleteOK", false);
+            returnMap.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试");
+            return returnMap;
+        }
+    }
+
+
+
     // accountFile合并统计，不发送Web
     @RequestMapping(value = "/bill/accountFileCount", method = RequestMethod.GET)
     @ResponseBody
@@ -664,6 +866,7 @@ public class BillController {
         }
     }
 
+
     // 判断是否可以删除账单accountFile
     @RequestMapping("/bill/checkIfCanDeleteAccountFile")
     @ResponseBody
@@ -810,21 +1013,9 @@ public class BillController {
         User user = (User) request.getSession().getAttribute("user");
         String mchId = user.getLoginName();
 
-        // 组装模板AccountBook
-        List<AccountBook> accountBookModelList = new ArrayList<>();
-        for(int i = 1; i <= 5; i++) {
-            AccountBook accountBook = new AccountBook();
-//            accountBook.setMch_id("xiwangxiaoxue");
-            accountBook.setUser_id("student" + i + "(唯一标识不能重复,否则导入失败!)");
-            accountBook.setUser_name("张" + i);
-            accountBook.setCurrency("cny");
-            accountBook.setItems_money(10000L * i);
-            accountBookModelList.add(accountBook);
-        }
-
         // 导出excel
         WriteExcel<AccountBook> we = new WriteExcel<>();
-        HSSFWorkbook workbook = we.getWorkbookModel(accountBookModelList, "账单模板", AccountBook.class);
+        HSSFWorkbook workbook = we.getWorkbookModel("账单模板");
 
         // 响应到浏览器
         try {
@@ -1192,13 +1383,6 @@ public class BillController {
 
     /**
      * 导入账单accountFile
-     * @param file
-     * @param xmbh
-     * @param xmmc
-     * @param xmlb
-     * @param shengxsj
-     * @param shixsj
-     * @param request
      * @return
      */
     @PostMapping("/bill/importAccountFile")
@@ -1211,17 +1395,21 @@ public class BillController {
                                     @RequestParam(value = "shixsj", required = true) String shixsj,
                                     HttpServletRequest request) {
 
+        // 从session域中取值
+        User user = (User) request.getSession().getAttribute("user");
+        String mch_id = user.getLoginName();
         // 解析账单文件start——————————————————————————————————————————————————————————————
         // 获取文件名称
         String fileName = file.getOriginalFilename();
         // 将MultipartFile转为list
-        List<AccountBook> accountBookList = AccountBookUtil.readAccountBook(fileName, file, xmbh);
+        Map<String, Object> dataMap = AccountBookUtil.readAccountBook(fileName, file, xmbh, mch_id);
         // 解析账单文件end————————————————————————————————————————————————————————————————
+        ModelKey modelKey = (ModelKey) dataMap.get("modelKey");
+        List<AccountBook> accountBookList = (List<AccountBook>) dataMap.get("accountBooksList");
+        List<ModelValue> modelValueList = (List<ModelValue>) dataMap.get("modelValueList");
+//        Map<String, Integer> titlePositionMap = (Map<String, Integer>) dataMap.get("titlePositionMap");
 
         AccountFile accountFile = new AccountFile();
-        // 从session域中取值
-        User user = (User) request.getSession().getAttribute("user");
-        String mch_id = user.getLoginName();
         // TODO 预防session域失效 待做
         String id = "F00" + new Date().getTime() + (int)((Math.random()*9+1)*100000);
         String uploadDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -1238,10 +1426,10 @@ public class BillController {
 
         // 处理账单条数特别多的情况
         int allCount = accountBookList.size();
-        int begin = 0, end = 50, count = 1;
+        int begin = 0, end = 20, count = 1;
         if(end > allCount) {
             // 发送一次
-            String result = subAccountBookListMethod(mch_id, accountBookList, accountFile);
+            String result = subAccountBookListMethod(mch_id, accountBookList, accountFile, modelKey, modelValueList);
             System.out.println("请求导入账单接口,响应数据:" + result);
             //转换成object
             Map retMap = JSON.parseObject(result);
@@ -1260,10 +1448,12 @@ public class BillController {
         while (end <= allCount) {
             System.out.println("begin:" + begin + ",end:" + end);
             List<AccountBook> subAccountBookList = accountBookList.subList(begin, end);
+            List<ModelValue> subModelValueList = modelValueList.subList(begin, end);
             if(subAccountBookList.size() == 0) {
                 break;
             }
-            String result = subAccountBookListMethod(mch_id, subAccountBookList, accountFile);
+            // 循环发送
+            String result = subAccountBookListMethod(mch_id, subAccountBookList, accountFile, modelKey, subModelValueList);
             System.out.println("请求导入账单接口,响应数据第" +(count++)+ "次:" + result);
             //转换成object
             Map retMap = JSON.parseObject(result);
@@ -1274,17 +1464,19 @@ public class BillController {
                 boolean importOK = (boolean) retBody.get("result");
                 if(importOK) {
                     begin = end;
-                    end = (end + 50) >= allCount ? allCount : (end + 50);
+                    end = (end + 20) >= allCount ? allCount : (end + 20);
                     System.out.println("导入成功，第" + (count - 1) + "次");
                 } else {
                     System.out.println("第" + (count - 1) + "次导入失败");
-                    // 重新导入一次
+                    // 重新导入3次
                     for(int i = 1; i <= 3; i++) {
                         subAccountBookList = accountBookList.subList(begin, end);
+                        subModelValueList = modelValueList.subList(begin, end);
                         if(subAccountBookList.size() == 0) {
                             break;
                         }
-                        result = subAccountBookListMethod(mch_id, subAccountBookList, accountFile);
+                        // 尝试3次
+                        result = subAccountBookListMethod(mch_id, subAccountBookList, accountFile, modelKey, subModelValueList);
                         System.out.println(i + "重新请求导入账单接口,响应数据第" +(count - 1)+ "次:" + result);
                         //转换成object
                         retMap = JSON.parseObject(result);
@@ -1295,13 +1487,13 @@ public class BillController {
                             importOK = (boolean) retBody.get("result");
                             if(importOK) {
                                 begin = end;
-                                end = (end + 50) >= allCount ? allCount : (end + 50);
+                                end = (end + 20) >= allCount ? allCount : (end + 20);
                                 break;
                             } else {
                                 System.out.println(i + "再次尝试第" + (count - 1) + "次导入失败");
                                 if(i ==3) {
                                     begin = end;
-                                    end = (end + 50) >= allCount ? allCount : (end + 50);
+                                    end = (end + 20) >= allCount ? allCount : (end + 20);
                                 }
                                 continue;
                             }
@@ -1314,7 +1506,11 @@ public class BillController {
         // 如果保存账单后想去首页，必须重定向发送billUpload请求，因为首页需要获取一些数据
         return "redirect:/billUploadAndDelete.jsp";
     }
-    public String subAccountBookListMethod(String mch_id, List<AccountBook> subAccountBookList, AccountFile accountFile) {
+    public String subAccountBookListMethod(String mch_id,
+                                           List<AccountBook> subAccountBookList,
+                                           AccountFile accountFile,
+                                           ModelKey modelKey,
+                                           List<ModelValue> modelValueList) {
 
 
         // 响应头中放入渠道信息
@@ -1323,7 +1519,10 @@ public class BillController {
         // 响应体
         JSONObject requestBodyMap = new JSONObject();
         requestBodyMap.put("accountFile", accountFile);
+        requestBodyMap.put("modelKey", modelKey);
+//        requestBodyMap.put("titlePositionMap", map);
 
+        // 将accountBookList转为数组传输
         int i = 1;
         for(AccountBook ab : subAccountBookList) {
             Object[] array = {ab.getAccount_book_id(),
@@ -1337,8 +1536,28 @@ public class BillController {
                     ab.getPay_status() == null ? "" : ab.getPay_status()};
             requestBodyMap.put("array" + (i++), array);
         }
-
         requestBodyMap.put("arrayCount", subAccountBookList.size());
+
+        // 将modelValueList转为数组传输(保存顺序就按照如下顺序保存)
+        int j = 1;
+        for(ModelValue mv : modelValueList) {
+            Object[] array = {mv.getModelValueId(),
+                    mv.getModelKeyId(),
+                    mv.getUserIdValue(),
+                    mv.getItemsMoneyValue(),
+                    mv.getValue1() == null ? "" : mv.getValue1(),
+                    mv.getValue2() == null ? "" : mv.getValue2(),
+                    mv.getValue3() == null ? "" : mv.getValue3(),
+                    mv.getValue4() == null ? "" : mv.getValue4(),
+                    mv.getValue5() == null ? "" : mv.getValue5(),
+                    mv.getValue6() == null ? "" : mv.getValue6(),
+                    mv.getValue7() == null ? "" : mv.getValue7(),
+                    mv.getValue8() == null ? "" : mv.getValue8(),
+                    mv.getValue9() == null ? "" : mv.getValue9(),
+                    mv.getValue10() == null ? "" : mv.getValue10()};
+            requestBodyMap.put("anotherArray" + (j++), array);
+        }
+        requestBodyMap.put("arrayCount2", modelValueList.size());
 
         JSONObject paramMap = new JSONObject();
         // 请求报文：响应头 + 响应体 + sign(签名)
@@ -1428,6 +1647,97 @@ public class BillController {
 
             // 返回商户信息
             returnMap.put("accountFileList", list);
+            returnMap.put("total", total);// 账单数量
+            returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+
+            // 验签
+            /*String checkSign = PayDigestUtil.getSign(retMap, resKey, "sign", "payParams");
+            String retSign = (String) retMap.get("sign");
+            if(checkSign.equals(retSign)) {
+                System.out.println("=========支付中心下单验签成功=========");
+            }else {
+                System.err.println("=========支付中心下单验签失败=========");
+                return null;
+            }*/
+        } else {
+            returnMap.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试……");
+        }
+        return returnMap;
+    }
+
+
+
+    /**
+     * 活动分页显示
+     * @param pageNo1
+     * @param pageSize1
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/bill/ActivityPage", method = RequestMethod.GET)
+    @ResponseBody
+    public Object ActivityPage(@RequestParam(value = "pageNo", required = true)String pageNo1,
+                               @RequestParam(value = "pageSize", required = true)String pageSize1,
+                               HttpServletRequest request) {
+
+        Integer pageNo = Integer.valueOf(pageNo1);
+        Integer pageSize = Integer.valueOf(pageSize1);
+        Integer startIndex = (pageNo - 1) * pageSize;
+
+        // 从session域中获取当前登录用户
+        User user = (User) request.getSession().getAttribute("user");
+        String mch_id = user.getLoginName();
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        requestHeaderMap.put("request_channel", "MGR");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("mch_id", mch_id);
+        requestBodyMap.put("startIndex", startIndex);
+        requestBodyMap.put("pageSize", pageSize);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("请求查询商户账单信息接口,请求数据:" + reqData);
+
+        String url = baseUrl + "/bill_query_activity?";
+        // 通过getway调用web工程(账单list)
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("请求查询商户账单信息接口,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+//        Map<String, Object> returnMap = new HashMap<>();
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            List<Map<String, Object>> activityList = (List<Map<String, Object>>) retBody.get("ActivityList");
+            int total = (int) retBody.get("total");
+
+            List<Activity> list = new ArrayList<>();
+            for(Map<String, Object> bodyMap : activityList) {
+                Activity activity = new Activity();
+                activity.setActivityId((String) bodyMap.get("activityId").toString());
+                activity.setItemsId(bodyMap.get("itemsId").toString());
+                activity.setMchId(bodyMap.get("mchId").toString());
+                activity.setActivityName(bodyMap.get("activityName").toString());
+                activity.setActivityType(bodyMap.get("activityType").toString());
+                activity.setCreateTime(bodyMap.get("createTime").toString());
+                activity.setStartTime(bodyMap.get("startTime").toString());
+                activity.setEndTime(bodyMap.get("endTime").toString());
+                activity.setActivityStatus(Byte.parseByte(bodyMap.get("activityStatus").toString()));
+                list.add(activity);
+            }
+
+            // 返回商户信息
+            returnMap.put("activityList", list);
             returnMap.put("total", total);// 账单数量
             returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
 

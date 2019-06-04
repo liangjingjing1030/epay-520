@@ -190,7 +190,7 @@ public class MchChannelController {
                 return errorMessage;
             }
             // 商户状态,0-未激活,1-使用中,2-停止使用
-            if(mchInfo.getByte("mch_status") != 1) {
+            if(mchInfo.getByte("audit_status") != 1) {
                 errorMessage = "商户号为 [mch_id="+mch_id+"] 的商户状态为未启用 in db.";
                 return errorMessage;
             }

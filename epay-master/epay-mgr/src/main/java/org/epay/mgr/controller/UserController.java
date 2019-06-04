@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +127,7 @@ public class UserController {
         return retMap;
     }
 
-    // 验证用户账户状态
+/*    // 验证用户账户状态
     // loginAct不再是商户号@2019年6月1日23:18:27
     @RequestMapping("/mch/checkStatus")
     @ResponseBody
@@ -143,13 +144,76 @@ public class UserController {
         }
         // 改为判断商户@2019年6月1日22:53:19
         MchInfo mchInfo = userService.queryMchInfoByMchId(user.getLoginName());
-        if(mchInfo.getMch_status() == 1) {//商户状态,0-未激活,1-使用中,2-停止使用
+        if(mchInfo.getAudit_status() == 1) {//审核状态,0-未审核,1-已审核,2-拒绝
             retMap.put(Constant.ERROR_MESSAGE, Constant.OK);
         } else {
-            retMap.put(Constant.ERROR_MESSAGE, "当前账号不可用，请联系管理员");
+            retMap.put(Constant.ERROR_MESSAGE, "当前账号未审核");
         }
         return retMap;
+    }*/
+    // 验证用户账户状态
+    // loginAct不再是商户号@2019年6月1日23:18:27
+    @RequestMapping("/mch/checkStatus")
+    @ResponseBody
+    public Object checkStatus(@RequestParam(value = "loginAct", required = true) String loginAct,
+                              @RequestParam(value = "loginPwd", required = true) String loginPwd) {
+
+        Map<String, Object> map = new HashMap<>();
+        // 密码进行加密
+        String md5Pswd = MD5AndCreateKeyUtil.md5(loginPwd.trim(), "UTF-8");
+        // 查询用户
+        User user = userService.queryByLoginNameAndPassword(loginAct, md5Pswd);
+        if(user == null) {
+            map.put(Constant.ERROR_MESSAGE, "用户名或密码错误，请重新输入");
+            return map;
+        }
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        // TODO 临时写为 WX_APP = "微信APP支付";
+        requestHeaderMap.put("request_channel", "WX_APP");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("mch_id", user.getLoginName());
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("查询商户信息,请求数据:" + reqData);
+
+        String url = baseUrl + "/login_query_mchInfo?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("查询商户信息,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+//        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            Map<String, Object> bodyMap = (Map<String, Object>) retBody.get("result");
+            // 获取object中的返回对象
+            int audit_status = Integer.parseInt(bodyMap.get("audit_status").toString());
+
+            if(audit_status == 1) {//审核状态,0-未审核,1-已审核,2-拒绝
+                map.put(Constant.ERROR_MESSAGE, Constant.OK);
+            } else {
+                map.put(Constant.ERROR_MESSAGE, "当前账号未审核");
+            }
+//            return map;
+        } else {
+            map.put(Constant.ERROR_MESSAGE, Constant.FAIL);
+            map.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试");
+        }
+        return map;
     }
+
 
     // 查询私钥
     @RequestMapping("/public/queryKey")

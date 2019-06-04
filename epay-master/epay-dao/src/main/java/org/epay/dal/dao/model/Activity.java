@@ -3,6 +3,8 @@ package org.epay.dal.dao.model;
 public class Activity {
     private String activityId;
 
+    private String itemsId;
+
     private String mchId;
 
     private String activityName;
@@ -14,6 +16,8 @@ public class Activity {
     private String startTime;
 
     private String endTime;
+
+    private Byte activityStatus;
 
     private String reserve1;
 
@@ -31,6 +35,14 @@ public class Activity {
 
     public void setActivityId(String activityId) {
         this.activityId = activityId == null ? null : activityId.trim();
+    }
+
+    public String getItemsId() {
+        return itemsId;
+    }
+
+    public void setItemsId(String itemsId) {
+        this.itemsId = itemsId == null ? null : itemsId.trim();
     }
 
     public String getMchId() {
@@ -79,6 +91,14 @@ public class Activity {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public Byte getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(Byte activityStatus) {
+        this.activityStatus = activityStatus;
     }
 
     public String getReserve1() {

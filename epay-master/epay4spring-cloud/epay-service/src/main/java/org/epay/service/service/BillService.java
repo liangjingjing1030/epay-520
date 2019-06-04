@@ -10,10 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.xmlbeans.impl.util.Base64;
 import org.epay.common.util.DateUtils;
-import org.epay.dal.dao.mapper.AccountBookMapper;
-import org.epay.dal.dao.mapper.AccountFileMapper;
-import org.epay.dal.dao.mapper.ChannelInfoMapper;
-import org.epay.dal.dao.mapper.PayOrderMapper;
+import org.epay.dal.dao.mapper.*;
 import org.epay.dal.dao.model.*;
 import org.epay.service.utils.BASE64DecodedMultipartFile;
 import org.springframework.beans.BeanUtils;
@@ -44,6 +41,12 @@ public class BillService {
     private AccountBookMapper accountBookMapper;
     @Autowired
     private PayOrderMapper payOrderMapper;
+    @Autowired
+    private ModelKeyMapper modelKeyMapper;
+    @Autowired
+    private ModelValueMapper modelValueMapper;
+    @Autowired
+    private ActivityMapper activityMapper;
 
     // 判断账单是否重复上传
     public int queryByMchIdAndItemsId(String mchId, String xmbh) {
@@ -59,6 +62,8 @@ public class BillService {
         dataMap.put("pageList", accountFileMapper.getPageList(mchId, Integer.parseInt(startIndex), Integer.parseInt(pageSize)));
         return dataMap;
     }
+
+
 
     // accountBook分页显示
     public Map<String, Object> selectAccountBookByConfition(Map<String, Object> conditionMap) {
@@ -242,11 +247,19 @@ public class BillService {
         }
     }
 
-    // 导入账单start--------------------------------------------------------------------------
+    /**
+     * 导入账单start--------------------------------------------------------------------------
+     * 2019年6月4日10:20:57
+     */
     @Transactional(readOnly = false,rollbackFor = Exception.class)
-    public boolean importAccountFileAndAccountBook(AccountFile accountFile, List<AccountBook> accountBookList) {
+    public boolean importAccountFileAndAccountBook(AccountFile accountFile,
+                                                   List<AccountBook> accountBookList,
+                                                   ModelKey modelKey,
+                                                   List<ModelValue> modelValueList) {
         boolean saveFileOk = false;
+        boolean saveKeyOk = false;
         boolean saveBookOk = false;
+        boolean saveValueOk = false;
         try {
             // 1.保存文件信息到accountFile表中
             saveFileOk = insertAccountFile(accountFile);
@@ -258,12 +271,22 @@ public class BillService {
             if(!saveBookOk) {
                 int i = 1 / 0;// 进入catch，无实际意义
             }
+            // 3、保存模板标题内容到ModelKey表中
+            saveKeyOk = insertModelKey(modelKey);
+            if(!saveKeyOk) {
+                int i = 1 / 0;// 进入catch，无实际意义
+            }
+            // 4、解析表中的数据保存到ModelValue表中
+            saveValueOk = insertModelValue(modelValueList);
+            if(!saveValueOk) {
+                int i = 1 / 0;// 进入catch，无实际意义
+            }
         } catch (Exception e) {
             // try catch捕获异常会让注解@Transactional失效
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             e.printStackTrace();
         }
-        if(saveFileOk && saveBookOk) {
+        if(saveFileOk && saveBookOk && saveKeyOk && saveValueOk) {
             return true;
         } else {
             return false;
@@ -271,7 +294,7 @@ public class BillService {
     }
 
     public boolean insertAccountFile(AccountFile a) {
-        // 分批导入，只插入一次
+        // 分批导入，只插入一次,判断是否已经导入
         AccountFile af = accountFileMapper.selectByAllCondition(a.getMch_id(),a.getItems_id(),a.getItems_name(),a.getAffect_date(),a.getExpiry_date());
         if(af == null) {
             int insertCount = accountFileMapper.insertSelective(a);
@@ -283,10 +306,23 @@ public class BillService {
         return true;
     }
 
+    public boolean insertModelKey(ModelKey modelKey) {
+        // 分批导入，只插入一次,判断是否已经导入
+        ModelKey mk = modelKeyMapper.selectByAllCondition(modelKey);
+        if(mk == null) {
+            int insertCount = modelKeyMapper.insertSelective(modelKey);
+            if(1 == insertCount) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
     public boolean insertAccountBook(List<AccountBook> accountBookList) {
         int count = 0, exist = 0;
         for(AccountBook accountBook : accountBookList) {
-            // 已经存在的数据不再重复插入
+            // 已经存在的数据不再重复插入(商户号、项目编号、唯一标识)
             AccountBook a = accountBookMapper.selectByMchIdAndItemsIdAndUserId(accountBook.getMch_id(), accountBook.getItems_id(), accountBook.getUser_id());
             if(a == null) {
                 count += accountBookMapper.insertSelective(accountBook);
@@ -296,6 +332,25 @@ public class BillService {
 
         }
         if((count + exist) == accountBookList.size()) {
+            System.out.println("count:" + count + ",exist:" + exist);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean insertModelValue(List<ModelValue> modelValueList) {
+        int count = 0, exist = 0;
+        for(ModelValue modelValue : modelValueList) {
+            // 已经存在的数据不再重复插入(同一个模板model_key_id下，如果user_id_value相同就认为是重复)
+            // TODO user_id_value相同时，model_key_id并不会相同，需要在key表中添加商户号、项目编号字段
+            ModelValue a = modelValueMapper.selectByModelKeyIdAndUserId(modelValue.getModelKeyId(), modelValue.getUserIdValue());
+            if(a == null) {
+                count += modelValueMapper.insertSelective(modelValue);
+            } else {
+                exist++;
+            }
+        }
+        if((count + exist) == modelValueList.size()) {
             System.out.println("count:" + count + ",exist:" + exist);
             return true;
         }
@@ -348,7 +403,12 @@ public class BillService {
     }
     // 导入账单end--------------------------------------------------------------------------
 
-    // 判断有无可以导出的账单
+
+    /**
+     * 判断有无可以导出的账单
+     * @param mch_id
+     * @return
+     */
     public int checkHaveAccountCanBeExport(String mch_id) {
         List<AccountFile> accountFileList = accountFileMapper.selectByMchId(mch_id);
 

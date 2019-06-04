@@ -31,6 +31,8 @@ public class MchCheckOutDetailServiceController {
 
     @Autowired
     private AccountBookService accountBookService;
+    @Autowired
+    private MchCheckOutService mchCheckOutService;
 
     /**
      * 查询结算明细信息
@@ -117,6 +119,56 @@ public class MchCheckOutDetailServiceController {
         for(AccountBook accountBook : accountBookList) {
             retObj.put("result" + (i++), JSON.toJSON(accountBook));
         }
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
+    /**
+     * 结算汇总数据查询
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/mch_checkOut/query_money_summart")
+    public String queryMoneySummary(@RequestParam String jsonParam) {
+        _log.info("query_money_summart << {}", jsonParam);
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            _log.info("query_money_summart << {}", retObj.toString());
+            return retObj.toJSONString();
+        }
+        JSONObject object = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
+        _log.info("query_money_summart << {}", object.toString());
+        String mch_id  = "";		// 商户ID
+
+        try {
+        	mch_id  = object.getString("mch_id").trim();	// 商户ID
+        	if(StringUtils.isBlank(mch_id)) {
+        		retObj.put("code", "0001"); // 参数错误
+                retObj.put("msg", "mch_id参数为空");
+                _log.info("query_money_summart << {}", retObj.toString());
+                return retObj.toJSONString();
+        	}
+		} catch (Exception e) {
+			retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "mch_id参数缺失");
+            _log.info("query_money_summart << {}", retObj.toString());
+            return retObj.toJSONString();
+		}
+
+        MchCheckOut mchCheckOut = mchCheckOutService.queryMoneySummary(mch_id);
+
+        if(mchCheckOut == null) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "当前无结算汇总数据");
+            _log.info("query_money_summart << {}", retObj.toString());
+            return retObj.toJSONString();
+        }
+
+        retObj.put("result", JSON.toJSON(mchCheckOut));
 
         _log.info("result:{}", retObj.toJSONString());
         return retObj.toJSONString();

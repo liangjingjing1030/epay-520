@@ -7,10 +7,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.epay.common.constant.Constant;
 import org.epay.common.constant.PayConstant;
 import org.epay.common.util.EPayUtil;
-import org.epay.dal.dao.model.AccountBook;
-import org.epay.dal.dao.model.AccountBookStr;
-import org.epay.dal.dao.model.MchCheckOut;
-import org.epay.dal.dao.model.User;
+import org.epay.dal.dao.model.*;
 import org.epay.mgr.utils.WriteExcel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -136,26 +133,90 @@ public class MchCheckOutController {
         return returnMap;
     }
 
-    // 结算分页查询
+
+    // 结算汇总查询
+    @RequestMapping(value = "/bill/moneySummary", method = RequestMethod.GET)
+    @ResponseBody
+    public Object moneySummary(HttpServletRequest request) {
+
+        // 从session域中获取当前登录用户
+        User user = (User) request.getSession().getAttribute("user");
+        String mch_id = user.getLoginName();
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        // TODO 临时写为 WX_APP = "微信APP支付";
+        requestHeaderMap.put("request_channel", "WX_APP");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("mch_id", mch_id);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("请求查询结算汇总数据接口,请求数据:" + reqData);
+
+        String url = baseUrl + "/user_query_money_summary?";
+        // 通过getway调用web工程(账单list)
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("请求查询结算汇总数据接口,响应数据:" + result);
+
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            Map<String, Object> bodyMap = (Map<String, Object>) retBody.get("result");
+            // 获取object中的返回对象
+            long dealMoney = Long.parseLong(bodyMap.get("dealMoney").toString());
+            long checkoutMoney = Long.parseLong(bodyMap.get("checkoutMoney").toString());
+
+            // 将钱数“分”转换为“元”，且保留小数
+            DecimalFormat df=new DecimalFormat("0.00");//设置保留位数
+            String dealMoneyStr = df.format((float) dealMoney / 100);
+            String checkoutMoneyStr = df.format((float) checkoutMoney / 100);
+
+            // 返回商户信息
+            returnMap.put("dealMoney", dealMoneyStr);// 下载账单明细所需
+            returnMap.put("checkoutMoney", checkoutMoneyStr);
+            returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+        } else {
+            returnMap.put(Constant.ERROR_MESSAGE, retHeader.get(PayConstant.RETURN_PARAM_RETMSG));
+        }
+
+        return returnMap;
+    }
+
+
+    /**
+     * 结算分页查询
+     * @return
+     */
     @RequestMapping(value = "/count/countPage", method = RequestMethod.GET)
     @ResponseBody
-    public Object countPage(@RequestParam(value = "items_id", required = false)String items_id,
+    public Object countPage(@RequestParam(value = "pay_channel", required = false)String pay_channel,
                              @RequestParam(value = "start_time", required = false)String start_time1,
                              @RequestParam(value = "end_time", required = false)String end_time1,
-                             @RequestParam(value = "moneyStates", required = false)String settle_status,
                              @RequestParam(value = "pageNo", required = false)String pageNo1,
                              @RequestParam(value = "pageSize", required = false)String pageSize1,
                              HttpServletRequest request) {
 
         // 处理时间格式：2008-08-08————>20080808000000
-        String start_time = "";
+        /*String start_time = "";
         String end_time = "";
         if(StringUtils.isNotBlank(start_time1)) {
             start_time = start_time1.replace("-", "") + "000000";
         }
         if(StringUtils.isNotBlank(end_time1)) {
             end_time = end_time1.replace("-", "") + "000000";
-        }
+        }*/
 
         Integer pageNo = Integer.valueOf(pageNo1);
         Integer pageSize = Integer.valueOf(pageSize1);
@@ -174,12 +235,9 @@ public class MchCheckOutController {
         // 响应体
         JSONObject requestBodyMap = new JSONObject();
         requestBodyMap.put("mch_id", mch_id);
-        requestBodyMap.put("items_id", items_id);
-        requestBodyMap.put("start_time", start_time);
-        requestBodyMap.put("end_time", end_time);
-        if(!"-99".equals(settle_status)) {
-            requestBodyMap.put("settle_status", settle_status);
-        }
+        requestBodyMap.put("pay_channel", pay_channel);
+        requestBodyMap.put("start_time", start_time1);
+        requestBodyMap.put("end_time", end_time1);
         requestBodyMap.put("startIndex", startIndex);
         requestBodyMap.put("pageSize", pageSize);
 
@@ -208,28 +266,64 @@ public class MchCheckOutController {
             List<Map<String, Object>> mchCheckOutList = (List<Map<String, Object>>) retBody.get("mchCheckOutList");
             int total = (int) retBody.get("total");
             // 此处使用的是dao中的MchCheckOut，金额格式为String
-            List<MchCheckOut> list = new ArrayList<>();
+            List<MchCheckOutDetail> list = new ArrayList<>();
             for(Map<String, Object> bodyMap : mchCheckOutList) {
-                MchCheckOut mchCheckOut = new MchCheckOut();
-                mchCheckOut.setMchCheckoutId(bodyMap.get("mchCheckoutId").toString());
-                mchCheckOut.setMchId(bodyMap.get("mchId").toString());
-                mchCheckOut.setMchName(bodyMap.get("mchName").toString());
-                mchCheckOut.setItemsId(bodyMap.get("itemsId").toString());
-                mchCheckOut.setCurrency(bodyMap.get("currency").toString());
+                MchCheckOutDetail mchCheckOutDetail = new MchCheckOutDetail();
+                mchCheckOutDetail.setMchCheckoutId(bodyMap.get("mchCheckoutId").toString());
+                mchCheckOutDetail.setMchId(bodyMap.get("mchId").toString());
+                mchCheckOutDetail.setMchName(bodyMap.get("mchName").toString());
+                mchCheckOutDetail.setOrderType(Byte.parseByte(bodyMap.get("orderType").toString()));
+                mchCheckOutDetail.setCurrency(bodyMap.get("currency").toString());
                 // 将金额处理为“元”
                 long dealMoney = Long.parseLong(bodyMap.get("dealMoney").toString());
                 long checkoutMoney = Long.parseLong(bodyMap.get("checkoutMoney").toString());
                 DecimalFormat df=new DecimalFormat("0.00");//设置保留位数
                 String dealMoneyStr = df.format((float) dealMoney / 100) + "";
                 String checkoutMoneyStr = df.format((float) checkoutMoney / 100);
-                mchCheckOut.setDealMoney(dealMoneyStr);
-                mchCheckOut.setCheckoutMoney(checkoutMoneyStr);
-                mchCheckOut.setCheckoutRate(Integer.parseInt(bodyMap.get("checkoutRate").toString()));
-                mchCheckOut.setCheckoutDate(bodyMap.get("checkoutDate").toString());
-                mchCheckOut.setSettleStatus(Byte.parseByte(bodyMap.get("settleStatus").toString()));
-                mchCheckOut.setCreateTime(bodyMap.get("createTime").toString());
-                mchCheckOut.setUpdateTime(bodyMap.get("updateTime").toString());
-                list.add(mchCheckOut);
+                mchCheckOutDetail.setDealMoney(dealMoneyStr);
+                mchCheckOutDetail.setCheckoutMoney(checkoutMoneyStr);
+                mchCheckOutDetail.setCheckoutRate(Integer.parseInt(bodyMap.get("checkoutRate").toString()));
+                mchCheckOutDetail.setCheckoutDate(bodyMap.get("checkoutDate").toString());
+                mchCheckOutDetail.setSettleStatus(Byte.parseByte(bodyMap.get("settleStatus").toString()));
+                String payChannel = bodyMap.get("payChannel").toString();
+//                WX_JSAPI = "微信公众号支付";
+//                WX_NATIVE = "微信原生扫码支付";
+//                WX_APP = "微信APP支付";
+//                WX_MWEB = "微信H5支付";
+//                IAP = "苹果应用内支付";
+//                ALIPAY_MOBILE = "支付宝移动支付";
+//                ALIPAY_PC = "支付宝PC支付";
+//                ALIPAY_WAP = "支付宝WAP支付";
+//                ALIPAY_QR = "支付宝当面付之扫码支付";
+//                PC_MGR = "管理平台支付";
+//                JD_PAY = "京东支付
+                if("WX_JSAPI".equals(payChannel)) {
+                    payChannel = "微信公众号支付";
+                } else if("WX_NATIVE".equals(payChannel)) {
+                    payChannel = "微信原生扫码支付";
+                } else if("WX_APP".equals(payChannel)) {
+                    payChannel = "微信APP支付";
+                } else if("WX_MWEB".equals(payChannel)) {
+                    payChannel = "微信H5支付";
+                } else if("IAP".equals(payChannel)) {
+                    payChannel = "苹果应用内支付";
+                } else if("ALIPAY_MOBILE".equals(payChannel)) {
+                    payChannel = "支付宝移动支付";
+                } else if("ALIPAY_PC".equals(payChannel)) {
+                    payChannel = "支付宝PC支付";
+                } else if("ALIPAY_WAP".equals(payChannel)) {
+                    payChannel = "支付宝WAP支付";
+                } else if("ALIPAY_QR".equals(payChannel)) {
+                    payChannel = "支付宝当面付之扫码支付";
+                } else if("PC_MGR".equals(payChannel)) {
+                    payChannel = "管理平台支付";
+                } else if("JD_PAY".equals(payChannel)) {
+                    payChannel = "京东支付";
+                }
+                mchCheckOutDetail.setPayChannel(payChannel);
+                mchCheckOutDetail.setCreateTime(bodyMap.get("createTime").toString());
+                mchCheckOutDetail.setUpdateTime(bodyMap.get("updateTime").toString());
+                list.add(mchCheckOutDetail);
             }
 
             // 返回商户信息

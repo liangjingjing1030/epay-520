@@ -3,6 +3,7 @@ package org.epay.service.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.commons.lang.StringUtils;
 import org.epay.common.util.DateUtils;
 import org.epay.common.util.MyBase64;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -301,6 +303,111 @@ public class BillServiceController {
         return retObj.toJSONString();
     }
 
+    // 删除活动
+    @RequestMapping(value = "/bill/delete_activity")
+    public String deleteActivity(@RequestParam String jsonParam) {
+        _log.info("delete_activity << {}", jsonParam);
+
+        String param = new String(MyBase64.decode(jsonParam));
+        JSONObject paramObj = JSON.parseObject(param);
+
+        JSONArray ids = paramObj.getJSONArray("ids");
+        // json数组转ArrayList
+        ArrayList<String> list = new ArrayList<String>();
+        if (ids != null) {
+            int len = ids.size();
+            for (int i=0;i<len;i++){
+                list.add(ids.get(i).toString());
+            }
+        }
+        // 删除账单
+        boolean deleteOK = activityService.removeActivity(list);
+
+        JSONObject retObj = new JSONObject();
+        // 删除账单失败
+        if(!deleteOK) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "删除活动失败！");
+            return retObj.toJSONString();
+        }
+
+        retObj.put("code", "0000");
+        retObj.put("result" , deleteOK);
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
+    // 停止活动
+    @RequestMapping(value = "/bill/stop_activity")
+    public String stopActivity(@RequestParam String jsonParam) {
+        _log.info("stop_activity << {}", jsonParam);
+
+        String param = new String(MyBase64.decode(jsonParam));
+        JSONObject paramObj = JSON.parseObject(param);
+
+        JSONArray ids = paramObj.getJSONArray("ids");
+        // json数组转ArrayList
+        ArrayList<String> list = new ArrayList<String>();
+        if (ids != null) {
+            int len = ids.size();
+            for (int i=0;i<len;i++){
+                list.add(ids.get(i).toString());
+            }
+        }
+        //
+        boolean deleteOK = activityService.stopActivity(list);
+
+        JSONObject retObj = new JSONObject();
+        // 删除账单失败
+        if(!deleteOK) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "停止活动失败！");
+            return retObj.toJSONString();
+        }
+
+        retObj.put("code", "0000");
+        retObj.put("result" , deleteOK);
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
+    // 恢复活动
+    @RequestMapping(value = "/bill/restart_activity")
+    public String restartActivity(@RequestParam String jsonParam) {
+        _log.info("restart_activity << {}", jsonParam);
+
+        String param = new String(MyBase64.decode(jsonParam));
+        JSONObject paramObj = JSON.parseObject(param);
+
+        JSONArray ids = paramObj.getJSONArray("ids");
+        // json数组转ArrayList
+        ArrayList<String> list = new ArrayList<String>();
+        if (ids != null) {
+            int len = ids.size();
+            for (int i=0;i<len;i++){
+                list.add(ids.get(i).toString());
+            }
+        }
+        //
+        boolean deleteOK = activityService.restartActivity(list);
+
+        JSONObject retObj = new JSONObject();
+        // 删除账单失败
+        if(!deleteOK) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "恢复活动失败！");
+            return retObj.toJSONString();
+        }
+
+        retObj.put("code", "0000");
+        retObj.put("result" , deleteOK);
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
     // 生成回单
     @RequestMapping(value = "/bill/userGenerateReceipt")
     public String userGenerateReceipt(@RequestParam String jsonParam) {
@@ -428,7 +535,9 @@ public class BillServiceController {
         }
         activity.setStartTime(start_time);
         activity.setEndTime(end_time);
-        activity.setCreateTime(new Date().toString());
+        activity.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        // 设置可用状态为可用  可用状态 0：不可用；1：可用
+        activity.setActivityStatus((byte)1);// 默认可用
 
         // 创建活动
         int saveCount = activityService.save(activity);
@@ -519,6 +628,7 @@ public class BillServiceController {
         return retObj.toJSONString();
     }
 
+
     // 导入账单start————————————————————————————————————————————————————————————————————————
     @RequestMapping(value = "/bill/importAccountFile")
     public String importAccountFile(@RequestParam String jsonParam) {
@@ -528,8 +638,22 @@ public class BillServiceController {
         JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
         // 1.json转bean对象
         JSONObject ac = paramObj.getJSONObject("accountFile");
+        JSONObject mk = paramObj.getJSONObject("modelKey");
         AccountFile accountFile = JSON.parseObject(ac.toJSONString(), AccountFile.class);
-        // 3.账单文件
+        ModelKey modelKey = JSON.parseObject(mk.toJSONString(), ModelKey.class);
+        // 解析map(json转map)
+//        String str = paramObj.getString("titlePositionMap");
+//        Map<String, Integer> map = JSON.parseObject(str,new TypeReference<Map<String,Integer>>(){});
+        /*Set<Map.Entry<String, Integer>> m = map.entrySet();
+        Iterator<Map.Entry<String, Integer>> it = m.iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Integer> en = it.next();
+            String title = en.getKey();
+            int position = en.getValue();
+            System.out.println(title + "===" + position);
+        }*/
+
+        // 2.账单文件
         List<AccountBook> accountBookList = new ArrayList<>();
         Integer arrayCount = paramObj.getInteger("arrayCount");// 数组个数/accountBook个数/上传的表中行数
         for(int j = 1; j <= arrayCount; j++) {
@@ -589,9 +713,87 @@ public class BillServiceController {
             mchId = accountBook.getMch_id();
         }
 
-
-        // 导入账单
-        boolean importOK = accountFileService.importAccountFileAndAccountBook(accountFile,accountBookList);
+        // 3.模板内容
+        List<ModelValue> modelValueList = new ArrayList<>();
+        Integer arrayCount2 = paramObj.getInteger("arrayCount2");// 数组个数/modelValue个数/上传的表中行数
+        for(int j = 1; j <= arrayCount2; j++) {
+            JSONArray array = paramObj.getJSONArray("anotherArray" + j);
+            //array = {Account_book_id,Mch_id,Items_id,User_id,User_name,Currency,Items_money,Pay_time,Pay_status};
+            // json数组转List
+            List<String> list = new ArrayList<String>();
+            if (array != null) {
+                int len = array.size();
+                for (int i=0;i<len;i++){
+                    list.add(array.get(i).toString());
+                }
+            }
+            // list转为ModelValue对象
+            ModelValue modelValue = new ModelValue();
+            for(int i = 0 ; i < list.size() ; i++) {
+                // 保存顺序modelValueId、modelKeyId、user_id、items_money、value1、value2……
+                String s = list.get(i);
+                if(i == 0) {
+                    if(!"".equals(s)) {
+                        modelValue.setModelValueId(s);
+                    }
+                } else if(i == 1) {
+                    if(!"".equals(s)) {
+                        modelValue.setModelKeyId(s);
+                    }
+                } else if(i == 2) {
+                    if(!"".equals(s)) {
+                        modelValue.setUserIdValue(s);
+                    }
+                } else if(i == 3) {
+                    if(!"".equals(s)) {
+                        modelValue.setItemsMoneyValue(Long.parseLong(s));
+                    }
+                } else if(i == 4) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue1(s);
+                    }
+                }  else if(i == 5) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue2(s);
+                    }
+                }  else if(i == 6) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue3(s);
+                    }
+                }  else if(i == 7) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue4(s);
+                    }
+                }  else if(i == 8) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue5(s);
+                    }
+                }  else if(i == 9) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue6(s);
+                    }
+                }  else if(i == 10) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue7(s);
+                    }
+                }  else if(i == 11) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue8(s);
+                    }
+                }  else if(i == 12) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue9(s);
+                    }
+                }  else if(i == 13) {
+                    if(!"".equals(s)) {// 如果为空已在mgr中设置为""
+                        modelValue.setValue10(s);
+                    }
+                }
+            }
+            modelValueList.add(modelValue);
+        }
+        // 导入账单结果
+        boolean importOK = accountFileService.importAccountFileAndAccountBook(accountFile,accountBookList,modelKey,modelValueList);
 
         JSONObject retObj = new JSONObject();
         retObj.put("code", "0000");
@@ -613,6 +815,7 @@ public class BillServiceController {
         return retObj.toJSONString();
     }
     // 导入账单end——————————————————————————————————————————————————————————————————————————
+
 
     // accountFile分页显示
     @RequestMapping(value = "/bill/AccountFilePageByMchId")
@@ -654,6 +857,49 @@ public class BillServiceController {
         _log.info("result:{}", retObj.toJSONString());
         return retObj.toJSONString();
     }
+
+
+    // 活动分页显示
+    @RequestMapping(value = "/bill/ActivityPageByMchId")
+    public String selectActivityByMchId(@RequestParam String jsonParam) {
+        _log.info("ActivityPageByMchId << {}", jsonParam);
+
+        String param = new String(MyBase64.decode(jsonParam));
+        JSONObject paramObj = JSON.parseObject(param);
+        String mch_id = paramObj.getString("mch_id");
+        String startIndex = paramObj.getString("startIndex");
+        String pageSize = paramObj.getString("pageSize");
+
+        // 查询商户活动信息
+        Map<String, Object> dataMap = activityService.selectActivityPageByMchId(mch_id, startIndex, pageSize);
+
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+        int total = (int) dataMap.get("total");
+        if(total == 0) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "当前商户未创建活动");
+            return retObj.toJSONString();
+        }
+
+        retObj.put("total", total);
+        List<Activity> activityListi = (List<Activity>) dataMap.get("pageList");
+        retObj.put("count", activityListi.size());
+        int i = 1;
+        // 遍历list
+        for(Activity activity : activityListi) {
+            retObj.put("result" + (i++), JSON.toJSON(activity));
+        }
+
+        _log.info("result:{}", retObj.toJSONString());
+        return retObj.toJSONString();
+    }
+
 
     // 导出全部账单
     @RequestMapping(value = "/bill/exportAllAccountBook")

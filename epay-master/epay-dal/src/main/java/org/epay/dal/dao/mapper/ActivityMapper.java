@@ -1,5 +1,6 @@
 package org.epay.dal.dao.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.epay.dal.dao.model.Activity;
 
 import java.util.List;
@@ -23,4 +24,10 @@ public interface ActivityMapper {
      * @return
      */
     List<String> selectByMchId(String mch_id);
+
+    int getTotalByMchId(String mchId);
+
+    List<Activity> getPageList(@Param("mch_id") String mchId,
+                               @Param("start_index") int parseInt,
+                               @Param("page_size") int parseInt1);
 }

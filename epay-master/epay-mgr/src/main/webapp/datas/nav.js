@@ -1,5 +1,5 @@
 var navs = [{
-	"title": "商户管理",
+	"title": "商户模块",
 	"icon": "fa-user",
 	"spread": true,
 	"children": [{
@@ -8,20 +8,24 @@ var navs = [{
 		"href": "/custBaseInfo.jsp"
 	}]
 },{
-	"title": "账单管理",
+	"title": "账单模块",
 	"icon": "fa-file-text-o",
 	"spread": false,
 	"children": [{
-		"title": "上传/删除",
+		"title": "活动管理",
+		"icon": "fa-circle",
+		"href": "/activity.jsp"
+	}, {
+		"title": "账单管理",
 		"icon": "fa-circle",
 		"href": "/billUploadAndDelete.jsp"
 	}, {
-		"title": "查询/导出",
+		"title": "账单查询",
 		"icon": "fa-circle",
 		"href": "/billqueryAndExport.jsp"
 	}]
 },{
-	"title": "交易管理",
+	"title": "交易模块",
 	"icon": "fa-gg",
 	"spread": false,
 	"children": [{
@@ -42,7 +46,7 @@ var navs = [{
 		"href": "/refundDetail.jsp"
 	}]
 },{
-	"title": "结算管理",
+	"title": "结算模块",
 	"icon": "fa-usd",
 	"spread": false,
 	"children": [{

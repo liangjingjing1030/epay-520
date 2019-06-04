@@ -26,6 +26,14 @@ public class AccountFilePageServiceClient {
         return " select mchInfo error";
     }
 
+    @HystrixCommand(fallbackMethod = "ActivityPageByMchIdFallback")
+    public String ActivityPageByMchId(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/bill/ActivityPageByMchId?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String ActivityPageByMchIdFallback(String jsonParam) {
+        return " select mchInfo error";
+    }
+
     @HystrixCommand(fallbackMethod = "checkIfCanDeleteAccountFileFallback")
     public String checkIfCanDeleteAccountFile(String jsonParam) {
         return restTemplate.getForEntity("http://EPAY-SERVICE/bill/checkIfCanDeleteAccountFile?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
@@ -39,6 +47,30 @@ public class AccountFilePageServiceClient {
         return restTemplate.getForEntity("http://EPAY-SERVICE/bill/deleteAccountFile?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
     }
     public String deleteAccountFileFallback(String jsonParam) {
+        return " delete AccountFile error";
+    }
+
+    @HystrixCommand(fallbackMethod = "deleteActivityFallback")
+    public String deleteActivity(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/bill/delete_activity?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String deleteActivityFallback(String jsonParam) {
+        return " delete AccountFile error";
+    }
+
+    @HystrixCommand(fallbackMethod = "stopActivityFallback")
+    public String stopActivity(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/bill/stop_activity?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String stopActivityFallback(String jsonParam) {
+        return " delete AccountFile error";
+    }
+
+    @HystrixCommand(fallbackMethod = "restartActivityFallback")
+    public String restartActivity(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/bill/restart_activity?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String restartActivityFallback(String jsonParam) {
         return " delete AccountFile error";
     }
 

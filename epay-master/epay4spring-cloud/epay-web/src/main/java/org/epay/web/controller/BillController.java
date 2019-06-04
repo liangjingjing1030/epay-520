@@ -47,6 +47,9 @@ public class BillController {
      * 导入账单
      * 1.保存文件信息到accountFile表中
      * 2.解析表中的数据保存到accountBook表中
+     * 3.保存ModelKey信息
+     * 4.解析表中的数据保存到ModelValue表中
+     * 2019年6月4日08:59:18
      */
     @RequestMapping(value = "/bill_import_accountFile")
     public String importAccountFile(@RequestParam String params) {
@@ -81,16 +84,28 @@ public class BillController {
             // 获取请求体
             JSONObject requestBody = object.getJSONObject("request_body");
             JSONObject accountFile2 = requestBody.getJSONObject("accountFile");// 账单信息
+            JSONObject modelKey = requestBody.getJSONObject("modelKey");// 模板标题
+//            JSONObject titlePositionMap = requestBody.getJSONObject("titlePositionMap");// model标题位置
+
             Integer arrayCount = requestBody.getInteger("arrayCount");// 数组个数/accountBook个数/上传的表中行数
             for(int i = 1; i <= arrayCount; i++) {
                 JSONArray array = requestBody.getJSONArray("array" + i);
                 payContext.put("array" + i, array);
             }
-
             payContext.put("arrayCount", arrayCount);
+
+            Integer arrayCount2 = requestBody.getInteger("arrayCount2");// 数组个数/accountBook个数/上传的表中行数
+            for(int i = 1; i <= arrayCount2; i++) {
+                JSONArray array = requestBody.getJSONArray("anotherArray" + i);
+                payContext.put("anotherArray" + i, array);
+            }
+            payContext.put("arrayCount2", arrayCount2);
+
             payContext.put("accountFile", accountFile2);
+            payContext.put("modelKey", modelKey);
+//            payContext.put("titlePositionMap", titlePositionMap);
+
             // 查询商户账单信息list
-//            String retStr = mchInfoServiceClient.mchQueryOrders(payContext.toJSONString());// 多个参数用这个
             String retStr = accountFileServiceClient.importAccountFile(payContext.toJSONString());
             // 将商户账单信息转换为JSONObject对象
             JSONObject retObj = JSON.parseObject(retStr);
@@ -131,10 +146,7 @@ public class BillController {
     }
 
     /**
-     * 商户信息查询
-     * 1)先验证接口参数以及签名信息
-     * 2)根据参数查询商户账单信息
-     * 3)返回商户数据
+     * accountFile分页显示
      */
     @RequestMapping(value = "/bill_query_accountFile")
     public String mchQueryOrders(@RequestParam String params) {
@@ -240,6 +252,115 @@ public class BillController {
             return EPayUtil.makeRetFail(response);
         }
     }
+
+
+    /**
+     * 活动分页显示
+     */
+    @RequestMapping(value = "/bill_query_activity")
+    public String queryActivity(@RequestParam String params) {
+        _log.info("###### 开始接收查询活动请求 ######");
+        JSONObject object;
+        String logPrefix = "【查询活动】";
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        // 获取本地服务实例(获取service工程)
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/bill_query_activity, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            // 将请求参数转换为JSONObject对象
+            object = JSONObject.parseObject(params);
+            // 获取请求头
+            JSONObject channelObj = object.getJSONObject("request_header");
+            // 从请求头中获取渠道信息
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            /*String errorMessage = validateParams(object, payContext);//携带请求参数+响应私钥
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            _log.debug("请求参数及签名校验通过");*/
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+            String mch_id = requestBody.getString("mch_id");// 商户ID
+            String startIndex = requestBody.getString("startIndex");
+            String pageSize = requestBody.getString("pageSize");//
+
+            payContext.put("mch_id", mch_id);
+            payContext.put("startIndex", startIndex);
+            payContext.put("pageSize", pageSize);
+            // 查询商户账单信息list
+            String retStr = accountFileServiceClient.ActivityPageByMchId(payContext.toJSONString());
+            // 将商户账单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}查询活动,结果:{}", logPrefix, retObj);
+
+            // 0000表示查询成功，且查询对象不为null
+            if(!"0000".equals(retObj.getString("code"))) {
+            	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+            	response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "活动信息不存在", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+
+            List<Map<String, Object>> list = new ArrayList<>();
+            //获取查询到的渠道总条数
+            int total = retObj.getInteger("total");
+            // 本次分页查询的总条数
+            int count = retObj.getInteger("count");
+            for(int i = 1; i <= count; i++) {
+                // 结果对象
+                JSONObject activity = retObj.getJSONObject("result" + i);
+                Map<String, Object> map = new HashMap<String, Object>();
+
+                map.put("activityId", activity.getString("activityId") == null ? "" : activity.getString("activityId"));
+                map.put("itemsId", activity.getString("itemsId") == null ? "" : activity.getString("itemsId"));
+                map.put("mchId",	activity.getString("mchId") == null ? "" : activity.getString("mchId"));
+                map.put("activityName",	activity.getString("activityName") == null ? "" : activity.getString("activityName"));
+                map.put("activityType",	activity.getString("activityType") == null ? "" : activity.getString("activityType"));
+                map.put("createTime",	activity.getString("createTime") == null ? "" : activity.getString("createTime"));
+                map.put("startTime", activity.getString("startTime") == null ? "" : activity.getString("startTime"));
+                map.put("endTime", activity.getString("endTime") == null ? "" : activity.getString("endTime"));
+                map.put("activityStatus", activity.getByte("activityStatus") == null ? "" : activity.getByte("activityStatus"));
+                list.add(map);
+            }
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "活动信息查询成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("ActivityList", list);
+            retBody.put("total", total);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("活动信息查询成功,channel={}", response);
+            _log.info("###### 活动信息查询处理完成 ######");
+            // 管理平台账单
+            /*if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }*/
+            return EPayUtil.makeRetData(response);//JSON.toJSONString
+
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
 
     /*
      *   accountBook分页查询
@@ -890,6 +1011,255 @@ public class BillController {
             response.put("response_body", retBody);
             _log.info("删除账单查询成功,channel={}", response);
             _log.info("###### 删除账单处理完成 ######");
+            // 管理平台账单
+            /*if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }*/
+            return EPayUtil.makeRetData(response);//JSON.toJSONString
+
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
+    /**
+     * 删除活动
+     */
+    @RequestMapping(value = "/bill_delete_activity")
+    public String deleteActivity(@RequestParam String params) {
+        _log.info("###### 删除活动信息请求 ######");
+        JSONObject object;
+        String logPrefix = "【删除活动】";
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        // 获取本地服务实例(获取service工程)
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/bill_delete_accountFile, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            // 将请求参数转换为JSONObject对象
+            object = JSONObject.parseObject(params);
+            // 获取请求头
+            JSONObject channelObj = object.getJSONObject("request_header");
+            // 从请求头中获取渠道信息
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            /*String errorMessage = validateParams(object, payContext);//携带请求参数+响应私钥
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            _log.debug("请求参数及签名校验通过");*/
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+            // 要删除的accountFile的所有主键
+            JSONArray ids = requestBody.getJSONArray("ids");
+
+            payContext.put("ids", ids);
+            // 删除活动
+            String retStr = accountFileServiceClient.deleteActivity(payContext.toJSONString());
+            // 将商户账单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}删除活动,结果:{}", logPrefix, retObj);
+
+            // 0000表示查询成功
+            if(!"0000".equals(retObj.getString("code"))) {
+            	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+            	response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "删除活动失败", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            // 结果对象
+            boolean deleteOK = retObj.getBoolean("result");
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "删除活动成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("result", deleteOK);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("删除活动查询成功,channel={}", response);
+            _log.info("###### 删除活动处理完成 ######");
+            // 管理平台账单
+            /*if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }*/
+            return EPayUtil.makeRetData(response);//JSON.toJSONString
+
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
+    /**
+     * 停止活动
+     */
+    @RequestMapping(value = "/bill_stop_activity")
+    public String stopActivity(@RequestParam String params) {
+        _log.info("###### 停止活动信息请求 ######");
+        JSONObject object;
+        String logPrefix = "【停止活动】";
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        // 获取本地服务实例(获取service工程)
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/bill_stop_activity, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            // 将请求参数转换为JSONObject对象
+            object = JSONObject.parseObject(params);
+            // 获取请求头
+            JSONObject channelObj = object.getJSONObject("request_header");
+            // 从请求头中获取渠道信息
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            /*String errorMessage = validateParams(object, payContext);//携带请求参数+响应私钥
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            _log.debug("请求参数及签名校验通过");*/
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+            // 要删除的accountFile的所有主键
+            JSONArray ids = requestBody.getJSONArray("ids");
+
+            payContext.put("ids", ids);
+            // 删除活动
+            String retStr = accountFileServiceClient.stopActivity(payContext.toJSONString());
+            // 将商户账单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}停止活动,结果:{}", logPrefix, retObj);
+
+            // 0000表示查询成功
+            if(!"0000".equals(retObj.getString("code"))) {
+            	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+            	response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "停止活动失败", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            // 结果对象
+            boolean deleteOK = retObj.getBoolean("result");
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "停止活动成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("result", deleteOK);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("停止活动查询成功,channel={}", response);
+            _log.info("###### 停止活动处理完成 ######");
+            // 管理平台账单
+            /*if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }*/
+            return EPayUtil.makeRetData(response);//JSON.toJSONString
+
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
+    /**
+     * 恢复活动
+     */
+    @RequestMapping(value = "/bill_restart_activity")
+    public String restartActivity(@RequestParam String params) {
+        _log.info("###### 恢复活动信息请求 ######");
+        JSONObject object;
+        String logPrefix = "【恢复活动】";
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        // 获取本地服务实例(获取service工程)
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/bill_restart_activity, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            // 将请求参数转换为JSONObject对象
+            object = JSONObject.parseObject(params);
+            // 获取请求头
+            JSONObject channelObj = object.getJSONObject("request_header");
+            // 从请求头中获取渠道信息
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            /*String errorMessage = validateParams(object, payContext);//携带请求参数+响应私钥
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            _log.debug("请求参数及签名校验通过");*/
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+            // 要删除的accountFile的所有主键
+            JSONArray ids = requestBody.getJSONArray("ids");
+
+            payContext.put("ids", ids);
+            //
+            String retStr = accountFileServiceClient.restartActivity(payContext.toJSONString());
+            // 将商户账单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}恢复活动,结果:{}", logPrefix, retObj);
+
+            // 0000表示查询成功
+            if(!"0000".equals(retObj.getString("code"))) {
+            	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+            	response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "恢复活动失败", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            // 结果对象
+            boolean deleteOK = retObj.getBoolean("result");
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "恢复活动成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("result", deleteOK);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("恢复活动查询成功,channel={}", response);
+            _log.info("###### 恢复活动处理完成 ######");
             // 管理平台账单
             /*if("MGR".equals(request_channel)) {
             	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
@@ -1991,7 +2361,7 @@ public class BillController {
                 return errorMessage;
             }
             // 商户状态,0-未激活,1-使用中,2-停止使用
-            if(mchInfo.getByte("mch_status") != 1) {
+            if(mchInfo.getByte("audit_status") != 1) {
                 errorMessage = "商户未启用 [mch_id="+mch_id+"].";
                 return errorMessage;
             }

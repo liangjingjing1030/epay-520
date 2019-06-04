@@ -174,7 +174,7 @@ public class QueryAccountBookController {
                 errorMessage = "未查询到[mch_id="+mch_id+"] 的商户信息 in db.";
                 return errorMessage;
             }
-            if(mchInfo.getByte("mch_status") != 1) {
+            if(mchInfo.getByte("audit_status") != 1) {
                 errorMessage = "商户号为 [mch_id="+mch_id+"] 的商户信息为启用 in db.";
                 return errorMessage;
             }

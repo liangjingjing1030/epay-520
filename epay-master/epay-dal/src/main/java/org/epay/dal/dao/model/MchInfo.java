@@ -46,11 +46,11 @@ public class MchInfo implements Serializable {
     private String mch_address;
 
     /**
-     * 商户状态,0-未激活,1-使用中,2-停止使用
+     * 下级审核机构
      *
      * @mbg.generated
      */
-    private Byte mch_status;
+    private Long next_audit_dept_id;
 
     /**
      * 联系人姓名
@@ -267,12 +267,16 @@ A-台胞证
         this.mch_address = mch_address == null ? null : mch_address.trim();
     }
 
-    public Byte getMch_status() {
-        return mch_status;
+    public Long getNext_audit_dept_id() {
+        return next_audit_dept_id;
     }
 
-    public void setMch_status(Byte mch_status) {
-        this.mch_status = mch_status;
+    public void setNext_audit_dept_id(Long next_audit_dept_id) {
+        this.next_audit_dept_id = next_audit_dept_id;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getContact_person() {
@@ -463,7 +467,7 @@ A-台胞证
         sb.append(", mch_range=").append(mch_range);
         sb.append(", mch_city=").append(mch_city);
         sb.append(", mch_address=").append(mch_address);
-        sb.append(", mch_status=").append(mch_status);
+        sb.append(", next_audit_dept_id=").append(next_audit_dept_id);
         sb.append(", contact_person=").append(contact_person);
         sb.append(", contact_phone=").append(contact_phone);
         sb.append(", contact_email=").append(contact_email);
@@ -508,7 +512,7 @@ A-台胞证
             && (this.getMch_range() == null ? other.getMch_range() == null : this.getMch_range().equals(other.getMch_range()))
             && (this.getMch_city() == null ? other.getMch_city() == null : this.getMch_city().equals(other.getMch_city()))
             && (this.getMch_address() == null ? other.getMch_address() == null : this.getMch_address().equals(other.getMch_address()))
-            && (this.getMch_status() == null ? other.getMch_status() == null : this.getMch_status().equals(other.getMch_status()))
+            && (this.getNext_audit_dept_id() == null ? other.getNext_audit_dept_id() == null : this.getNext_audit_dept_id().equals(other.getNext_audit_dept_id()))
             && (this.getContact_person() == null ? other.getContact_person() == null : this.getContact_person().equals(other.getContact_person()))
             && (this.getContact_phone() == null ? other.getContact_phone() == null : this.getContact_phone().equals(other.getContact_phone()))
             && (this.getContact_email() == null ? other.getContact_email() == null : this.getContact_email().equals(other.getContact_email()))
@@ -543,7 +547,7 @@ A-台胞证
         result = prime * result + ((getMch_range() == null) ? 0 : getMch_range().hashCode());
         result = prime * result + ((getMch_city() == null) ? 0 : getMch_city().hashCode());
         result = prime * result + ((getMch_address() == null) ? 0 : getMch_address().hashCode());
-        result = prime * result + ((getMch_status() == null) ? 0 : getMch_status().hashCode());
+        result = prime * result + ((getNext_audit_dept_id() == null) ? 0 : getNext_audit_dept_id().hashCode());
         result = prime * result + ((getContact_person() == null) ? 0 : getContact_person().hashCode());
         result = prime * result + ((getContact_phone() == null) ? 0 : getContact_phone().hashCode());
         result = prime * result + ((getContact_email() == null) ? 0 : getContact_email().hashCode());

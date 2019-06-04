@@ -14,4 +14,11 @@ public interface ModelKeyMapper {
     int updateByPrimaryKeySelective(ModelKey record);
 
     int updateByPrimaryKey(ModelKey record);
+
+    /**
+     * 查询重复
+     * @param modelKey
+     * @return
+     */
+    ModelKey selectByAllCondition(ModelKey modelKey);
 }

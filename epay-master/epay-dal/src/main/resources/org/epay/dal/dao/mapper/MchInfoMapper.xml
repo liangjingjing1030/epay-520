@@ -8,7 +8,7 @@
     <result column="mch_range" jdbcType="VARCHAR" property="mch_range" />
     <result column="mch_city" jdbcType="VARCHAR" property="mch_city" />
     <result column="mch_address" jdbcType="VARCHAR" property="mch_address" />
-    <result column="mch_status" jdbcType="TINYINT" property="mch_status" />
+    <result column="next_audit_dept_id" jdbcType="BIGINT" property="next_audit_dept_id" />
     <result column="contact_person" jdbcType="VARCHAR" property="contact_person" />
     <result column="contact_phone" jdbcType="VARCHAR" property="contact_phone" />
     <result column="contact_email" jdbcType="VARCHAR" property="contact_email" />
@@ -91,7 +91,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    mch_id, mch_name, mch_type, mch_range, mch_city, mch_address, mch_status, contact_person, 
+    mch_id, mch_name, mch_type, mch_range, mch_city, mch_address, next_audit_dept_id, contact_person,
     contact_phone, contact_email, certificate_type, certificate_number, business_license, 
     req_key, res_key, branch_id, branch_name, staff_id, stall_name, create_time, update_time, 
     audit_time, audit_status, audit_reason, reserve1, reserve2, reserve3, reserve4, reserve5
@@ -137,7 +137,7 @@
   <insert id="insert" parameterType="org.epay.dal.dao.model.MchInfo">
     insert into epay_mch_info (mch_id, mch_name, mch_type, 
       mch_range, mch_city, mch_address, 
-      mch_status, contact_person, contact_phone, 
+      next_audit_dept_id, contact_person, contact_phone,
       contact_email, certificate_type, certificate_number, 
       business_license, req_key, res_key, 
       branch_id, branch_name, staff_id, 
@@ -147,7 +147,7 @@
       reserve4, reserve5)
     values (#{mch_id,jdbcType=VARCHAR}, #{mch_name,jdbcType=VARCHAR}, #{mch_type,jdbcType=VARCHAR}, 
       #{mch_range,jdbcType=VARCHAR}, #{mch_city,jdbcType=VARCHAR}, #{mch_address,jdbcType=VARCHAR}, 
-      #{mch_status,jdbcType=TINYINT}, #{contact_person,jdbcType=VARCHAR}, #{contact_phone,jdbcType=VARCHAR}, 
+      #{next_audit_dept_id,jdbcType=TINYINT}, #{contact_person,jdbcType=VARCHAR}, #{contact_phone,jdbcType=VARCHAR},
       #{contact_email,jdbcType=VARCHAR}, #{certificate_type,jdbcType=VARCHAR}, #{certificate_number,jdbcType=VARCHAR}, 
       #{business_license,jdbcType=VARCHAR}, #{req_key,jdbcType=VARCHAR}, #{res_key,jdbcType=VARCHAR}, 
       #{branch_id,jdbcType=VARCHAR}, #{branch_name,jdbcType=VARCHAR}, #{staff_id,jdbcType=VARCHAR}, 
@@ -177,8 +177,8 @@
       <if test="mch_address != null">
         mch_address,
       </if>
-      <if test="mch_status != null">
-        mch_status,
+      <if test="next_audit_dept_id != null">
+        next_audit_dept_id,
       </if>
       <if test="contact_person != null">
         contact_person,
@@ -266,8 +266,8 @@
       <if test="mch_address != null">
         #{mch_address,jdbcType=VARCHAR},
       </if>
-      <if test="mch_status != null">
-        #{mch_status,jdbcType=TINYINT},
+      <if test="next_audit_dept_id != null">
+        #{next_audit_dept_id,jdbcType=TINYINT},
       </if>
       <if test="contact_person != null">
         #{contact_person,jdbcType=VARCHAR},
@@ -364,8 +364,8 @@
       <if test="record.mch_address != null">
         mch_address = #{record.mch_address,jdbcType=VARCHAR},
       </if>
-      <if test="record.mch_status != null">
-        mch_status = #{record.mch_status,jdbcType=TINYINT},
+      <if test="record.next_audit_dept_id != null">
+        next_audit_dept_id = #{record.next_audit_dept_id,jdbcType=TINYINT},
       </if>
       <if test="record.contact_person != null">
         contact_person = #{record.contact_person,jdbcType=VARCHAR},
@@ -446,7 +446,7 @@
       mch_range = #{record.mch_range,jdbcType=VARCHAR},
       mch_city = #{record.mch_city,jdbcType=VARCHAR},
       mch_address = #{record.mch_address,jdbcType=VARCHAR},
-      mch_status = #{record.mch_status,jdbcType=TINYINT},
+      next_audit_dept_id = #{record.next_audit_dept_id,jdbcType=TINYINT},
       contact_person = #{record.contact_person,jdbcType=VARCHAR},
       contact_phone = #{record.contact_phone,jdbcType=VARCHAR},
       contact_email = #{record.contact_email,jdbcType=VARCHAR},
@@ -491,8 +491,8 @@
       <if test="mch_address != null">
         mch_address = #{mch_address,jdbcType=VARCHAR},
       </if>
-      <if test="mch_status != null">
-        mch_status = #{mch_status,jdbcType=TINYINT},
+      <if test="next_audit_dept_id != null">
+        next_audit_dept_id = #{next_audit_dept_id,jdbcType=TINYINT},
       </if>
       <if test="contact_person != null">
         contact_person = #{contact_person,jdbcType=VARCHAR},
@@ -570,7 +570,7 @@
       mch_range = #{mch_range,jdbcType=VARCHAR},
       mch_city = #{mch_city,jdbcType=VARCHAR},
       mch_address = #{mch_address,jdbcType=VARCHAR},
-      mch_status = #{mch_status,jdbcType=TINYINT},
+      next_audit_dept_id = #{next_audit_dept_id,jdbcType=TINYINT},
       contact_person = #{contact_person,jdbcType=VARCHAR},
       contact_phone = #{contact_phone,jdbcType=VARCHAR},
       contact_email = #{contact_email,jdbcType=VARCHAR},

@@ -16,20 +16,64 @@
     <result column="select9" property="select9" jdbcType="VARCHAR" />
     <result column="select10" property="select10" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     model_key_id, user_id, items_money, select1, select2, select3, select4, select5, 
     select6, select7, select8, select9, select10
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from epay_account_model_key
     where model_key_id = #{modelKeyId,jdbcType=VARCHAR}
   </select>
+
+  <!--查询重复-->
+  <select id="selectByAllCondition" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from epay_account_model_key
+    <where>
+      user_id = #{userId} and items_money = #{itemsMoney}
+      <if test="select1 != null and select1 != ''">
+        and select1 = #{select1}
+      </if>
+      <if test="select2 != null and select2 != ''">
+        and select2 = #{select2}
+      </if>
+      <if test="select3 != null and select3 != ''">
+        and select3 = #{select3}
+      </if>
+      <if test="select4 != null and select4 != ''">
+        and select4 = #{select4}
+      </if>
+      <if test="select5 != null and select5 != ''">
+        and select5 = #{select5}
+      </if>
+      <if test="select6 != null and select6 != ''">
+        and select6 = #{select6}
+      </if>
+      <if test="select7 != null and select7 != ''">
+        and select7 = #{select7}
+      </if>
+      <if test="select8 != null and select8 != ''">
+        and select8 = #{select8}
+      </if>
+      <if test="select9 != null and select9 != ''">
+        and select9 = #{select9}
+      </if>
+      <if test="select10 != null and select10 != ''">
+        and select10 = #{select10}
+      </if>
+    </where>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from epay_account_model_key
     where model_key_id = #{modelKeyId,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="org.epay.dal.dao.model.ModelKey" >
     insert into epay_account_model_key (model_key_id, user_id, items_money, 
       select1, select2, select3, 

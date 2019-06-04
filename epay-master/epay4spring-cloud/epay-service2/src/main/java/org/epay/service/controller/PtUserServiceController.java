@@ -134,17 +134,17 @@ public class PtUserServiceController {
      */
     @RequestMapping(value = "/pt_user/addIntoPtUser")
     public String addPtUser(@RequestParam String jsonParam) {
-        _log.info("pt_user/addIntoPtUser << {}", jsonParam);
         JSONObject retObj = new JSONObject();
         retObj.put("code", "0000");
-        
+
         if(StringUtils.isBlank(jsonParam)) {
             retObj.put("code", "0001"); // 参数错误
             retObj.put("msg", "缺少参数");
             return retObj.toJSONString();
         }
-        
+
         JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
+        _log.info("pt_user/addIntoPtUser << {}", paramObj);
         String mch_id = ""; // 商户ID
         String pswd	= "";	//登陆密码
         String account = "";// 登录账号

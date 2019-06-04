@@ -1,23 +1,27 @@
 package org.epay.dal.dao.model;
 
-public class MchCheckOut {
-    private String checkoutId;
+public class MchCheckOutDetail {
+    private String mchCheckoutId;
 
     private String mchId;
 
     private String mchName;
 
+    private Byte orderType;
+
     private String currency;
 
-    private Long dealMoney;
+    private String dealMoney;
 
-    private Long checkoutMoney;
+    private String checkoutMoney;
 
     private Integer checkoutRate;
 
     private String checkoutDate;
 
     private Byte settleStatus;
+
+    private String payChannel;
 
     private String createTime;
 
@@ -33,12 +37,12 @@ public class MchCheckOut {
 
     private String reserve5;
 
-    public String getCheckoutId() {
-        return checkoutId;
+    public String getMchCheckoutId() {
+        return mchCheckoutId;
     }
 
-    public void setCheckoutId(String checkoutId) {
-        this.checkoutId = checkoutId == null ? null : checkoutId.trim();
+    public void setMchCheckoutId(String mchCheckoutId) {
+        this.mchCheckoutId = mchCheckoutId == null ? null : mchCheckoutId.trim();
     }
 
     public String getMchId() {
@@ -57,6 +61,14 @@ public class MchCheckOut {
         this.mchName = mchName == null ? null : mchName.trim();
     }
 
+    public Byte getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Byte orderType) {
+        this.orderType = orderType;
+    }
+
     public String getCurrency() {
         return currency;
     }
@@ -65,19 +77,19 @@ public class MchCheckOut {
         this.currency = currency == null ? null : currency.trim();
     }
 
-    public Long getDealMoney() {
+    public String getDealMoney() {
         return dealMoney;
     }
 
-    public void setDealMoney(Long dealMoney) {
+    public void setDealMoney(String dealMoney) {
         this.dealMoney = dealMoney;
     }
 
-    public Long getCheckoutMoney() {
+    public String getCheckoutMoney() {
         return checkoutMoney;
     }
 
-    public void setCheckoutMoney(Long checkoutMoney) {
+    public void setCheckoutMoney(String checkoutMoney) {
         this.checkoutMoney = checkoutMoney;
     }
 
@@ -103,6 +115,14 @@ public class MchCheckOut {
 
     public void setSettleStatus(Byte settleStatus) {
         this.settleStatus = settleStatus;
+    }
+
+    public String getPayChannel() {
+        return payChannel;
+    }
+
+    public void setPayChannel(String payChannel) {
+        this.payChannel = payChannel == null ? null : payChannel.trim();
     }
 
     public String getCreateTime() {

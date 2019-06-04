@@ -96,11 +96,11 @@ public class MchInfoServiceController {
         String mch_address  = paramObj.getString("mch_address").trim();
         String contact_person  = paramObj.getString("contact_person").trim();
         String contact_phone  = paramObj.getString("contact_phone").trim();
+        String branch_id  = paramObj.getString("branch_id").trim();
         String contact_email  = "";
         String certificate_type  = "";
         String certificate_number  = "";
         String business_license  = "";
-        String branch_id  = "";
         String branch_name  = "";
         String staff_id  = "";
         String staff_name  = "";
@@ -143,14 +143,6 @@ public class MchInfoServiceController {
 			business_license = "";
 		}
         try {
-        	branch_id  = paramObj.getString("branch_id").trim();
-        	if(StringUtils.isBlank(branch_id)) {
-        		branch_id = "";
-        	}
-		} catch (Exception e) {
-			branch_id = "";
-		}
-        try {
         	branch_name  = paramObj.getString("branch_name").trim();
         	if(StringUtils.isBlank(branch_name)) {
         		branch_name = "";
@@ -187,7 +179,7 @@ public class MchInfoServiceController {
         mchInfo.setMch_range(mch_range);//经营范围
         mchInfo.setMch_city(mch_city);//商户所在城市
         mchInfo.setMch_address(mch_address);//商户地址
-        mchInfo.setMch_status((byte)0);//商户状态
+//        mchInfo.setMch_status((byte)0);//商户状态
         mchInfo.setContact_person(contact_person);//联系人姓名
         mchInfo.setContact_phone(contact_phone);//联系电话
         mchInfo.setContact_email(contact_email);//商户邮箱
@@ -202,6 +194,8 @@ public class MchInfoServiceController {
         mchInfo.setStall_name(staff_name);//拓展员工名称
         mchInfo.setCreate_time(myDate);//创建时间
         mchInfo.setAudit_status((byte)0);//审核状态
+        // 如果能走到这一步，说明机构号正确，保存机构号
+        mchInfo.setNext_audit_dept_id(Long.parseLong(branch_id));
         int retMchInfo = mchInfoService.insertMchInfo(mchInfo);
         if(retMchInfo <= 0) {
             retObj.put("code", "0007");
@@ -280,7 +274,7 @@ public class MchInfoServiceController {
     		map.put("mch_type", mchInfo1.getMch_type());	//	商户类型
     		map.put("mch_range", mchInfo1.getMch_range());	//	经营范围
     		map.put("mch_address", mchInfo1.getMch_address());	//	商户地址
-    		map.put("mch_status", mchInfo1.getMch_status());	//	商户状态
+//    		map.put("mch_status", mchInfo1.getMch_status());	//	商户状态
     		mchInfoList.add(map);
     	}
     	retObj.put("total_num", mchInfoNum);
@@ -290,5 +284,6 @@ public class MchInfoServiceController {
         
         return CollectionUtils.isEmpty(retObj) ? null : retObj.toJSONString();
     }
-    
+
+
 }

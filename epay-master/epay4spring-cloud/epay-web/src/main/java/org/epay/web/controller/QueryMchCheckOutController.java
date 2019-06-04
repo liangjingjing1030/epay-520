@@ -101,21 +101,22 @@ public class QueryMchCheckOutController {
             int count = retObj.getInteger("count");
             for(int i = 1; i <= count; i++) {
                 // 结果对象
-                JSONObject payOrder = retObj.getJSONObject("result" + i);
+                JSONObject checkOutDetail = retObj.getJSONObject("result" + i);
                 Map<String, Object> map = new HashMap<String, Object>();
 
-                map.put("mchCheckoutId", payOrder.getString("mchCheckoutId") == null ? "" : payOrder.getString("mchCheckoutId"));
-                map.put("mchId", payOrder.getString("mchId") == null ? "" : payOrder.getString("mchId"));
-                map.put("mchName",	payOrder.getString("mchName") == null ? "" : payOrder.getString("mchName"));
-                map.put("itemsId",	payOrder.getString("itemsId") == null ? "" : payOrder.getString("itemsId"));
-                map.put("currency", payOrder.getString("currency") == null ? "" : payOrder.getString("currency"));
-                map.put("dealMoney", payOrder.getLong("dealMoney") == null ? "" : payOrder.getLong("dealMoney"));
-                map.put("checkoutMoney", payOrder.getLong("checkoutMoney") == null ? "" : payOrder.getLong("checkoutMoney"));
-                map.put("checkoutRate", payOrder.getInteger("checkoutRate") == null ? "" : payOrder.getInteger("checkoutRate"));
-                map.put("checkoutDate", payOrder.getString("checkoutDate") == null ? "" : payOrder.getString("checkoutDate"));
-                map.put("settleStatus", payOrder.getByte("settleStatus") == null ? "" : payOrder.getByte("settleStatus"));
-                map.put("createTime", payOrder.getString("createTime") == null ? "" : payOrder.getString("createTime"));
-                map.put("updateTime", payOrder.getString("updateTime") == null ? "" : payOrder.getString("updateTime"));
+                map.put("mchCheckoutId", checkOutDetail.getString("mchCheckoutId") == null ? "" : checkOutDetail.getString("mchCheckoutId"));
+                map.put("mchId", checkOutDetail.getString("mchId") == null ? "" : checkOutDetail.getString("mchId"));
+                map.put("mchName",	checkOutDetail.getString("mchName") == null ? "" : checkOutDetail.getString("mchName"));
+                map.put("orderType",	checkOutDetail.getByte("orderType") == null ? "" : checkOutDetail.getByte("orderType"));
+                map.put("currency", checkOutDetail.getString("currency") == null ? "" : checkOutDetail.getString("currency"));
+                map.put("dealMoney", checkOutDetail.getLong("dealMoney") == null ? "" : checkOutDetail.getLong("dealMoney"));
+                map.put("checkoutMoney", checkOutDetail.getLong("checkoutMoney") == null ? "" : checkOutDetail.getLong("checkoutMoney"));
+                map.put("checkoutRate", checkOutDetail.getInteger("checkoutRate") == null ? "" : checkOutDetail.getInteger("checkoutRate"));
+                map.put("checkoutDate", checkOutDetail.getString("checkoutDate") == null ? "" : checkOutDetail.getString("checkoutDate"));
+                map.put("settleStatus", checkOutDetail.getByte("settleStatus") == null ? "" : checkOutDetail.getByte("settleStatus"));
+                map.put("payChannel", checkOutDetail.getString("payChannel") == null ? "" : checkOutDetail.getString("payChannel"));
+                map.put("createTime", checkOutDetail.getString("createTime") == null ? "" : checkOutDetail.getString("createTime"));
+                map.put("updateTime", checkOutDetail.getString("updateTime") == null ? "" : checkOutDetail.getString("updateTime"));
                 list.add(map);
             }
 
@@ -160,10 +161,9 @@ public class QueryMchCheckOutController {
         
         JSONObject request_body = params.getJSONObject("request_body");
         String mch_id = request_body.getString("mch_id");					// 商户ID
-        String items_id = request_body.getString("items_id");				// 项目编号
+        String pay_channel = request_body.getString("pay_channel");		// 支付渠道
         String start_time = request_body.getString("start_time");			// 开始时间
         String end_time = request_body.getString("end_time");				// 结束时间
-        String settle_status = request_body.getString("settle_status");	// 结算状态
         String startIndex = request_body.getString("startIndex");			// 页码
         String pageSize = request_body.getString("pageSize");				// 每页数量
 
@@ -197,7 +197,7 @@ public class QueryMchCheckOutController {
                 errorMessage = "未查询到[mch_id="+mch_id+"] 的商户信息 in db.";
                 return errorMessage;
             }
-            if(mchInfo.getByte("mch_status") != 1) {
+            if(mchInfo.getByte("audit_status") != 1) {
                 errorMessage = "商户号为 [mch_id="+mch_id+"] 的商户未启用 in db.";
                 return errorMessage;
             }
@@ -225,10 +225,9 @@ public class QueryMchCheckOutController {
             payContext.put("res_key", mchInfo.getString("res_key"));//商户响应私钥
         }
         payContext.put("mch_id", mch_id);
-        payContext.put("items_id", items_id);
+        payContext.put("pay_channel", pay_channel);
         payContext.put("start_time", start_time);
         payContext.put("end_time", end_time);
-        payContext.put("settle_status", settle_status);
         payContext.put("startIndex", startIndex);
         payContext.put("pageSize", pageSize);
 

@@ -46,11 +46,11 @@ public class MchInfo implements Serializable {
     private String mch_address;
 
     /**
-     * 商户状态,0-未激活,1-使用中,2-停止使用
+     * 下级审核机构
      *
      * @mbg.generated
      */
-    private Byte mch_status;
+    private Long next_audit_dept_id;
 
     /**
      * 联系人姓名
@@ -75,17 +75,17 @@ public class MchInfo implements Serializable {
 
     /**
      * 联系人证件类型:
-0-身份证
-1-护照
-2-军官证 
-3-士兵证
-4-港澳居民身份证
-5-户口本
-6-外国护照
-7-文职证
-8-警官证
-9-其它
-A-台胞证
+     0-身份证
+     1-护照
+     2-军官证
+     3-士兵证
+     4-港澳居民身份证
+     5-户口本
+     6-外国护照
+     7-文职证
+     8-警官证
+     9-其它
+     A-台胞证
      *
      * @mbg.generated
      */
@@ -267,12 +267,16 @@ A-台胞证
         this.mch_address = mch_address == null ? null : mch_address.trim();
     }
 
-    public Byte getMch_status() {
-        return mch_status;
+    public Long getNext_audit_dept_id() {
+        return next_audit_dept_id;
     }
 
-    public void setMch_status(Byte mch_status) {
-        this.mch_status = mch_status;
+    public void setNext_audit_dept_id(Long next_audit_dept_id) {
+        this.next_audit_dept_id = next_audit_dept_id;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getContact_person() {
@@ -463,7 +467,7 @@ A-台胞证
         sb.append(", mch_range=").append(mch_range);
         sb.append(", mch_city=").append(mch_city);
         sb.append(", mch_address=").append(mch_address);
-        sb.append(", mch_status=").append(mch_status);
+        sb.append(", next_audit_dept_id=").append(next_audit_dept_id);
         sb.append(", contact_person=").append(contact_person);
         sb.append(", contact_phone=").append(contact_phone);
         sb.append(", contact_email=").append(contact_email);
@@ -503,34 +507,34 @@ A-台胞证
         }
         MchInfo other = (MchInfo) that;
         return (this.getMch_id() == null ? other.getMch_id() == null : this.getMch_id().equals(other.getMch_id()))
-            && (this.getMch_name() == null ? other.getMch_name() == null : this.getMch_name().equals(other.getMch_name()))
-            && (this.getMch_type() == null ? other.getMch_type() == null : this.getMch_type().equals(other.getMch_type()))
-            && (this.getMch_range() == null ? other.getMch_range() == null : this.getMch_range().equals(other.getMch_range()))
-            && (this.getMch_city() == null ? other.getMch_city() == null : this.getMch_city().equals(other.getMch_city()))
-            && (this.getMch_address() == null ? other.getMch_address() == null : this.getMch_address().equals(other.getMch_address()))
-            && (this.getMch_status() == null ? other.getMch_status() == null : this.getMch_status().equals(other.getMch_status()))
-            && (this.getContact_person() == null ? other.getContact_person() == null : this.getContact_person().equals(other.getContact_person()))
-            && (this.getContact_phone() == null ? other.getContact_phone() == null : this.getContact_phone().equals(other.getContact_phone()))
-            && (this.getContact_email() == null ? other.getContact_email() == null : this.getContact_email().equals(other.getContact_email()))
-            && (this.getCertificate_type() == null ? other.getCertificate_type() == null : this.getCertificate_type().equals(other.getCertificate_type()))
-            && (this.getCertificate_number() == null ? other.getCertificate_number() == null : this.getCertificate_number().equals(other.getCertificate_number()))
-            && (this.getBusiness_license() == null ? other.getBusiness_license() == null : this.getBusiness_license().equals(other.getBusiness_license()))
-            && (this.getReq_key() == null ? other.getReq_key() == null : this.getReq_key().equals(other.getReq_key()))
-            && (this.getRes_key() == null ? other.getRes_key() == null : this.getRes_key().equals(other.getRes_key()))
-            && (this.getBranch_id() == null ? other.getBranch_id() == null : this.getBranch_id().equals(other.getBranch_id()))
-            && (this.getBranch_name() == null ? other.getBranch_name() == null : this.getBranch_name().equals(other.getBranch_name()))
-            && (this.getStaff_id() == null ? other.getStaff_id() == null : this.getStaff_id().equals(other.getStaff_id()))
-            && (this.getStall_name() == null ? other.getStall_name() == null : this.getStall_name().equals(other.getStall_name()))
-            && (this.getCreate_time() == null ? other.getCreate_time() == null : this.getCreate_time().equals(other.getCreate_time()))
-            && (this.getUpdate_time() == null ? other.getUpdate_time() == null : this.getUpdate_time().equals(other.getUpdate_time()))
-            && (this.getAudit_time() == null ? other.getAudit_time() == null : this.getAudit_time().equals(other.getAudit_time()))
-            && (this.getAudit_status() == null ? other.getAudit_status() == null : this.getAudit_status().equals(other.getAudit_status()))
-            && (this.getAudit_reason() == null ? other.getAudit_reason() == null : this.getAudit_reason().equals(other.getAudit_reason()))
-            && (this.getReserve1() == null ? other.getReserve1() == null : this.getReserve1().equals(other.getReserve1()))
-            && (this.getReserve2() == null ? other.getReserve2() == null : this.getReserve2().equals(other.getReserve2()))
-            && (this.getReserve3() == null ? other.getReserve3() == null : this.getReserve3().equals(other.getReserve3()))
-            && (this.getReserve4() == null ? other.getReserve4() == null : this.getReserve4().equals(other.getReserve4()))
-            && (this.getReserve5() == null ? other.getReserve5() == null : this.getReserve5().equals(other.getReserve5()));
+                && (this.getMch_name() == null ? other.getMch_name() == null : this.getMch_name().equals(other.getMch_name()))
+                && (this.getMch_type() == null ? other.getMch_type() == null : this.getMch_type().equals(other.getMch_type()))
+                && (this.getMch_range() == null ? other.getMch_range() == null : this.getMch_range().equals(other.getMch_range()))
+                && (this.getMch_city() == null ? other.getMch_city() == null : this.getMch_city().equals(other.getMch_city()))
+                && (this.getMch_address() == null ? other.getMch_address() == null : this.getMch_address().equals(other.getMch_address()))
+                && (this.getNext_audit_dept_id() == null ? other.getNext_audit_dept_id() == null : this.getNext_audit_dept_id().equals(other.getNext_audit_dept_id()))
+                && (this.getContact_person() == null ? other.getContact_person() == null : this.getContact_person().equals(other.getContact_person()))
+                && (this.getContact_phone() == null ? other.getContact_phone() == null : this.getContact_phone().equals(other.getContact_phone()))
+                && (this.getContact_email() == null ? other.getContact_email() == null : this.getContact_email().equals(other.getContact_email()))
+                && (this.getCertificate_type() == null ? other.getCertificate_type() == null : this.getCertificate_type().equals(other.getCertificate_type()))
+                && (this.getCertificate_number() == null ? other.getCertificate_number() == null : this.getCertificate_number().equals(other.getCertificate_number()))
+                && (this.getBusiness_license() == null ? other.getBusiness_license() == null : this.getBusiness_license().equals(other.getBusiness_license()))
+                && (this.getReq_key() == null ? other.getReq_key() == null : this.getReq_key().equals(other.getReq_key()))
+                && (this.getRes_key() == null ? other.getRes_key() == null : this.getRes_key().equals(other.getRes_key()))
+                && (this.getBranch_id() == null ? other.getBranch_id() == null : this.getBranch_id().equals(other.getBranch_id()))
+                && (this.getBranch_name() == null ? other.getBranch_name() == null : this.getBranch_name().equals(other.getBranch_name()))
+                && (this.getStaff_id() == null ? other.getStaff_id() == null : this.getStaff_id().equals(other.getStaff_id()))
+                && (this.getStall_name() == null ? other.getStall_name() == null : this.getStall_name().equals(other.getStall_name()))
+                && (this.getCreate_time() == null ? other.getCreate_time() == null : this.getCreate_time().equals(other.getCreate_time()))
+                && (this.getUpdate_time() == null ? other.getUpdate_time() == null : this.getUpdate_time().equals(other.getUpdate_time()))
+                && (this.getAudit_time() == null ? other.getAudit_time() == null : this.getAudit_time().equals(other.getAudit_time()))
+                && (this.getAudit_status() == null ? other.getAudit_status() == null : this.getAudit_status().equals(other.getAudit_status()))
+                && (this.getAudit_reason() == null ? other.getAudit_reason() == null : this.getAudit_reason().equals(other.getAudit_reason()))
+                && (this.getReserve1() == null ? other.getReserve1() == null : this.getReserve1().equals(other.getReserve1()))
+                && (this.getReserve2() == null ? other.getReserve2() == null : this.getReserve2().equals(other.getReserve2()))
+                && (this.getReserve3() == null ? other.getReserve3() == null : this.getReserve3().equals(other.getReserve3()))
+                && (this.getReserve4() == null ? other.getReserve4() == null : this.getReserve4().equals(other.getReserve4()))
+                && (this.getReserve5() == null ? other.getReserve5() == null : this.getReserve5().equals(other.getReserve5()));
     }
 
     @Override
@@ -543,7 +547,7 @@ A-台胞证
         result = prime * result + ((getMch_range() == null) ? 0 : getMch_range().hashCode());
         result = prime * result + ((getMch_city() == null) ? 0 : getMch_city().hashCode());
         result = prime * result + ((getMch_address() == null) ? 0 : getMch_address().hashCode());
-        result = prime * result + ((getMch_status() == null) ? 0 : getMch_status().hashCode());
+        result = prime * result + ((getNext_audit_dept_id() == null) ? 0 : getNext_audit_dept_id().hashCode());
         result = prime * result + ((getContact_person() == null) ? 0 : getContact_person().hashCode());
         result = prime * result + ((getContact_phone() == null) ? 0 : getContact_phone().hashCode());
         result = prime * result + ((getContact_email() == null) ? 0 : getContact_email().hashCode());

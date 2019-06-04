@@ -84,7 +84,7 @@ public class MchInfoController {
             mchInfo.setMch_range(businessRange.getBusinessRange());
             mchInfo.setMch_city(bodyMap.get("mch_city").toString());
             mchInfo.setMch_address(bodyMap.get("mch_address").toString());
-            mchInfo.setMch_status(Byte.parseByte(bodyMap.get("mch_status").toString()));
+            mchInfo.setNext_audit_dept_id(Long.valueOf(bodyMap.get("next_audit_dept_id").toString()));
             mchInfo.setContact_person(bodyMap.get("contact_person").toString());
             mchInfo.setContact_phone(bodyMap.get("contact_phone").toString());
             mchInfo.setContact_email(bodyMap.get("contact_email").toString());

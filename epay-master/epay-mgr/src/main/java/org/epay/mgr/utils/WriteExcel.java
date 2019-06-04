@@ -277,83 +277,38 @@ public class WriteExcel<T> {
 
 	/**
 	 * 下载账单模板
-	 * @param dataList
 	 * @param sheetName
-	 * @param c
 	 * @return
 	 */
-	public HSSFWorkbook getWorkbookModel(List<T> dataList , String sheetName , Class c) {
+	public HSSFWorkbook getWorkbookModel(String sheetName) {
 		try {
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			// 创建一个sheet
 			HSSFSheet hssfSheet = workbook.createSheet(sheetName);
 			// 创建第一行
-			HSSFRow row0 = hssfSheet.createRow(0);
-			// 获取实体类的所有字段
-			Field[] fields = c.getDeclaredFields();
-			int count = -1;
-			for (int i = 0; i < fields.length; i++) {
-				// 获取第一行标题列名
-				String fieldName = fields[i].getName();
-				/*if("mch_id".equals(fieldName)) { // 1
-					fieldName = "商户号";
-					count++;
-				} else */if("user_id".equals(fieldName)) { // 2
-					fieldName = "唯一标识/学号、身份证";
-					count++;
-				} else if("user_name".equals(fieldName)) { // 3
-					fieldName = "姓名";
-					count++;
-				} else if("currency".equals(fieldName)) { // 4
-					fieldName = "货币代码/人民币cny";
-					count++;
-				} else if("items_money".equals(fieldName)) { // 5
-					fieldName = "应缴金额/分";
-					count++;
-				} else {
-					continue; // 其他字段不做处理
-				}
-				// 创建第一行标题列
-				HSSFCell cell0 = row0.createCell(count);
-				// 设置标题列的内容
-				cell0.setCellValue(fieldName);
-			}
-			for (int i = 0; i < dataList.size(); i++) {
-				// dataList是实体类的list，获取list中具体的实体类
-				T obj = dataList.get(i);
-				// 创建所有的内容行
-				HSSFRow row = hssfSheet.createRow(i + 1);
-				int num = -1;
-				for (int j = 0; j < fields.length; j++) {
-					// 获取列明
-					String fieldName = fields[j].getName();
-					// 只处理上面的5个字段
-					if( /*!"mch_id".equals(fieldName) &&*/
-						!"user_id".equals(fieldName) &&
-						!"user_name".equals(fieldName) &&
-						!"currency".equals(fieldName) &&
-						!"items_money".equals(fieldName)) {
-						continue;
-					}
-					num++;
-					// 拼出列的get方法
-					String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-					// 调用get方法
-					Method getMethod = c.getDeclaredMethod(getMethodName);
-					Object value = getMethod.invoke(obj);
-					// 创建内容列
-					HSSFCell cell = row.createCell(num);
-					// 设置内容列的内容
-					String v = null;
-					if(value != null) {
-						v = value.toString();
-					}
-					cell.setCellValue(value == null ? "" : v);
-				}
-			}
+			HSSFRow row1 = hssfSheet.createRow(0);
+			// 创建第一行标题列
+			HSSFCell cell1 = row1.createCell(0);//唯一标识
+			HSSFCell cell2 = row1.createCell(1);//姓名
+			HSSFCell cell3 = row1.createCell(2);//应缴金额
+			HSSFCell cell4 = row1.createCell(3);//电话
+			HSSFCell cell5 = row1.createCell(4);//证件号码
+			// 设置标题列的内容
+			cell1.setCellValue("学号id");
+			cell2.setCellValue("姓名s1");
+			cell3.setCellValue("应缴金额(元)m");
+			cell4.setCellValue("电话s2");
+			cell5.setCellValue("身份证号s3");
+
+			// 创建第2行
+			HSSFRow row2 = hssfSheet.createRow(1);
+			// 创建第2行标题列
+			HSSFCell cellTwo1 = row2.createCell(0);
+			// 设置标题列的内容
+			cellTwo1.setCellValue("本模板中各列名中后缀不可删除,否则无法上传!");
+
 			return workbook;
-		} catch (SecurityException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (SecurityException | IllegalArgumentException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -379,59 +334,65 @@ public class WriteExcel<T> {
 				// 获取第一行标题列名
 				String fieldName = fields[i].getName();
 				if("userId".equals(fieldName)) {
-					fieldName = modelKey.getUserId();
+					fieldName = modelKey.getUserId() + "id";
 					// 创建第一行标题列
 					HSSFCell cell0 = row0.createCell(positionMap.get("userIdPosition"));
 					// 设置标题列的内容
 					cell0.setCellValue(fieldName);
 				} else if("itemsMoney".equals(fieldName)) {
-					fieldName = modelKey.getItemsMoney();
+					fieldName = modelKey.getItemsMoney() + "m";
 					HSSFCell cell0 = row0.createCell(positionMap.get("items_money_position"));
 					cell0.setCellValue(fieldName);
 				} else if("select1".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect1())) {
-					fieldName = modelKey.getSelect1();
+					fieldName = modelKey.getSelect1() + "s1";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position1"));
 					cell0.setCellValue(fieldName);
 				} else if("select2".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect2())) {
-					fieldName = modelKey.getSelect2();
+					fieldName = modelKey.getSelect2() + "s2";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position2"));
 					cell0.setCellValue(fieldName);
 				} else if("select3".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect3())) {
-					fieldName = modelKey.getSelect3();
+					fieldName = modelKey.getSelect3() + "s3";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position3"));
 					cell0.setCellValue(fieldName);
 				} else if("select4".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect4())) {
-					fieldName = modelKey.getSelect4();
+					fieldName = modelKey.getSelect4() + "s4";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position4"));
 					cell0.setCellValue(fieldName);
 				} else if("select5".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect5())) {
-					fieldName = modelKey.getSelect5();
+					fieldName = modelKey.getSelect5() + "s5";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position5"));
 					cell0.setCellValue(fieldName);
 				} else if("select6".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect6())) {
-					fieldName = modelKey.getSelect6();
+					fieldName = modelKey.getSelect6() + "s6";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position6"));
 					cell0.setCellValue(fieldName);
 				} else if("select7".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect7())) {
-					fieldName = modelKey.getSelect7();
+					fieldName = modelKey.getSelect7() + "s7";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position7"));
 					cell0.setCellValue(fieldName);
 				} else if("select8".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect8())) {
-					fieldName = modelKey.getSelect8();
+					fieldName = modelKey.getSelect8() + "s8";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position8"));
 					cell0.setCellValue(fieldName);
 				} else if("select9".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect9())) {
-					fieldName = modelKey.getSelect9();
+					fieldName = modelKey.getSelect9() + "s9";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position9"));
 					cell0.setCellValue(fieldName);
 				} else if("select10".equals(fieldName) && StringUtils.isNotBlank(modelKey.getSelect10())) {
-					fieldName = modelKey.getSelect10();
+					fieldName = modelKey.getSelect10() + "s10";
 					HSSFCell cell0 = row0.createCell(positionMap.get("position10"));
 					cell0.setCellValue(fieldName);
 				} else {
 					continue; // 其他字段不做处理
 				}
 			}
+            // 创建第2行
+            HSSFRow row2 = hssfSheet.createRow(1);
+            // 创建第2行标题列
+            HSSFCell cell2 = row2.createCell(0);
+            // 设置标题列的内容
+            cell2.setCellValue("本模板中各列名中后缀不可删除,否则无法上传!");
 
 			return workbook;
 		} catch (SecurityException | IllegalArgumentException e) {

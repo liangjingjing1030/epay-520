@@ -17,6 +17,8 @@ public class Activity {
 
     private String endTime;
 
+    private Byte activityStatus;
+
     private String reserve1;
 
     private String reserve2;
@@ -89,6 +91,14 @@ public class Activity {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public Byte getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(Byte activityStatus) {
+        this.activityStatus = activityStatus;
     }
 
     public String getReserve1() {
