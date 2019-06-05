@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.epay.common.constant.PayConstant;
 import org.epay.common.util.EPayUtil;
 import org.epay.common.util.MyLog;
+import org.epay.web.service.BankBranchServiceClient;
 import org.epay.web.service.MchInfoServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -34,6 +35,8 @@ public class QueryMchInfoForLoginController {
 
     @Autowired
     private MchInfoServiceClient mchInfoServiceClient;
+    @Autowired
+    private BankBranchServiceClient bankBranchServiceClient;
 
     /**
      * 查询商户信息
@@ -108,6 +111,92 @@ public class QueryMchInfoForLoginController {
             	return EPayUtil.makeRetData(response);
             }*/
             return EPayUtil.makeRetData(response);
+        }catch (Exception e) {
+        	_log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
+    /**
+     * 根据网点名称查询网点号
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/query_branch_id")
+    public String queryBranchIdByBranchName(@RequestParam String params) {
+        _log.info("###### 根据网点名称查询网点号请求 ######");
+        String logPrefix = "【根据网点名称查询网点号】";
+        JSONObject object;
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/query_branch_id, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+            object = JSONObject.parseObject(params);
+            JSONObject channelObj = object.getJSONObject("request_header");
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            /*String errorMessage = validateParams(object, payContext);
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }*/
+            _log.debug("请求参数及签名校验通过");
+
+            // 获取请求体
+            JSONObject requestBody = object.getJSONObject("request_body");
+            String branchName = requestBody.getString("branchName");//
+
+            String retStr = bankBranchServiceClient.queryBranchIdByBranchName(getJsonParam("branchName", branchName));
+            // 将商户信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}根据网点名称查询网点号,结果:{}", logPrefix, retObj);
+
+            // 0002表示没有查询到(特殊，勿参考)
+            if("0002".equals(retObj.getString("code"))) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, retObj.getString("msg"), null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+
+            if(!"0000".equals(retObj.getString("code"))) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "网点号不存在", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            //获取查询到的对象内容
+            JSONObject bankBranch = retObj.getJSONObject("result");
+
+            map.put("deptId", bankBranch.getLong("deptId") == null ? "" : bankBranch.getLong("deptId"));
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "根据网点名称查询网点号成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("result", map);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("根据网点名称查询网点号成功,mchInfo={}", response);
+            _log.info("###### 根据网点名称查询网点号处理完成 ######");
+            // 管理平台渠道
+            if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }
         }catch (Exception e) {
         	_log.error(e, "");
             retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);

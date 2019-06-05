@@ -14,4 +14,11 @@ public interface BankBranchMapper {
     int updateByPrimaryKeySelective(BankBranch record);
 
     int updateByPrimaryKey(BankBranch record);
+
+    /**
+     *
+     * @param branchName
+     * @return
+     */
+    BankBranch selectByBranchName(String branchName);
 }

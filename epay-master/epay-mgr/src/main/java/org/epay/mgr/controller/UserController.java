@@ -214,6 +214,62 @@ public class UserController {
         return map;
     }
 
+    // 根据网点名称查询网点号
+    @RequestMapping("/mch/queryBranchIdByBranchName")
+    @ResponseBody
+    public Object queryBranchIdByBranchName(@RequestParam(value = "branchName", required = true) String branchName) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        // TODO 临时写为 WX_APP = "微信APP支付";
+        requestHeaderMap.put("request_channel", "WX_APP");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("branchName", branchName);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("根据网点名称查询网点号,请求数据:" + reqData);
+
+        String url = baseUrl + "/query_branch_id?";
+        // 通过getway调用web工程
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("根据网点名称查询网点号,响应数据:" + result);
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+//        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            if(retBody == null) {
+                // 返回success且没有返回体说明没有查询到
+                map.put(Constant.ERROR_MESSAGE, Constant.FAIL);
+                map.put(Constant.ERROR_MESSAGE, "未查询到网点号,请确认网点名称!");
+                return map;
+            }
+            Map<String, Object> bodyMap = (Map<String, Object>) retBody.get("result");
+            // 获取object中的返回对象
+            long deptId = Long.parseLong(bodyMap.get("deptId").toString());
+
+            map.put(Constant.ERROR_MESSAGE, Constant.OK);
+            map.put("branchId", deptId);
+
+        } else {
+            map.put(Constant.ERROR_MESSAGE, Constant.FAIL);
+            map.put(Constant.ERROR_MESSAGE, "系统繁忙，请稍后再试");
+        }
+        return map;
+    }
+
 
     // 查询私钥
     @RequestMapping("/public/queryKey")

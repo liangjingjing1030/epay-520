@@ -11,12 +11,22 @@
   <sql id="Base_Column_List" >
     dept_id, parent_id, name, order_num, del_flag
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from sys_dept
     where dept_id = #{deptId,jdbcType=BIGINT}
   </select>
+
+  <!---->
+  <select id="selectByBranchName" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_dept
+    where name = #{branchName}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from sys_dept
     where dept_id = #{deptId,jdbcType=BIGINT}

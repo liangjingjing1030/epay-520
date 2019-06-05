@@ -29,7 +29,7 @@ public class BankBranchServiceController {
     private BankBranckService bankBranckService;
 
     /**
-     * 查询商户登陆信息
+     * 查询机构信息
      * @param jsonParam
      * @return
      */
@@ -73,5 +73,51 @@ public class BankBranchServiceController {
 
         return CollectionUtils.isEmpty(retObj) ? null : retObj.toJSONString();
     }
-    
+
+    /**
+     * 根据机构名称查询机构号
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/bank_branch/queryBranchIdByBranchName")
+    public String queryBranchIdByBranchName(@RequestParam String jsonParam) {
+        _log.info("queryBranchIdByBranchName << {}", jsonParam);
+        JSONObject retObj = new JSONObject();
+        retObj.put("code", "0000");
+
+        if(StringUtils.isBlank(jsonParam)) {
+            retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "缺少参数");
+            return retObj.toJSONString();
+        }
+
+        JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
+        String branchName = ""; // 拓展网点名
+
+        try {
+            branchName  = paramObj.getString("branchName").trim();	// 拓展网点名
+        	if(StringUtils.isBlank(branchName)) {
+        		retObj.put("code", "0001"); // 参数错误
+                retObj.put("msg", "branchName参数为空");
+                return retObj.toJSONString();
+        	}
+		} catch (Exception e) {
+			retObj.put("code", "0001"); // 参数错误
+            retObj.put("msg", "branchName参数缺失");
+            return retObj.toJSONString();
+		}
+
+        BankBranch bankBranch = bankBranckService.selectBankBranchByBranchName(branchName);
+
+        if(bankBranch == null) {
+            retObj.put("code", "0002");
+            retObj.put("msg", "机构信息不存在");
+            return retObj.toJSONString();
+        }
+    	retObj.put("result", JSON.toJSON(bankBranch));
+        _log.info("queryBranchIdByBranchName >> {}", retObj.toJSONString());
+
+        return CollectionUtils.isEmpty(retObj) ? null : retObj.toJSONString();
+    }
+
 }

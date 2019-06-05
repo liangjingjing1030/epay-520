@@ -111,6 +111,9 @@
             $("#channel_order_no").val("");
             $("#res_code").val("");
             $("#expire_time").val("");
+            // 清空状态
+            $("#pay_status").val("-99");//
+            $("#settle_status").val("-99");//
         }
 
         function display(pageNo, pageSize){

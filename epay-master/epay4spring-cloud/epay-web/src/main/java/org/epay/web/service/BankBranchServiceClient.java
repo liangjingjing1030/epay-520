@@ -27,8 +27,15 @@ public class BankBranchServiceClient {
     public String queryBankBranch(String jsonParam) {
         return restTemplate.getForEntity("http://EPAY-SERVICE3/bank_branch/queryBankBranch?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
     }
-
     public String queryBankBranchFallback(String jsonParam) {
+        return "queryBankBranch error";
+    }
+
+    @HystrixCommand(fallbackMethod = "queryBranchIdByBranchNameFallback")
+    public String queryBranchIdByBranchName(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE3/bank_branch/queryBranchIdByBranchName?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String queryBranchIdByBranchNameFallback(String jsonParam) {
         return "queryBankBranch error";
     }
 

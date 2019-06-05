@@ -26,4 +26,7 @@ public class BankBranckService {
         return  bankBranckMapper.selectByPrimaryKey(Long.parseLong(branch_id));
     }
 
+    public BankBranch selectBankBranchByBranchName(String branchName) {
+        return bankBranckMapper.selectByBranchName(branchName);
+    }
 }

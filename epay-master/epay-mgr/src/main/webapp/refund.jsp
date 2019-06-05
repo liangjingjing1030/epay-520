@@ -142,6 +142,7 @@
             $("#user_id").val("");
             $("#user_name").val("");
             $("#user_channel_account").val("");
+            $("#orderStates").val("-99");
         }
 
         // 退款

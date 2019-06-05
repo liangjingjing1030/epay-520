@@ -981,7 +981,12 @@ public class BillServiceController {
         return retObj.toJSONString();
     }
 
-    // accountBook分页显示
+
+    /**
+     * accountBook分页显示
+     * @param jsonParam
+     * @return
+     */
     @RequestMapping(value = "/bill/accountBookPageByConfition")
     public String accountBookPageByConfition(@RequestParam String jsonParam) {
         _log.info("accountBookPageByConfition << {}", jsonParam);

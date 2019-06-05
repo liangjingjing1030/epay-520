@@ -317,8 +317,11 @@
             $("#scrq").val("");
             $("#user_id").val("");
             $("#user_name").val("");
+            // 清空账单状态
+            $("#orderStates").val("-99");
         }
 
+        // 账单分页显示
         function display(pageNo, pageSize){
             // 获取被选中的下拉菜单的值
             /*var myselect = document.getElementById("xmbh");

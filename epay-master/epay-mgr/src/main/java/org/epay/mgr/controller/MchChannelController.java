@@ -95,7 +95,7 @@ public class MchChannelController {
                 return null;
             }*/
         } else {
-            returnMap.put(Constant.ERROR_MESSAGE, "加载商户结算信息失败，请稍后再试……");
+            returnMap.put(Constant.ERROR_MESSAGE, "加载商户渠道信息失败，请稍后再试……");
         }
         return returnMap;
     }

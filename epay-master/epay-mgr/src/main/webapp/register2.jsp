@@ -273,8 +273,7 @@
 		if("" == phone) {
 			$("#showId").html("请输入手机号码");
 			return false; // 终止并返回结果
-		} else if(!/^1[1-9]\d{9}$/.test(phone)) {
-			// b) 手机号格式
+		} else if(!/^[0-9]*$/.test(phone)) {
 			$("#showId").html("请输入正确的手机号码");
 			return false;
 		}
@@ -433,7 +432,7 @@
 			</div>
 
 			<div style="height: 15px;">
-				<ul><li id="showId" style="margin-left:40px;color:red;font-size:15px;width:222px;margin-top:10px;margin-bottom:10px;line-height:18px;"></li></ul>
+				<ul><li id="showId" style="margin-left:40px;color:white;font-size:15px;width:222px;margin-top:10px;margin-bottom:10px;line-height:18px;"></li></ul>
 			</div>
 
 			<div class="layui-form-item" style="">

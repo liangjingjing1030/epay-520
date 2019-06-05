@@ -144,6 +144,110 @@ public class QueryMchCheckOutController {
     }
 
     /**
+     * 客户对账查询
+     * 1)先验证接口参数以及签名信息
+     * 2)根据参数查询结算表
+     * 3)返回结算数据
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/user_query_mch_duizhang")
+    public String queryMchDuiZhang(@RequestParam String params) {
+        _log.info("###### 开始接收客户对账查询请求 ######");
+        String logPrefix = "【客户对账查询】";
+        JSONObject object;
+        Map<String, Object> response = new HashMap<String, Object>();//响应报文response
+        Map<String, Object> retHeader = new HashMap<String, Object>();//响应报文头map对象
+        Map<String, Object> retBody = new HashMap<String, Object>();//响应报文体map对象
+        ServiceInstance instance = client.getLocalServiceInstance();
+        _log.info("{}/user_query_mch_duizhang, host:{}, service_id:{}, params:{}", logPrefix, instance.getHost(), instance.getServiceId(), params);
+        try {
+        	object = JSONObject.parseObject(params);
+            JSONObject channelObj = object.getJSONObject("request_header");
+            String request_channel = channelObj.getString("request_channel");
+            retHeader.put("request_channel", request_channel);
+            JSONObject payContext = new JSONObject();
+            // 验证参数有效性
+            String errorMessage = validateParams(object, payContext);
+            if (!"success".equalsIgnoreCase(errorMessage)) {
+                _log.warn(errorMessage);
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, errorMessage, null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            _log.debug("请求参数及签名校验通过");
+
+            String retStr = mchCheckOutServiceClient.mchDuiZhangQuery(payContext.toJSONString());
+
+            // 将商户订单信息转换为JSONObject对象
+            JSONObject retObj = JSON.parseObject(retStr);
+            _log.info("{}查询对账信息,结果:{}", logPrefix, retObj);
+
+            // 0002:未查询到符合要求的账单
+            if(!"0000".equals(retObj.getString("code"))) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+            if (retObj == null) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "对账信息不存在", null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
+
+            List<Map<String, Object>> list = new ArrayList<>();
+            //获取查询到的订单总条数
+            int total = retObj.getInteger("total");
+            // 本次分页查询的总条数
+            int count = retObj.getInteger("count");
+            for(int i = 1; i <= count; i++) {
+                // 结果对象
+                JSONObject compareHistorySrc = retObj.getJSONObject("result" + i);
+                Map<String, Object> map = new HashMap<String, Object>();
+
+                map.put("seqNo", compareHistorySrc.getInteger("seqNo") == null ? "" : compareHistorySrc.getInteger("seqNo"));
+                map.put("payOrderSeqno", compareHistorySrc.getInteger("payOrderSeqno") == null ? "" : compareHistorySrc.getInteger("payOrderSeqno"));
+                map.put("txDate",	compareHistorySrc.getDate("txDate") == null ? "" : compareHistorySrc.getDate("txDate"));
+                map.put("txDateStr",	compareHistorySrc.getString("txDateStr") == null ? "" : compareHistorySrc.getString("txDateStr"));
+                map.put("compareDate",	compareHistorySrc.getDate("compareDate") == null ? "" : compareHistorySrc.getDate("compareDate"));
+                map.put("compareDateStr",	compareHistorySrc.getString("compareDateStr") == null ? "" : compareHistorySrc.getString("compareDateStr"));
+                map.put("compareUsername", compareHistorySrc.getString("compareUsername") == null ? "" : compareHistorySrc.getString("compareUsername"));
+                map.put("compareStatus", compareHistorySrc.getString("compareStatus") == null ? "" : compareHistorySrc.getString("compareStatus"));
+                map.put("questionType", compareHistorySrc.getString("questionType") == null ? "" : compareHistorySrc.getString("questionType"));
+                map.put("processStatus", compareHistorySrc.getInteger("processStatus") == null ? "" : compareHistorySrc.getInteger("processStatus"));
+                map.put("processUsername", compareHistorySrc.getString("processUsername") == null ? "" : compareHistorySrc.getString("processUsername"));
+                map.put("processDatetime", compareHistorySrc.getDate("processDatetime") == null ? "" : compareHistorySrc.getDate("processDatetime"));
+                map.put("processRemark", compareHistorySrc.getString("processRemark") == null ? "" : compareHistorySrc.getString("processRemark"));
+                map.put("txType", compareHistorySrc.getString("txType") == null ? "" : compareHistorySrc.getString("txType"));
+                map.put("tableName", compareHistorySrc.getString("tableName") == null ? "" : compareHistorySrc.getString("tableName"));
+                map.put("channel_id", compareHistorySrc.getString("channel_id") == null ? "" : compareHistorySrc.getString("channel_id"));
+                list.add(map);
+            }
+
+            //组装返回报文response
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, "结算查询成功", PayConstant.RETURN_VALUE_SUCCESS, null);
+            retBody.put("compareHistorySrcList", list);
+            retBody.put("total", total);
+
+            response.put("response_header", retHeader);
+            response.put("response_body", retBody);
+            _log.info("对账查询成功,channel={}", response);
+            _log.info("###### 对账查询处理完成 ######");
+            // 管理平台账单
+            if("MGR".equals(request_channel)) {
+            	return EPayUtil.makeRetData(response, payContext.getString("res_key"));
+            }else {
+            	return EPayUtil.makeRetData(response);
+            }
+        }catch (Exception e) {
+            _log.error(e, "");
+            retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "支付中心系统异常", null, null);
+            response.put("response_header", retHeader);
+            return EPayUtil.makeRetFail(response);
+        }
+    }
+
+    /**
      * 方法名: 验证请求参数,参数通过返回JSONObject对象,否则返回错误文本信息
      * 作    者: HappyDan
      * 时    间: 2019年4月8日
@@ -162,6 +266,7 @@ public class QueryMchCheckOutController {
         JSONObject request_body = params.getJSONObject("request_body");
         String mch_id = request_body.getString("mch_id");					// 商户ID
         String pay_channel = request_body.getString("pay_channel");		// 支付渠道
+        String compare_status = request_body.getString("compare_status");		//
         String start_time = request_body.getString("start_time");			// 开始时间
         String end_time = request_body.getString("end_time");				// 结束时间
         String startIndex = request_body.getString("startIndex");			// 页码
@@ -226,6 +331,7 @@ public class QueryMchCheckOutController {
         }
         payContext.put("mch_id", mch_id);
         payContext.put("pay_channel", pay_channel);
+        payContext.put("compare_status", compare_status);
         payContext.put("start_time", start_time);
         payContext.put("end_time", end_time);
         payContext.put("startIndex", startIndex);

@@ -132,19 +132,19 @@
 			<%--<input name="__RequestVerificationToken" type="hidden" value="fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81" />--%>
 			<div class="layui-form-item" style="margin-top: -5px;">
 				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">商户号:</span>
+				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">商&nbsp;户&nbsp;号:</span>
 				<input id="loginAct" type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="请输入商户号" class="layui-input" style="width: 65%; float: left;">
 			</div>
 
 			<div class="layui-form-item">
 				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">账&nbsp;&nbsp;号:</span>
+				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">账&nbsp;&nbsp;&nbsp;&nbsp;号:</span>
 				<input id="account" type="text" name="password" lay-verify="password" autocomplete="off" placeholder="请输入登录账号" class="layui-input"  style="width: 65%; float: left;">
 			</div>
 
 			<div class="layui-form-item">
 				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">密&nbsp;&nbsp;码:</span>
+				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">密&nbsp;&nbsp;&nbsp;&nbsp;码:</span>
 				<input id="loginPwd" type="password" name="password" lay-verify="password" autocomplete="off" placeholder="请输入密码" class="layui-input"  style="width: 65%; float: left;">
 			</div>
 
@@ -160,7 +160,7 @@
 			</div>--%>
 
 			<div style="height: 15px;">
-				<ul><li id="showId" style="margin-left: 20px;color:red;font-size:15px;margin-top:10px;margin-bottom:10px;line-height:18px;"></li></ul>
+				<ul><li id="showId" style="margin-left: 20px;color:white;font-size:15px;margin-top:10px;margin-bottom:10px;line-height:18px;"></li></ul>
 			</div>
 
 			<div class="layui-form-item" style="">

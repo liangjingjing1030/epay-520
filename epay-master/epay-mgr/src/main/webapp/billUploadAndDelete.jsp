@@ -888,7 +888,7 @@
 
                     <input type="file" name="file" style="margin-left: 50px;">
                     <span style="position: relative;top: 7px;margin-left: 50px;">
-                        <small style="color: red;">[仅支持.xls或.xlsx格式] [项目编号相同时,个人标识也相同的账单不会重复插入]</small>
+                        <small style="color: red;">[仅支持.xls或.xlsx格式] [项目编号与个人标识相同的账单不会重复导入]</small>
                     </span>
 
                     <div  style="top: 100px;left: 70px;width: 350px">
@@ -922,12 +922,12 @@
                         </div>
                     </div>
 
-                    <button id="importFileBtn" style="margin-top: 40px;margin-left:50px;bottom: 20px;left: 70px;background-color: #135ca1" class="btn btn-primary">导入文件</button>
+                    <button id="importFileBtn" style="margin-top: 40px;margin-left:155px;width:190px;bottom: 20px;left: 70px;background-color: #135ca1" class="btn btn-primary">导入文件</button>
                     <span id="errorMsg" style="color: red;font-size: 16px;position: absolute;bottom: 50px;left: 70px"></span>
                 </form>
             </div>
             <div class="modal-footer" style="left: 200px; bottom: -400px">
-                <button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #135ca1;color: white;">关闭</button>
+                <%--<button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #135ca1;color: white;">关闭</button>--%>
             </div>
         </div>
     </div>

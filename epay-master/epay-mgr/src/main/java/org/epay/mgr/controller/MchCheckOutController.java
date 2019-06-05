@@ -337,6 +337,129 @@ public class MchCheckOutController {
         return returnMap;
     }
 
+
+
+    /**
+     * 对账分页查询
+     * @return
+     */
+    @RequestMapping(value = "/count/reconciliationPage", method = RequestMethod.GET)
+    @ResponseBody
+    public Object reconciliationPage(@RequestParam(value = "pay_channel", required = false)String pay_channel,
+                             @RequestParam(value = "compare_status", required = false)String compare_status,
+                             @RequestParam(value = "start_time", required = false)String start_time1,
+                             @RequestParam(value = "end_time", required = false)String end_time1,
+                             @RequestParam(value = "pageNo", required = false)String pageNo1,
+                             @RequestParam(value = "pageSize", required = false)String pageSize1,
+                             HttpServletRequest request) {
+
+        Integer pageNo = Integer.valueOf(pageNo1);
+        Integer pageSize = Integer.valueOf(pageSize1);
+        Integer startIndex = (pageNo - 1) * pageSize;
+        String startIndexStr = "" + startIndex;
+        String pageSizeStr = pageSize1;
+
+        // 从session域中获取当前登录用户
+        User user = (User) request.getSession().getAttribute("user");
+        String mch_id = user.getLoginName();
+
+        // 响应头中放入渠道信息
+        JSONObject requestHeaderMap = new JSONObject();
+        // TODO 临时写为 WX_APP = "微信APP支付";
+        requestHeaderMap.put("request_channel", "WX_APP");
+        // 响应体
+        JSONObject requestBodyMap = new JSONObject();
+        requestBodyMap.put("mch_id", mch_id);
+        requestBodyMap.put("pay_channel", pay_channel);
+        if(!"-99".equals(compare_status)) {
+            requestBodyMap.put("compare_status", compare_status);
+        }
+        requestBodyMap.put("start_time", start_time1);
+        requestBodyMap.put("end_time", end_time1);
+        requestBodyMap.put("startIndex", startIndex);
+        requestBodyMap.put("pageSize", pageSize);
+
+        JSONObject paramMap = new JSONObject();
+        // 请求报文：响应头 + 响应体 + sign(签名)
+        paramMap.put("request_header", requestHeaderMap);
+        paramMap.put("request_body", requestBodyMap);
+        // TODO 待做
+        paramMap.put("sign", "xxxxx");
+
+        String reqData = "params=" + paramMap.toJSONString();
+        System.out.println("请求查询结算订单接口,请求数据:" + reqData);
+
+        String url = baseUrl + "/user_query_mch_duizhang?";
+        // 通过getway调用web工程(账单list)
+        String result = EPayUtil.call4Post(url + reqData);
+        System.out.println("请求查询结算订单接口,响应数据:" + result);
+
+        //转换成object
+        Map retMap = JSON.parseObject(result);
+
+        JSONObject returnMap = new JSONObject();
+        Map<String, Object> retHeader = (Map<String, Object>) retMap.get("response_header");
+        if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
+            Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            List<Map<String, Object>> compareHistorySrcList = (List<Map<String, Object>>) retBody.get("compareHistorySrcList");
+            int total = (int) retBody.get("total");
+            // 此处使用的是dao中的MchCheckOut，金额格式为String
+            List<CompareHistorySrc> list = new ArrayList<>();
+            for(Map<String, Object> bodyMap : compareHistorySrcList) {
+                CompareHistorySrc src = new CompareHistorySrc();
+                src.setSeqNo(Integer.parseInt(bodyMap.get("seqNo").toString()));
+                src.setPayOrderSeqno(Integer.parseInt(bodyMap.get("payOrderSeqno").toString()));
+                src.setTxDate(bodyMap.get("txDateStr").toString());
+                src.setCompareDate(bodyMap.get("compareDateStr").toString());
+                src.setCompareUsername(bodyMap.get("compareUsername").toString());
+                src.setCompareStatus(bodyMap.get("compareStatus").toString());
+                src.setQuestionType(bodyMap.get("questionType").toString());
+                src.setProcessStatus(bodyMap.get("processStatus").toString());
+                src.setProcessUsername(bodyMap.get("processUsername").toString());
+                src.setProcessDatetime(bodyMap.get("processDatetime").toString());
+                src.setProcessRemark(bodyMap.get("processRemark").toString());
+                src.setTxType(bodyMap.get("txType").toString());
+                src.setTableName(bodyMap.get("tableName").toString());
+                String payChannel = bodyMap.get("channel_id").toString();
+                if("WX_JSAPI".equals(payChannel)) {
+                    payChannel = "微信公众号支付";
+                } else if("WX_NATIVE".equals(payChannel)) {
+                    payChannel = "微信原生扫码支付";
+                } else if("WX_APP".equals(payChannel)) {
+                    payChannel = "微信APP支付";
+                } else if("WX_MWEB".equals(payChannel)) {
+                    payChannel = "微信H5支付";
+                } else if("IAP".equals(payChannel)) {
+                    payChannel = "苹果应用内支付";
+                } else if("ALIPAY_MOBILE".equals(payChannel)) {
+                    payChannel = "支付宝移动支付";
+                } else if("ALIPAY_PC".equals(payChannel)) {
+                    payChannel = "支付宝PC支付";
+                } else if("ALIPAY_WAP".equals(payChannel)) {
+                    payChannel = "支付宝WAP支付";
+                } else if("ALIPAY_QR".equals(payChannel)) {
+                    payChannel = "支付宝当面付之扫码支付";
+                } else if("PC_MGR".equals(payChannel)) {
+                    payChannel = "管理平台支付";
+                } else if("JD_PAY".equals(payChannel)) {
+                    payChannel = "京东支付";
+                }
+                src.setChannel_id(payChannel);
+                list.add(src);
+            }
+
+            // 返回商户信息
+            returnMap.put("compareHistorySrcList", list);
+            returnMap.put("total", total);// 账单数量
+            returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
+        } else {
+            returnMap.put(Constant.ERROR_MESSAGE, retHeader.get(PayConstant.RETURN_PARAM_RETMSG) + "1");
+        }
+
+        return returnMap;
+    }
+
+
     // 下载结算明细
     @RequestMapping("/count/downLoadCheckOutDetail")
     @ResponseBody

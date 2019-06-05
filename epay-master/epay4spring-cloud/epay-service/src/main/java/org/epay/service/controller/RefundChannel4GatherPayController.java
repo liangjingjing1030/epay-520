@@ -87,14 +87,19 @@ public class RefundChannel4GatherPayController{
             //发送数据到支付平台支付====================================Start
             String mweb_url = "";
             try {
-                String result = gatherPayService.sendPayRequest(requestParam);
-                if(!"SUCCESS".equals(result)) {
-                    retHeader.put("request_channel", paramObj.getString("channel_id"));
-                    retHeader.put("retCode", "0007");
-                    retHeader.put("retMsg", "订单支付系统调用处理异常");
-                    response.put("response_header", retHeader);
+            	String result = gatherPayService.sendRefundRequest(requestParam);
+            	JSONObject object = JSONObject.parseObject(result);
+        		String retCode = object.getString("retCode");// 支付结果代码
+        		mweb_url = object.getString("mweb_url");// 支付结果代码
+            	if(!"SUCCESS".equals(retCode)) {
+            		int i = refundOrderService.deleteRefundOrderByPrimaryKey(refundObject.getString("refund_order_id"));
+            		System.out.println("============删除退款订单失败的数据条数：" + i);
+            		retHeader.put("request_channel", paramObj.getString("channel_id"));
+                	retHeader.put("retCode", "0007");
+                	retHeader.put("retMsg", "订单支付系统调用处理异常");
+                	response.put("response_header", retHeader);
                     return response.toJSONString();
-                }
+            	}
 			} catch (Exception e) {
 				retHeader.put("request_channel", refundObject.getString("channel_id"));
             	retHeader.put("retCode", "0007");

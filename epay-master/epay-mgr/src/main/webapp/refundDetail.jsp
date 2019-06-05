@@ -65,6 +65,7 @@
             $("#pay_orderid").val("");
             $("#user_id").val("");
             $("#user_name").val("");
+            $("#orderStates").val("-99");
         }
 
         function checkLogin() {

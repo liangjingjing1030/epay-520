@@ -44,6 +44,10 @@ var navs = [{
 		"title": "退款明细查询",
 		"icon": "fa-circle",
 		"href": "/refundDetail.jsp"
+	}, {
+		"title": "对账查询",
+		"icon": "fa-circle",
+		"href": "/reconciliation.jsp"
 	}]
 },{
 	"title": "结算模块",

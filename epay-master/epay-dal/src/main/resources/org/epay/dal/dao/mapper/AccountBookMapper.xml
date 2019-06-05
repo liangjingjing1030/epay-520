@@ -377,10 +377,10 @@
         and pay_status = #{status}
       </if>
       <if test="user_id != null and user_id != ''">
-        and user_id = #{user_id}
+        and user_id like '%${user_id}%'
       </if>
       <if test="user_name != null and user_name != ''">
-        and user_name = #{user_name}
+        and user_name like '%${user_name}%'
       </if>
     </where>
   </select>
@@ -404,10 +404,10 @@
         and pay_status = #{status}
       </if>
       <if test="user_id != null and user_id != ''">
-        and user_id = #{user_id}
+        and user_id like '%${user_id}%'
       </if>
       <if test="user_name != null and user_name != ''">
-        and user_name = #{user_name}
+        and user_name like '%${user_name}%'
       </if>
       and items_id in
       <foreach collection="itemslist" item="item" index="index" open="(" separator="," close=")">

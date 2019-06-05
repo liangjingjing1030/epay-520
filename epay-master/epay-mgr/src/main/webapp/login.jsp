@@ -160,20 +160,26 @@
 </script>
 	<style>
 		html,body{
-			/*width:100%;*/
-			height:100%
+			width:100%;
+			/*height:100%*/
 		}
 		body{
-			background: url(images/login3.jpg) no-repeat top left;
+			background: url(images/mch.png) no-repeat top left;
 			background-size: cover;
 		}
 		/*设置渐变色*/
 		.beg-login-box{
 			height: 360px; margin-right: 200px; opacity: 0.7;
 			background: -webkit-linear-gradient(
-				top, #135ca1,#0e4d92,#1969ae,#247db9,#64abd7
+				top, #1577ef,#1577ef
 			);
 		}
+        /*.beg-login-box{
+			height: 360px; margin-right: 200px; opacity: 0.7;
+			background: -webkit-linear-gradient(
+				top, #135ca1,#0e4d92,#1969ae,#247db9,#64abd7
+			);
+		}*/
 	</style>
 </head>
 <body class="beg-login-bg">

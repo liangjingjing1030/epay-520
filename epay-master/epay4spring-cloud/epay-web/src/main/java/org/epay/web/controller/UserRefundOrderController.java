@@ -89,9 +89,7 @@ public class UserRefundOrderController {
 
             //查询满足条件的支付订单====================================Start
             String pay_order_id = refundOrder.getString("pay_orderid");
-            // 1、根据订单主键查询订单
             String payOrderResult = payOrderServiceClient.selectPayOrderByPrimaryKey(getJsonParam("pay_order_id", pay_order_id));
-
             JSONObject retPayOrder = JSON.parseObject(payOrderResult);
             if(!"0000".equals(retPayOrder.getString("code"))) {
             	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retPayOrder.getString("msg"), null, null);
@@ -116,9 +114,7 @@ public class UserRefundOrderController {
             refundOrder.put("mch_refund_no", payOrderObj.getString("mch_order_no"));
             refundOrder.put("pay_amount", payOrderObj.getString("amount"));
             refundOrder.put("currency", payOrderObj.getString("currency"));
-            // 2、创建退款订单
             String refundOrderResult = refundOrderServiceClient.createRefundOrder(refundOrder.toJSONString());
-
             _log.info("{}创建退款订单,结果:{}", logPrefix, refundOrderResult);
             if(StringUtils.isEmpty(refundOrderResult)) {
             	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, "创建退款订单失败", null, null);

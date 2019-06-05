@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.CompareHistoryTgtMapper" >
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.CompareHistoryTgt" >
+    <id column="SEQ_NO" property="seqNo" jdbcType="INTEGER" />
+    <result column="PAYCOMPANY_ORDER_SEQNO" property="paycompanyOrderSeqno" jdbcType="INTEGER" />
+    <result column="TX_DATE" property="txDate" jdbcType="DATE" />
+    <result column="COMPARE_DATE" property="compareDate" jdbcType="DATE" />
+    <result column="COMPARE_USERNAME" property="compareUsername" jdbcType="VARCHAR" />
+    <result column="COMPARE_STATUS" property="compareStatus" jdbcType="CHAR" />
+    <result column="QUESTION_TYPE" property="questionType" jdbcType="CHAR" />
+    <result column="PROCESS_STATUS" property="processStatus" jdbcType="CHAR" />
+    <result column="PROCESS_USERNAME" property="processUsername" jdbcType="VARCHAR" />
+    <result column="PROCESS_DATETIME" property="processDatetime" jdbcType="TIMESTAMP" />
+    <result column="PROCESS_REMARK" property="processRemark" jdbcType="VARCHAR" />
+    <result column="TX_TYPE" property="txType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SEQ_NO, PAYCOMPANY_ORDER_SEQNO, TX_DATE, COMPARE_DATE, COMPARE_USERNAME, COMPARE_STATUS, 
+    QUESTION_TYPE, PROCESS_STATUS, PROCESS_USERNAME, PROCESS_DATETIME, PROCESS_REMARK, 
+    TX_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from compare_history_tgt
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from compare_history_tgt
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.epay.dal.dao.model.CompareHistoryTgt" >
+    insert into compare_history_tgt (SEQ_NO, PAYCOMPANY_ORDER_SEQNO, TX_DATE, 
+      COMPARE_DATE, COMPARE_USERNAME, COMPARE_STATUS, 
+      QUESTION_TYPE, PROCESS_STATUS, PROCESS_USERNAME, 
+      PROCESS_DATETIME, PROCESS_REMARK, TX_TYPE
+      )
+    values (#{seqNo,jdbcType=INTEGER}, #{paycompanyOrderSeqno,jdbcType=INTEGER}, #{txDate,jdbcType=DATE}, 
+      #{compareDate,jdbcType=DATE}, #{compareUsername,jdbcType=VARCHAR}, #{compareStatus,jdbcType=CHAR}, 
+      #{questionType,jdbcType=CHAR}, #{processStatus,jdbcType=CHAR}, #{processUsername,jdbcType=VARCHAR}, 
+      #{processDatetime,jdbcType=TIMESTAMP}, #{processRemark,jdbcType=VARCHAR}, #{txType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.CompareHistoryTgt" >
+    insert into compare_history_tgt
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seqNo != null" >
+        SEQ_NO,
+      </if>
+      <if test="paycompanyOrderSeqno != null" >
+        PAYCOMPANY_ORDER_SEQNO,
+      </if>
+      <if test="txDate != null" >
+        TX_DATE,
+      </if>
+      <if test="compareDate != null" >
+        COMPARE_DATE,
+      </if>
+      <if test="compareUsername != null" >
+        COMPARE_USERNAME,
+      </if>
+      <if test="compareStatus != null" >
+        COMPARE_STATUS,
+      </if>
+      <if test="questionType != null" >
+        QUESTION_TYPE,
+      </if>
+      <if test="processStatus != null" >
+        PROCESS_STATUS,
+      </if>
+      <if test="processUsername != null" >
+        PROCESS_USERNAME,
+      </if>
+      <if test="processDatetime != null" >
+        PROCESS_DATETIME,
+      </if>
+      <if test="processRemark != null" >
+        PROCESS_REMARK,
+      </if>
+      <if test="txType != null" >
+        TX_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=INTEGER},
+      </if>
+      <if test="paycompanyOrderSeqno != null" >
+        #{paycompanyOrderSeqno,jdbcType=INTEGER},
+      </if>
+      <if test="txDate != null" >
+        #{txDate,jdbcType=DATE},
+      </if>
+      <if test="compareDate != null" >
+        #{compareDate,jdbcType=DATE},
+      </if>
+      <if test="compareUsername != null" >
+        #{compareUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="compareStatus != null" >
+        #{compareStatus,jdbcType=CHAR},
+      </if>
+      <if test="questionType != null" >
+        #{questionType,jdbcType=CHAR},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=CHAR},
+      </if>
+      <if test="processUsername != null" >
+        #{processUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="processDatetime != null" >
+        #{processDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="processRemark != null" >
+        #{processRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="txType != null" >
+        #{txType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.CompareHistoryTgt" >
+    update compare_history_tgt
+    <set >
+      <if test="paycompanyOrderSeqno != null" >
+        PAYCOMPANY_ORDER_SEQNO = #{paycompanyOrderSeqno,jdbcType=INTEGER},
+      </if>
+      <if test="txDate != null" >
+        TX_DATE = #{txDate,jdbcType=DATE},
+      </if>
+      <if test="compareDate != null" >
+        COMPARE_DATE = #{compareDate,jdbcType=DATE},
+      </if>
+      <if test="compareUsername != null" >
+        COMPARE_USERNAME = #{compareUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="compareStatus != null" >
+        COMPARE_STATUS = #{compareStatus,jdbcType=CHAR},
+      </if>
+      <if test="questionType != null" >
+        QUESTION_TYPE = #{questionType,jdbcType=CHAR},
+      </if>
+      <if test="processStatus != null" >
+        PROCESS_STATUS = #{processStatus,jdbcType=CHAR},
+      </if>
+      <if test="processUsername != null" >
+        PROCESS_USERNAME = #{processUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="processDatetime != null" >
+        PROCESS_DATETIME = #{processDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="processRemark != null" >
+        PROCESS_REMARK = #{processRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="txType != null" >
+        TX_TYPE = #{txType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.CompareHistoryTgt" >
+    update compare_history_tgt
+    set PAYCOMPANY_ORDER_SEQNO = #{paycompanyOrderSeqno,jdbcType=INTEGER},
+      TX_DATE = #{txDate,jdbcType=DATE},
+      COMPARE_DATE = #{compareDate,jdbcType=DATE},
+      COMPARE_USERNAME = #{compareUsername,jdbcType=VARCHAR},
+      COMPARE_STATUS = #{compareStatus,jdbcType=CHAR},
+      QUESTION_TYPE = #{questionType,jdbcType=CHAR},
+      PROCESS_STATUS = #{processStatus,jdbcType=CHAR},
+      PROCESS_USERNAME = #{processUsername,jdbcType=VARCHAR},
+      PROCESS_DATETIME = #{processDatetime,jdbcType=TIMESTAMP},
+      PROCESS_REMARK = #{processRemark,jdbcType=VARCHAR},
+      TX_TYPE = #{txType,jdbcType=VARCHAR}
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </update>
+</mapper>

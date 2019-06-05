@@ -103,11 +103,11 @@ public class ResultNotifyControllerServiceController {
             accountBook.setPay_channel(payOrder.getChannel_id());
             if("WX".equals(payOrder.getChannel_id().substring(0, 2))) {
             	accountBook.setChannel_settle_cost(Integer.valueOf(configEntity.getWx_settle_cost()));
-            	Long channel_settle_money = (payOrder.getAmount())*(Integer.valueOf(configEntity.getWx_settle_cost()))/10000;
+            	Long channel_settle_money = (payOrder.getAmount())-((payOrder.getAmount())*(Integer.valueOf(configEntity.getWx_settle_cost()))/10000);
             	accountBook.setChannel_settle_money(channel_settle_money);
             }else if("ALIPAY".equals(payOrder.getChannel_id().substring(0, 6))) {
             	accountBook.setChannel_settle_cost(Integer.valueOf(configEntity.getAlipay_settle_cost()));
-            	Long channel_settle_money = (payOrder.getAmount())*(Integer.valueOf(configEntity.getAlipay_settle_cost()))/10000;
+            	Long channel_settle_money = (payOrder.getAmount())-((payOrder.getAmount())*(Integer.valueOf(configEntity.getAlipay_settle_cost()))/10000);
             	accountBook.setChannel_settle_money(channel_settle_money);
             }
             accountBook.setPay_time(myDate);
@@ -233,8 +233,13 @@ public class ResultNotifyControllerServiceController {
     }
     
     public static void main(String[] args) {
-		String a = "100.00";
-		a = a.substring(0, a.length() - 3) + a.substring(a.length() - 2, a.length());
-		System.out.println(a);
+//		String a = "100.00";
+//		a = a.substring(0, a.length() - 3) + a.substring(a.length() - 2, a.length());
+//		System.out.println(a);
+		
+		long a = 100;
+		long b = a*2/1000;
+		System.out.println(b);
+		
 	}
 }

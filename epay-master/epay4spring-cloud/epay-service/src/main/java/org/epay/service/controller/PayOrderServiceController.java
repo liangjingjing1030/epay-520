@@ -8,7 +8,9 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.epay.common.util.MyBase64;
 import org.epay.common.util.MyLog;
+import org.epay.dal.dao.mapper.MchInfoMapper;
 import org.epay.dal.dao.model.AccountBook;
+import org.epay.dal.dao.model.MchInfo;
 import org.epay.dal.dao.model.PayOrder;
 import org.epay.service.service.AccountBookService;
 import org.epay.service.service.PayOrderService;
@@ -34,8 +36,12 @@ public class PayOrderServiceController {
 
     @Autowired
     private PayOrderService payOrderService;
+    
     @Autowired
     private AccountBookService accountBookService;
+    
+    @Autowired
+    private MchInfoMapper mchInfoMapper;
 
     /**
      * 根据项目编号查询payOrder列表（状态为已缴费）
@@ -211,11 +217,17 @@ public class PayOrderServiceController {
     	payOrder.setUser_id(user_id);
     	payOrder.setUser_name(user_name);
     	payOrder.setPay_order_id(pay_order_id);
-    	payOrder.setStatus(Byte.valueOf(status));
+    	if(StringUtils.isNotBlank(status)) {
+    		payOrder.setStatus(Byte.valueOf(status));
+    	}
     	payOrder.setStart_time(start_time);
     	payOrder.setEnd_time(end_time);
-    	payOrder.setLimit(Integer.valueOf(limit));
-    	payOrder.setOffset(Integer.valueOf(offset));
+    	if(StringUtils.isNotBlank(limit)) {
+    		payOrder.setLimit(Integer.valueOf(limit));
+    	}
+    	if(StringUtils.isNotBlank(offset)) {
+    		payOrder.setOffset(Integer.valueOf(offset));
+    	}
     	//根据查询条件组装查询对象====================================End
     	
         List<PayOrder> retPayOrderDetail = payOrderService.selectPayOrderDetail(payOrder);
@@ -231,9 +243,11 @@ public class PayOrderServiceController {
     	//组装返回需要数据====================================Start
     	List<Map<String, Object>> payOrderDetailList = new ArrayList<Map<String,Object>>();
     	for (PayOrder payOrder1 : retPayOrderDetail) {
+    		MchInfo mchInfo = mchInfoMapper.selectByPrimaryKey(payOrder1.getMch_id());
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("create_time", payOrder1.getCreate_time());
 			map.put("mch_id", payOrder1.getMch_id());
+			map.put("mch_name", mchInfo.getMch_name());
 			map.put("mch_order_no", payOrder1.getMch_order_no());
 			map.put("channel_id", payOrder1.getChannel_id());
 			map.put("pay_order_id", payOrder1.getPay_order_id());
@@ -269,7 +283,7 @@ public class PayOrderServiceController {
         }
         JSONObject paramObj = JSON.parseObject(new String(MyBase64.decode(jsonParam)));
         _log.info("selectPayOrderByPrimaryKey << {}", paramObj.toString());
-        String pay_order_id = paramObj.getString("pay_order_id"); // 订单号
+        String pay_order_id = paramObj.getString("pay_order_id"); // 账单号
         
         PayOrder payOrder = payOrderService.selectPayOrderByPrimaryKey(pay_order_id);
 

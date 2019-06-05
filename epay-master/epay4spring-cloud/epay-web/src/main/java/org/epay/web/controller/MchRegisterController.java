@@ -199,6 +199,13 @@ public class MchRegisterController {
             errorMessage = "请求参数[mch_type] 为空.";
             return errorMessage;
         }
+        if("个体商户".equals(mch_type)) {
+        	mch_type = "1";
+        }else if("企业".equals(mch_type)) {
+        	mch_type = "2";
+        }else if("小微商户".equals(mch_type)) {
+        	mch_type = "3";
+        }
         if(StringUtils.isBlank(mch_range)) {
             errorMessage = "请求参数[mch_range] 为空.";
             return errorMessage;

@@ -30,7 +30,15 @@ public class MchCheckOutServiceClient {
     public String mchCheckOutQueryFallback(String jsonParam) {
         return "error";
     }
-    
+
+    @HystrixCommand(fallbackMethod = "mchDuiZhangQueryFallback")
+    public String mchDuiZhangQuery(String jsonParam) {
+        return restTemplate.getForEntity("http://EPAY-SERVICE/mch_checkOut/mch_duizhang_page?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
+    }
+    public String mchDuiZhangQueryFallback(String jsonParam) {
+        return "error";
+    }
+
     @HystrixCommand(fallbackMethod = "queryMoneySummaryFallback")
     public String queryMoneySummary(String jsonParam) {
         return restTemplate.getForEntity("http://EPAY-SERVICE/mch_checkOut/query_money_summart?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();

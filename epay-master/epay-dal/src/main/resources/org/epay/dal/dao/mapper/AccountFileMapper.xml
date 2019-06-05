@@ -193,13 +193,13 @@
     <where>
       mch_id = #{mch_id}
       <if test="items_id != null and items_id != ''">
-        and items_id = #{items_id}
+        and items_id like '%${items_id}%'
       </if>
       <if test="items_name != null and items_name != ''">
-        and items_name = #{items_name}
+        and items_name like '%${items_name}%'
       </if>
       <if test="items_filename != null and items_filename != ''">
-        and items_filename = #{items_filename}
+        and items_filename like '%${items_filename}%'
       </if>
       <if test="upload_date != null and upload_date != ''">
         and upload_date = #{upload_date}

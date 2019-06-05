@@ -194,7 +194,7 @@ public class AccountBookService {
      */
     public boolean modefyAccountBookById(AccountBook accountBook) {
         try {
-            int updateCount = accountBookMapper.updateByPrimaryKey(accountBook);
+            int updateCount = accountBookMapper.updateByPrimaryKeySelective(accountBook);
             if(updateCount == 1) {
                 return true;
             } else {

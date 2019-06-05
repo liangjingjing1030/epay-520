@@ -125,9 +125,15 @@ public class MchQueryOrdersServiceController {
     	payOrder.setPay_order_id(pay_order_id);
     	payOrder.setUser_id(user_id);
     	payOrder.setUser_name(user_name);
-    	payOrder.setStatus(Byte.valueOf(status));
-    	payOrder.setLimit(Integer.valueOf(limit));
-    	payOrder.setOffset(Integer.valueOf(offset));
+    	if(StringUtils.isNotBlank(status)) {
+    		payOrder.setStatus(Byte.valueOf(status));
+    	}
+    	if(StringUtils.isNotBlank(limit)) {
+    		payOrder.setLimit(Integer.valueOf(limit));
+    	}
+    	if(StringUtils.isNotBlank(offset)) {
+    		payOrder.setOffset(Integer.valueOf(offset));
+    	}
     	
     	//根据条件查询数据
     	List<PayOrder> retOrders = mchQueryOrdersService.mchQueryOrdersByConditions(payOrder);

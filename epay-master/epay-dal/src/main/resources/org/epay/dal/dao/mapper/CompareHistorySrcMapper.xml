@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.epay.dal.dao.mapper.CompareHistorySrcMapper" >
+
+  <resultMap id="BaseResultMap" type="org.epay.dal.dao.model.CompareHistorySrc" >
+    <id column="SEQ_NO" property="seqNo" jdbcType="INTEGER" />
+    <result column="PAY_ORDER_SEQNO" property="payOrderSeqno" jdbcType="INTEGER" />
+    <result column="TX_DATE" property="txDate" jdbcType="DATE" />
+    <result column="COMPARE_DATE" property="compareDate" jdbcType="DATE" />
+    <result column="COMPARE_USERNAME" property="compareUsername" jdbcType="VARCHAR" />
+    <result column="COMPARE_STATUS" property="compareStatus" jdbcType="CHAR" />
+    <result column="QUESTION_TYPE" property="questionType" jdbcType="CHAR" />
+    <result column="PROCESS_STATUS" property="processStatus" jdbcType="CHAR" />
+    <result column="PROCESS_USERNAME" property="processUsername" jdbcType="VARCHAR" />
+    <result column="PROCESS_DATETIME" property="processDatetime" jdbcType="TIMESTAMP" />
+    <result column="PROCESS_REMARK" property="processRemark" jdbcType="VARCHAR" />
+    <result column="TX_TYPE" property="txType" jdbcType="VARCHAR" />
+    <result column="TABLE_NAME" property="tableName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap2" type="org.epay.dal.dao.model.CompareHistorySrc" >
+    <id column="SEQ_NO" property="seqNo" jdbcType="INTEGER" />
+    <result column="PAY_ORDER_SEQNO" property="payOrderSeqno" jdbcType="INTEGER" />
+    <result column="TX_DATE" property="txDate" jdbcType="DATE" />
+    <result column="COMPARE_DATE" property="compareDate" jdbcType="DATE" />
+    <result column="COMPARE_USERNAME" property="compareUsername" jdbcType="VARCHAR" />
+    <result column="COMPARE_STATUS" property="compareStatus" jdbcType="CHAR" />
+    <result column="QUESTION_TYPE" property="questionType" jdbcType="CHAR" />
+    <result column="PROCESS_STATUS" property="processStatus" jdbcType="CHAR" />
+    <result column="PROCESS_USERNAME" property="processUsername" jdbcType="VARCHAR" />
+    <result column="PROCESS_DATETIME" property="processDatetime" jdbcType="TIMESTAMP" />
+    <result column="PROCESS_REMARK" property="processRemark" jdbcType="VARCHAR" />
+    <result column="TX_TYPE" property="txType" jdbcType="VARCHAR" />
+    <result column="TABLE_NAME" property="tableName" jdbcType="VARCHAR" />
+    <!--association为联合之意，CompareHistorySrc.java中新加的order属性包含很多属性，
+      property表示新加的属性的名称，javaType表示新加的属性的类型，即全限定类名-->
+    <association property="order" javaType="org.epay.dal.dao.model.PayOrder">
+      <id column="pay_order_id" jdbcType="VARCHAR" property="pay_order_id" />
+      <result column="mch_id" jdbcType="VARCHAR" property="mch_id" />
+      <result column="mch_order_no" jdbcType="VARCHAR" property="mch_order_no" />
+      <result column="channel_id" jdbcType="VARCHAR" property="channel_id" />
+      <result column="user_id" jdbcType="VARCHAR" property="user_id" />
+      <result column="user_name" jdbcType="VARCHAR" property="user_name" />
+      <result column="user_channel_account" jdbcType="VARCHAR" property="user_channel_account" />
+      <result column="amount" jdbcType="BIGINT" property="amount" />
+      <result column="currency" jdbcType="VARCHAR" property="currency" />
+      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="client_ip" jdbcType="VARCHAR" property="client_ip" />
+      <result column="device" jdbcType="VARCHAR" property="device" />
+      <result column="subject" jdbcType="VARCHAR" property="subject" />
+      <result column="body" jdbcType="VARCHAR" property="body" />
+      <result column="extra" jdbcType="VARCHAR" property="extra" />
+      <result column="channel_mch_id" jdbcType="VARCHAR" property="channel_mch_id" />
+      <result column="channel_order_no" jdbcType="VARCHAR" property="channel_order_no" />
+      <result column="res_code" jdbcType="VARCHAR" property="res_code" />
+      <result column="res_msg" jdbcType="VARCHAR" property="res_msg" />
+      <result column="param1" jdbcType="VARCHAR" property="param1" />
+      <result column="param2" jdbcType="VARCHAR" property="param2" />
+      <result column="notify_url" jdbcType="VARCHAR" property="notify_url" />
+      <result column="notify_count" jdbcType="VARCHAR" property="notify_count" />
+      <result column="last_notify_time" jdbcType="VARCHAR" property="last_notify_time" />
+      <result column="expire_time" jdbcType="VARCHAR" property="expire_time" />
+      <result column="pay_succ_time" jdbcType="VARCHAR" property="pay_succ_time" />
+      <result column="branch_id" jdbcType="VARCHAR" property="branch_id" />
+      <result column="branch_name" jdbcType="VARCHAR" property="branch_name" />
+      <result column="staff_id" jdbcType="VARCHAR" property="staff_id" />
+      <result column="stall_name" jdbcType="VARCHAR" property="stall_name" />
+      <result column="create_time" jdbcType="VARCHAR" property="create_time" />
+      <result column="update_time" jdbcType="VARCHAR" property="update_time" />
+      <result column="reserve1" jdbcType="VARCHAR" property="reserve1" />
+      <result column="reserve2" jdbcType="VARCHAR" property="reserve2" />
+      <result column="reserve3" jdbcType="VARCHAR" property="reserve3" />
+      <result column="reserve4" jdbcType="VARCHAR" property="reserve4" />
+      <result column="reserve5" jdbcType="VARCHAR" property="reserve5" />
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    SEQ_NO, PAY_ORDER_SEQNO, TX_DATE, COMPARE_DATE, COMPARE_USERNAME, COMPARE_STATUS, 
+    QUESTION_TYPE, PROCESS_STATUS, PROCESS_USERNAME, PROCESS_DATETIME, PROCESS_REMARK, 
+    TX_TYPE, TABLE_NAME
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from compare_history_src
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </select>
+
+  <!--Src对账分页总数-->
+  <select id="getSrcTotalByCondition" resultType="java.lang.Integer"  >
+    select
+    count(*)
+    from compare_history_src a
+    left join epay_pay_order b
+    on a.PAY_ORDER_SEQNO = b.pay_order_id
+    <where>
+      b.mch_id = #{mch_id}
+      <if test="pay_channel != null and pay_channel != ''">
+        and b.channel_id = #{pay_channel}
+      </if>
+      <if test="compare_status != null and compare_status != ''">
+        and a.COMPARE_STATUS = #{compare_status}
+      </if>
+      <if test="start_time != null and start_time != ''">
+        and a.COMPARE_DATE &gt;= #{start_time}
+      </if>
+      <if test="end_time != null and end_time != ''">
+        and a.COMPARE_DATE &lt;= #{end_time}
+      </if>
+    </where>
+  </select>
+
+  <!--Src + Tgt对账分页总数-->
+  <!--src的PAY_ORDER_SEQNO 是订单表的pay_order_id， tgt的PAYCOMPANY_ORDER_SEQNO是订单表的channel_order_no-->
+  <!--<select id="getTgtTotalByCondition" resultType="java.lang.Integer"  >
+    select
+    count(*)
+    from epay_pay_order o
+    left join compare_history_src s
+    on s.PAY_ORDER_SEQNO = o.pay_order_id
+    left join compare_history_tgt t
+    on t.PAYCOMPANY_ORDER_SEQNO = o.channel_order_no
+    <where>
+      o.mch_id = #{mch_id}
+      <if test="pay_channel != null and pay_channel != ''">
+        and o.channel_id = #{pay_channel}
+      </if>
+      <if test="compare_status != null and compare_status != ''">
+        and s.COMPARE_STATUS = #{compare_status}
+      </if>
+      <if test="start_time != null and start_time != ''">
+        and s.COMPARE_DATE &gt;= #{start_time}
+      </if>
+      <if test="end_time != null and end_time != ''">
+        and s.COMPARE_DATE &lt;= #{end_time}
+      </if>
+    </where>
+  </select>-->
+
+  <!--Src对象分页数据-->
+  <select id="getSrcPageListByCondition" resultMap="BaseResultMap2"  >
+    select
+    a.SEQ_NO, a.PAY_ORDER_SEQNO, a.TX_DATE, a.COMPARE_DATE, a.COMPARE_USERNAME, a.COMPARE_STATUS,
+    a.QUESTION_TYPE, a.PROCESS_STATUS, a.PROCESS_USERNAME, a.PROCESS_DATETIME, a.PROCESS_REMARK,
+    a.TX_TYPE, a.TABLE_NAME, b.channel_id
+    from compare_history_src a
+    left join epay_pay_order b
+    on a.PAY_ORDER_SEQNO = b.pay_order_id
+    <where>
+      b.mch_id = #{mch_id}
+      <if test="pay_channel != null and pay_channel != ''">
+        and b.channel_id = #{pay_channel}
+      </if>
+      <if test="compare_status != null and compare_status != ''">
+        and a.COMPARE_STATUS = #{compare_status}
+      </if>
+      <if test="start_time != null and start_time != ''">
+        and a.COMPARE_DATE &gt;= #{start_time}
+      </if>
+      <if test="end_time != null and end_time != ''">
+        and a.COMPARE_DATE &lt;= #{end_time}
+      </if>
+    </where>
+    order by a.COMPARE_DATE desc
+    limit #{startIndex}, #{pageSize}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from compare_history_src
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.epay.dal.dao.model.CompareHistorySrc" >
+    insert into compare_history_src (SEQ_NO, PAY_ORDER_SEQNO, TX_DATE, 
+      COMPARE_DATE, COMPARE_USERNAME, COMPARE_STATUS, 
+      QUESTION_TYPE, PROCESS_STATUS, PROCESS_USERNAME, 
+      PROCESS_DATETIME, PROCESS_REMARK, TX_TYPE, 
+      TABLE_NAME)
+    values (#{seqNo,jdbcType=INTEGER}, #{payOrderSeqno,jdbcType=INTEGER}, #{txDate,jdbcType=DATE}, 
+      #{compareDate,jdbcType=DATE}, #{compareUsername,jdbcType=VARCHAR}, #{compareStatus,jdbcType=CHAR}, 
+      #{questionType,jdbcType=CHAR}, #{processStatus,jdbcType=CHAR}, #{processUsername,jdbcType=VARCHAR}, 
+      #{processDatetime,jdbcType=TIMESTAMP}, #{processRemark,jdbcType=VARCHAR}, #{txType,jdbcType=VARCHAR}, 
+      #{tableName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.epay.dal.dao.model.CompareHistorySrc" >
+    insert into compare_history_src
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seqNo != null" >
+        SEQ_NO,
+      </if>
+      <if test="payOrderSeqno != null" >
+        PAY_ORDER_SEQNO,
+      </if>
+      <if test="txDate != null" >
+        TX_DATE,
+      </if>
+      <if test="compareDate != null" >
+        COMPARE_DATE,
+      </if>
+      <if test="compareUsername != null" >
+        COMPARE_USERNAME,
+      </if>
+      <if test="compareStatus != null" >
+        COMPARE_STATUS,
+      </if>
+      <if test="questionType != null" >
+        QUESTION_TYPE,
+      </if>
+      <if test="processStatus != null" >
+        PROCESS_STATUS,
+      </if>
+      <if test="processUsername != null" >
+        PROCESS_USERNAME,
+      </if>
+      <if test="processDatetime != null" >
+        PROCESS_DATETIME,
+      </if>
+      <if test="processRemark != null" >
+        PROCESS_REMARK,
+      </if>
+      <if test="txType != null" >
+        TX_TYPE,
+      </if>
+      <if test="tableName != null" >
+        TABLE_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderSeqno != null" >
+        #{payOrderSeqno,jdbcType=INTEGER},
+      </if>
+      <if test="txDate != null" >
+        #{txDate,jdbcType=DATE},
+      </if>
+      <if test="compareDate != null" >
+        #{compareDate,jdbcType=DATE},
+      </if>
+      <if test="compareUsername != null" >
+        #{compareUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="compareStatus != null" >
+        #{compareStatus,jdbcType=CHAR},
+      </if>
+      <if test="questionType != null" >
+        #{questionType,jdbcType=CHAR},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=CHAR},
+      </if>
+      <if test="processUsername != null" >
+        #{processUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="processDatetime != null" >
+        #{processDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="processRemark != null" >
+        #{processRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="txType != null" >
+        #{txType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.epay.dal.dao.model.CompareHistorySrc" >
+    update compare_history_src
+    <set >
+      <if test="payOrderSeqno != null" >
+        PAY_ORDER_SEQNO = #{payOrderSeqno,jdbcType=INTEGER},
+      </if>
+      <if test="txDate != null" >
+        TX_DATE = #{txDate,jdbcType=DATE},
+      </if>
+      <if test="compareDate != null" >
+        COMPARE_DATE = #{compareDate,jdbcType=DATE},
+      </if>
+      <if test="compareUsername != null" >
+        COMPARE_USERNAME = #{compareUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="compareStatus != null" >
+        COMPARE_STATUS = #{compareStatus,jdbcType=CHAR},
+      </if>
+      <if test="questionType != null" >
+        QUESTION_TYPE = #{questionType,jdbcType=CHAR},
+      </if>
+      <if test="processStatus != null" >
+        PROCESS_STATUS = #{processStatus,jdbcType=CHAR},
+      </if>
+      <if test="processUsername != null" >
+        PROCESS_USERNAME = #{processUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="processDatetime != null" >
+        PROCESS_DATETIME = #{processDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="processRemark != null" >
+        PROCESS_REMARK = #{processRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="txType != null" >
+        TX_TYPE = #{txType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.epay.dal.dao.model.CompareHistorySrc" >
+    update compare_history_src
+    set PAY_ORDER_SEQNO = #{payOrderSeqno,jdbcType=INTEGER},
+      TX_DATE = #{txDate,jdbcType=DATE},
+      COMPARE_DATE = #{compareDate,jdbcType=DATE},
+      COMPARE_USERNAME = #{compareUsername,jdbcType=VARCHAR},
+      COMPARE_STATUS = #{compareStatus,jdbcType=CHAR},
+      QUESTION_TYPE = #{questionType,jdbcType=CHAR},
+      PROCESS_STATUS = #{processStatus,jdbcType=CHAR},
+      PROCESS_USERNAME = #{processUsername,jdbcType=VARCHAR},
+      PROCESS_DATETIME = #{processDatetime,jdbcType=TIMESTAMP},
+      PROCESS_REMARK = #{processRemark,jdbcType=VARCHAR},
+      TX_TYPE = #{txType,jdbcType=VARCHAR},
+      TABLE_NAME = #{tableName,jdbcType=VARCHAR}
+    where SEQ_NO = #{seqNo,jdbcType=INTEGER}
+  </update>
+</mapper>

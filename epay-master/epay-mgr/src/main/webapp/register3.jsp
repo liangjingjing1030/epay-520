@@ -31,8 +31,32 @@
 					register();
 				}
 			});
+			
+			// 查询机构号按钮
+			$("#queryBranchIdBtn").click(function () {
+				var branchName = $.trim($("#branchName").val());
+				if("" == branchName) {
+					alert("请输入网点名称查询");
+				} else {
+					$.ajax({
+						type : "post",
+						url : "mch/queryBranchIdByBranchName",
+						data: {
+							"branchName": branchName
+						},
+						success : function(jsonObject) {
+							if(jsonObject.errorMessage == "OK") {
+								$("#branchId").val(jsonObject.branchId);
+							} else {
+								$("#branchId").val("");
+								alert(jsonObject.errorMessage);
+							}
+						}
+					});
+				}
+			});
 
-		});
+		});//---------------------------------------------------------------------------------------------
 
 		// 注册
 		function register() {
@@ -233,6 +257,7 @@
 			}
 			return true;
 		}
+
 		// 验证验证码
 		function checkRegisterCaptcha() {
 			var captcha = $.trim($("#captcha").val());
@@ -331,13 +356,17 @@
 		</div>
 
 		<div class="layui-form-item">
-			<span class="nameSpan"><span class="xingSpan">✲</span>拓展网点号:</span>
-			<input id="branchId" type="text" name="branchId" lay-verify="branchId" autocomplete="off" placeholder="*请输入拓展网点号" class="layui-input">
+			<span class="nameSpan">拓展网点名:</span>
+			<input id="branchName" type="text" name="branchName" lay-verify="branchName" autocomplete="off" placeholder="-请输入拓展网点名称" class="layui-input">
 		</div>
 
 		<div class="layui-form-item">
-			<span class="nameSpan">拓展网点名:</span>
-			<input id="branchName" type="text" name="branchName" lay-verify="branchName" autocomplete="off" placeholder="-请输入拓展网点名称" class="layui-input">
+			<span class="nameSpan"><span class="xingSpan">✲</span>拓展网点号:</span>
+			<input id="branchId" type="text" name="branchId" lay-verify="branchId" autocomplete="off" placeholder="输入网点名后自动填写" class="layui-input" style="width: 120px;float: left;margin-left: 16px;">
+			<%--<input type="button" value="查询" style="float: right;width: 68px;height: 30px;border-radius: 3px;"/>--%>
+			<button id="queryBranchIdBtn" class="layui-btn layui-btn-primary" lay-submit lay-filter="login" style="width: 68px;height: 30px;float: right;">
+				查&nbsp;询
+			</button>
 		</div>
 
 		<div class="layui-form-item">
@@ -356,7 +385,7 @@
 		</div>
 
 		<div style="height: 15px;">
-			<ul><li id="showId" style="margin-left:40px;color:red;font-size:15px;margin-top:10px;margin-bottom:10px;line-height:18px;"></li></ul>
+			<ul><li id="showId" style="margin-left:40px;color:white;font-size:15px;margin-top:10px;margin-bottom:10px;line-height:18px;"></li></ul>
 		</div>
 
 		<div class="layui-form-item" style="">

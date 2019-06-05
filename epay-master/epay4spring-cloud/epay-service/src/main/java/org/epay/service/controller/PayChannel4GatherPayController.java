@@ -159,8 +159,8 @@ public class PayChannel4GatherPayController{
         	customerInfo.setUser_channel_account(user_channel_account);
         	customerInfo.setCreate_time(myDate1);
         	List<CustomerInfo> customerInfos = customerInfoService.selectCustomerInfoByPrimaryKey(customerInfo);
-        	CustomerInfo customeer = customerInfos.get(0);
-        	if(customeer == null) {
+        	
+        	if(customerInfos == null) {
         		int i = customerInfoService.createCustomerInfo(customerInfo);
             	if(i <= 0) {
                 	retHeader.put("request_channel", paramObj.getString("channel_id"));
@@ -169,6 +169,17 @@ public class PayChannel4GatherPayController{
                 	response.put("response_header", retHeader);
                     return response.toJSONString();
                 }
+        	}else {
+        		if(customerInfos.size() == 0) {
+            		int i = customerInfoService.createCustomerInfo(customerInfo);
+                	if(i <= 0) {
+                    	retHeader.put("request_channel", paramObj.getString("channel_id"));
+                    	retHeader.put("retCode", "0118");
+                    	retHeader.put("retMsg", "添加客户信息失败");
+                    	response.put("response_header", retHeader);
+                        return response.toJSONString();
+                    }
+            	}
         	}
             //将客户对应信息存入数据库====================================End
             
@@ -267,4 +278,6 @@ public class PayChannel4GatherPayController{
         
         return request;
     }
+    
+    
 }

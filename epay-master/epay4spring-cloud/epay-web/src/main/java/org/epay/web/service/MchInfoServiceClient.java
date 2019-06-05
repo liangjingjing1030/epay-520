@@ -37,9 +37,9 @@ public class MchInfoServiceClient {
     public String userSelectMchInfo(String jsonParam) {
         return restTemplate.getForEntity("http://EPAY-SERVICE/mch_info/userSelectMchInfo?jsonParam=" + MyBase64.encode(jsonParam.getBytes()), String.class).getBody();
     }
+
     public String userSelectMchInfoFallback(String jsonParam) {
         return " select mchInfo error";
     }
-
 
 }
