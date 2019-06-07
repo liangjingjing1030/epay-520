@@ -120,6 +120,17 @@
     }
 
 </script>
+<style>
+	.layui-input{
+		width: 65%; float: left;
+	}
+	.nameSpan{
+		width: 35%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;text-align: right;
+	}
+	.xingSpan{
+		color: red; font-size: 15px;
+	}
+</style>
 </head>
 <body class="beg-login-bg">
 	<div class="beg-login-box" style="height: 390px; width: 500px;">
@@ -131,27 +142,27 @@
 		<div class="beg-login-main">
 			<%--<input name="__RequestVerificationToken" type="hidden" value="fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81" />--%>
 			<div class="layui-form-item" style="margin-top: -5px;">
-				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">商&nbsp;户&nbsp;号:</span>
-				<input id="loginAct" type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="请输入商户号" class="layui-input" style="width: 65%; float: left;">
+				<%--<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>--%>
+				<span class="nameSpan"><span class="xingSpan">✲</span>商户号码:</span>
+				<input id="loginAct" type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="请输入商户号" class="layui-input">
 			</div>
 
 			<div class="layui-form-item">
-				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">账&nbsp;&nbsp;&nbsp;&nbsp;号:</span>
-				<input id="account" type="text" name="password" lay-verify="password" autocomplete="off" placeholder="请输入登录账号" class="layui-input"  style="width: 65%; float: left;">
+				<%--<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>--%>
+				<span class="nameSpan"><span class="xingSpan">✲</span>登录账号:</span>
+				<input id="account" type="text" name="password" lay-verify="password" autocomplete="off" placeholder="请输入登录账号" class="layui-input">
 			</div>
 
 			<div class="layui-form-item">
-				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">密&nbsp;&nbsp;&nbsp;&nbsp;码:</span>
-				<input id="loginPwd" type="password" name="password" lay-verify="password" autocomplete="off" placeholder="请输入密码" class="layui-input"  style="width: 65%; float: left;">
+				<%--<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>--%>
+				<span class="nameSpan"><span class="xingSpan">✲</span>登录密码:</span>
+				<input id="loginPwd" type="password" name="password" lay-verify="password" autocomplete="off" placeholder="请输入密码" class="layui-input">
 			</div>
 
 			<div class="layui-form-item">
-				<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>
-				<span style="width: 30%; float: left; font-size: 20px; font-family: 宋体;margin-top: 8px;">确认密码:</span>
-				<input id="reLoginPwd" type="password" name="reLoginPwd" lay-verify="reLoginPwd" autocomplete="off" placeholder="请再次输入密码" class="layui-input"  style="width: 65%; float: left;">
+				<%--<span style="color: red; float: left; width: 5%; font-size: 15px;margin-top: 10px;">✲</span>--%>
+				<span class="nameSpan"><span class="xingSpan">✲</span>确认密码:</span>
+				<input id="reLoginPwd" type="password" name="reLoginPwd" lay-verify="reLoginPwd" autocomplete="off" placeholder="请再次输入密码" class="layui-input">
 			</div>
 
 			<%--<div class="layui-form-item">

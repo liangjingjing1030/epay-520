@@ -355,10 +355,17 @@ public class BillServiceController {
                 list.add(ids.get(i).toString());
             }
         }
-        //
+        JSONObject retObj = new JSONObject();
+        // 先判断活动当前的状态,都是启用状态返回“start”，都是停止状态返回“stop”，都有返回“all”
+        String result = activityService.queryByActivityIds(list);
+        if(!"start".equals(result)) {
+            retObj.put("code", "0002"); // 有处于停止状态的活动
+            retObj.put("msg", "您当前所选活动中已经有活动处于不可用状态！");
+            return retObj.toJSONString();
+        }
+        // 停止活动
         boolean deleteOK = activityService.stopActivity(list);
 
-        JSONObject retObj = new JSONObject();
         // 删除账单失败
         if(!deleteOK) {
             retObj.put("code", "0001"); // 参数错误
@@ -390,10 +397,16 @@ public class BillServiceController {
                 list.add(ids.get(i).toString());
             }
         }
-        //
+        JSONObject retObj = new JSONObject();
+        // 先判断活动当前的状态,都是启用状态返回“start”，都是停止状态返回“stop”，都有返回“all”
+        String result = activityService.queryByActivityIds(list);
+        if(!"stop".equals(result)) {
+            retObj.put("code", "0002"); // 有处于停止状态的活动
+            retObj.put("msg", "您当前所选活动中已经有活动处于可用状态！");
+            return retObj.toJSONString();
+        }
         boolean deleteOK = activityService.restartActivity(list);
 
-        JSONObject retObj = new JSONObject();
         // 删除账单失败
         if(!deleteOK) {
             retObj.put("code", "0001"); // 参数错误
@@ -539,23 +552,27 @@ public class BillServiceController {
         // 设置可用状态为可用  可用状态 0：不可用；1：可用
         activity.setActivityStatus((byte)1);// 默认可用
 
-        // 创建活动
-        int saveCount = activityService.save(activity);
-
         JSONObject retObj = new JSONObject();
         retObj.put("code", "0000");
-        if(StringUtils.isBlank(jsonParam)) {
-            retObj.put("code", "0001"); // 参数错误
-            retObj.put("msg", "缺少参数");
-            return retObj.toJSONString();
+        // 判断活动是否重复(一个商户下，活动编号是唯一的）
+        Activity a = activityService.queryByMchIdAndItemsId(mch_Id, items_id);
+        if(a != null) {
+            retObj.put("result" , -99);
+        } else {
+            // 创建活动
+            int saveCount = activityService.save(activity);
+            if(StringUtils.isBlank(jsonParam)) {
+                retObj.put("code", "0001"); // 参数错误
+                retObj.put("msg", "缺少参数");
+                return retObj.toJSONString();
+            }
+            if(saveCount < 1) {
+                retObj.put("code", "0002");
+                retObj.put("msg", "创建活动失败！");
+                return retObj.toJSONString();
+            }
+            retObj.put("result" , saveCount);
         }
-        if(saveCount < 1) {
-            retObj.put("code", "0002");
-            retObj.put("msg", "创建活动失败！");
-            return retObj.toJSONString();
-        }
-
-        retObj.put("result" , saveCount);
 
         _log.info("result:{}", retObj.toJSONString());
         return retObj.toJSONString();

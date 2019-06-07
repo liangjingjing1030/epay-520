@@ -30,4 +30,13 @@ public interface ActivityMapper {
     List<Activity> getPageList(@Param("mch_id") String mchId,
                                @Param("start_index") int parseInt,
                                @Param("page_size") int parseInt1);
+
+    /**
+     *
+     * @param mch_id
+     * @param items_id
+     * @return
+     */
+    Activity selectByMchIdAndItemsId(@Param("mch_id") String mch_id,
+                                     @Param("items_id") String items_id);
 }

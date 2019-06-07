@@ -7,6 +7,7 @@ import org.epay.common.constant.PayConstant;
 import org.epay.common.util.EPayUtil;
 import org.epay.dal.dao.model.MchStlInfo;
 import org.epay.dal.dao.model.User;
+import org.epay.mgr.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,8 +69,17 @@ public class MchStlInfoController {
             mchStlInfo.setAccount_bank(bodyMap.get("account_bank").toString());
             mchStlInfo.setAccount_type(bodyMap.get("account_type").toString());
             mchStlInfo.setMch_stl_day(bodyMap.get("mch_stl_day").toString());
-            mchStlInfo.setCreate_time(bodyMap.get("create_time").toString());
-            mchStlInfo.setUpdate_time(bodyMap.get("update_time").toString());
+            // 处理时间格式20190602051558---->2019年06月02日 05:15:58
+            String create_time = bodyMap.get("create_time").toString();
+            if(create_time.length() == 14) {
+                create_time = DateUtil.formatDate(create_time);
+            }
+            String update_time = bodyMap.get("update_time").toString();
+            if(update_time.length() == 14) {
+                update_time = DateUtil.formatDate(update_time);
+            }
+            mchStlInfo.setCreate_time(create_time);
+            mchStlInfo.setUpdate_time(update_time);
             // 将商户信息放入session域中
             request.getSession().setAttribute("mchStlInfo", mchStlInfo);
             returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);

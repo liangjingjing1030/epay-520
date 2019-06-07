@@ -103,4 +103,37 @@ public class ActivityService {
             return false;
         }
     }
+
+    /**
+     * 根据主键s查询活动
+     * @param list
+     * @return
+     */
+    public String queryByActivityIds(ArrayList<String> list) {
+        int start = 0, stop = 0;
+        for(String activity_id : list) {
+            Activity a = activityMapper.selectByPrimaryKey(activity_id);
+            if(a.getActivityStatus() == 0) {// 可用状态 0：不可用；1：可用
+                stop++;
+            } else if(a.getActivityStatus() == 1) {
+                start++;
+            }
+        }
+        //都是启用状态返回“start”，都是停止状态返回“stop”，都有返回“all”
+        if(start == 0 && stop != 0) {
+            return "stop";
+        } else if(start != 0 && stop == 0) {
+            return "start";
+        }
+        return "all";
+    }
+
+    /**
+     * 根据项目编号查询
+     * @param items_id
+     * @return
+     */
+    public Activity queryByMchIdAndItemsId(String mch_id, String items_id) {
+        return activityMapper.selectByMchIdAndItemsId(mch_id, items_id);
+    }
 }

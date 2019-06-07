@@ -59,6 +59,8 @@
                 var checked = $(":checkbox[name='id']:checked");
                 if(checked.size() == 0){
                     alert("请选择要合并的收费活动!");
+                } else if(checked.size() == 1) {
+                    alert("请选择2个以上收费活动进行合并统计!");
                 } else {
                     var sendData = "";
                     $.each(checked, function(i, n){

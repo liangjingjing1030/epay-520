@@ -357,8 +357,8 @@
         <button type="button" class="btn btn-default" id="queryBtn2" style="width: 120px;background-color: #135ca1;color: white;">
             <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;查&nbsp;&nbsp;&nbsp;&nbsp;询
         </button>
-        <button type="button" class="btn btn-default" id="printBtn" style="width: 120px;background-color: #135ca1;color: white;">
-            <span class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;生成回单
+        <button type="button" class="btn btn-default" id="printBtn" style="width: 130px;background-color: #135ca1;color: white;">
+            <span class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;批量生成回单
         </button>
         <button type="button" class="btn btn-default" id="clearBtn" style="width:120px;background-color: #d9534f;color: white;">
             <span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;清空条件

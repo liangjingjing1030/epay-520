@@ -3,6 +3,7 @@ package org.epay.mgr.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +51,9 @@ public class WriteExcel<T> {
 				} else if("user_name".equals(fieldName)) { // 3
 					fieldName = "客户姓名";
 				} else if("currency".equals(fieldName)) { // 4
-					fieldName = "货币代码,人民币:cny";
+					fieldName = "货币代码/人民币:cny";
 				} else if("items_money".equals(fieldName)) { // 5
-					fieldName = "应缴金额/分";
+					fieldName = "应缴金额/元";
 				} else if("pay_time".equals(fieldName)) {
 					fieldName = "支付时间";
 				} else if("pay_status".equals(fieldName)) {
@@ -113,6 +114,11 @@ public class WriteExcel<T> {
 						} else if("4".equals(v)) {
 							v = "支付中";
 						}
+					}
+					// 将金额“分”改为“元”
+					if("getItems_money".equals(getMethodName)) {
+						DecimalFormat df = new DecimalFormat("0.00");
+						v = df.format(Float.parseFloat(v) / 100);
 					}
 					cell.setCellValue(value == null ? "" : v);
 				}

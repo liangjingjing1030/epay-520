@@ -163,7 +163,7 @@
 						html+='<tr>';
 						html+='<td><span class="titleName">联系电话：</span>'+n.contact_phone+'</td>';
 						html+='<td><span class="titleName">邮箱：</span>'+n.contact_email+'</td>';
-						html+='<td><span class="titleName">证件类型：</span>'+n.certificate_type+'</td>';
+						html+='<td><span class="titleName">证件类型：</span>'+(n.certificate_type == null ? "" : n.certificate_type)+'</td>';
 						html+='<td><span class="titleName">证件号码：</span>'+n.certificate_number+'</td>';
 						html+='</tr>';
 						html+='<tr>';

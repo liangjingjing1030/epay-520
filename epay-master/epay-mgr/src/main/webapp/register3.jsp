@@ -362,7 +362,7 @@
 
 		<div class="layui-form-item">
 			<span class="nameSpan"><span class="xingSpan">✲</span>拓展网点号:</span>
-			<input id="branchId" type="text" name="branchId" lay-verify="branchId" autocomplete="off" placeholder="输入网点名后自动填写" class="layui-input" style="width: 120px;float: left;margin-left: 16px;">
+			<input id="branchId" type="text" name="branchId" lay-verify="branchId" autocomplete="off" placeholder="自动填写" class="layui-input" style="width: 120px;float: left;margin-left: 16px;">
 			<%--<input type="button" value="查询" style="float: right;width: 68px;height: 30px;border-radius: 3px;"/>--%>
 			<button id="queryBranchIdBtn" class="layui-btn layui-btn-primary" lay-submit lay-filter="login" style="width: 68px;height: 30px;float: right;">
 				查&nbsp;询

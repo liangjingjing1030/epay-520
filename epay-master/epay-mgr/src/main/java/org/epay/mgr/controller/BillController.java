@@ -524,6 +524,12 @@ public class BillController {
 
         if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
             Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            // 能进入if且没有返回体，说明不可更改状态
+            if(retBody == null) {
+                returnMap.put("deleteOK", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "您当前所选活动中已经有活动处于不可用状态");
+                return returnMap;
+            }
             boolean deleteOK = (boolean) retBody.get("result");
 
             // 返回商户信息
@@ -591,6 +597,12 @@ public class BillController {
 
         if("SUCCESS".equals(retHeader.get(PayConstant.RETURN_PARAM_RETCODE))) {
             Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
+            // 能进入if且没有返回体，说明不可更改状态
+            if(retBody == null) {
+                returnMap.put("deleteOK", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "您当前所选活动中已经有活动处于可用状态");
+                return returnMap;
+            }
             boolean deleteOK = (boolean) retBody.get("result");
 
             // 返回商户信息
@@ -849,6 +861,11 @@ public class BillController {
             Map<String, Object> retBody = (Map<String, Object>) retMap.get("response_body");
             // 查询结果
             int count = (int) retBody.get("result");
+            if(count == -99) {
+                returnMap.put("ok", false);
+                returnMap.put(Constant.ERROR_MESSAGE, "活动编号已存在！");
+                return returnMap;
+            }
             if(count == 1) {
                 returnMap.put("ok", true);
                 returnMap.put(Constant.ERROR_MESSAGE, Constant.OK);
@@ -1833,7 +1850,7 @@ public class BillController {
                 // 将金额处理为“元”
                 long items_money = Long.parseLong(bodyMap.get("items_money").toString());
                 DecimalFormat df=new DecimalFormat("0.00");//设置保留位数
-                String items_moneyStr = df.format((float) items_money / 100) + "";
+                String items_moneyStr = df.format((float) items_money) + "";
 
                 accountBookForPageShow.setItems_money(items_moneyStr);
                 accountBookForPageShow.setPay_time(bodyMap.get("pay_time").toString());
@@ -1842,8 +1859,17 @@ public class BillController {
                 accountBookForPageShow.setItems_name(bodyMap.get("items_name").toString());
                 accountBookForPageShow.setItems_filename(bodyMap.get("items_filename").toString());
                 accountBookForPageShow.setUpload_date(bodyMap.get("upload_date").toString());
-                accountBookForPageShow.setAffect_date(bodyMap.get("affect_date").toString());
-                accountBookForPageShow.setExpiry_date(bodyMap.get("expiry_date").toString());
+                // 生效时间、失效时间只保留到年 2019-06-07 14:56:42
+                String affect_date = bodyMap.get("affect_date").toString();
+                String expiry_date = bodyMap.get("expiry_date").toString();
+                if(affect_date.length() == 19) {
+                    affect_date = affect_date.substring(0, 10);
+                }
+                if(expiry_date.length() == 19) {
+                    expiry_date = expiry_date.substring(0, 10);
+                }
+                accountBookForPageShow.setAffect_date(affect_date);
+                accountBookForPageShow.setExpiry_date(expiry_date);
                 list.add(accountBookForPageShow);
             }
 

@@ -561,21 +561,21 @@
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">项目编号</div>
-                <input class="form-control" type="text" id="xmbh">
+                <input class="form-control" type="text" placeholder="支持模糊查询" id="xmbh">
             </div>
         </div>
 
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">项目名称</div>
-                <input class="form-control" type="text" id="xmmc">
+                <input class="form-control" type="text" placeholder="支持模糊查询" id="xmmc">
             </div>
         </div>
 
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">文件名称</div>
-                <input class="form-control" type="text" id="wjmc">
+                <input class="form-control" type="text" placeholder="支持模糊查询" id="wjmc">
             </div>
         </div>
 
@@ -591,14 +591,14 @@
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">个人标识</div>
-                <input class="form-control" type="text" id="user_id">
+                <input class="form-control" type="text" placeholder="支持模糊查询" id="user_id">
             </div>
         </div>
 
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">客户姓名</div>
-                <input class="form-control" type="text" id="user_name">
+                <input class="form-control" type="text" placeholder="支持模糊查询" id="user_name">
             </div>
         </div>
 

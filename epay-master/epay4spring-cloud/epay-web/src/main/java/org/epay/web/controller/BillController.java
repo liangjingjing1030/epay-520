@@ -1149,12 +1149,18 @@ public class BillController {
             JSONArray ids = requestBody.getJSONArray("ids");
 
             payContext.put("ids", ids);
-            // 删除活动
+            //
             String retStr = accountFileServiceClient.stopActivity(payContext.toJSONString());
             // 将商户账单信息转换为JSONObject对象
             JSONObject retObj = JSON.parseObject(retStr);
             _log.info("{}停止活动,结果:{}", logPrefix, retObj);
 
+            // 特殊案例，不要复制
+            if("0002".equals(retObj.getString("code"))) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, retObj.getString("msg"), null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
             // 0000表示查询成功
             if(!"0000".equals(retObj.getString("code"))) {
             	retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_FAIL, retObj.getString("msg"), null, null);
@@ -1237,6 +1243,13 @@ public class BillController {
             // 将商户账单信息转换为JSONObject对象
             JSONObject retObj = JSON.parseObject(retStr);
             _log.info("{}恢复活动,结果:{}", logPrefix, retObj);
+
+            // 特殊案例，不要复制
+            if("0002".equals(retObj.getString("code"))) {
+                retHeader = EPayUtil.makeRetMap(PayConstant.RETURN_VALUE_SUCCESS, retObj.getString("msg"), null, null);
+                response.put("response_header", retHeader);
+                return EPayUtil.makeRetFail(response);
+            }
 
             // 0000表示查询成功
             if(!"0000".equals(retObj.getString("code"))) {
@@ -2270,7 +2283,7 @@ public class BillController {
             payContext.put("activity_type", activity_type);
             payContext.put("start_time", start_time);
             payContext.put("end_time", end_time);
-            // 查询商户账单信息list
+            //
             String retStr = accountFileServiceClient.createActivity(payContext.toJSONString());
             // 将商户账单信息转换为JSONObject对象
             JSONObject retObj = JSON.parseObject(retStr);

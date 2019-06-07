@@ -56,7 +56,7 @@
             //活动名称自动获得焦点
             $("#activity_name").focus();
 
-            displayActivity(1, 6);
+            displayActivity(1, 10);
 
             checkLogin();
 
@@ -93,12 +93,17 @@
                         },
                         function(json){
                             if(json.ok){
+                                $("#createActivityModal").modal("hide");
                                 alert("创建活动成功");
-                                $("#createActivityModal").modal("hide");
                                 displayActivity(1, $("#cluePagination2").bs_pagination('getOption', 'rowsPerPage'));
+                                // 清空输入框内容
+                                $("#activity_name").val("");
+                                $("#items_id").val("");
+                                $("#start_time").val("");
+                                $("#end_time").val("");
                             }else{
-                                alert(json.errorMessage);
                                 $("#createActivityModal").modal("hide");
+                                alert(json.errorMessage);
                             }
                         }
                     );
@@ -139,6 +144,10 @@
                 if(checked.size() == 0){
                     alert("请选择要停止的活动!");
                 }else{
+                    // 判断活动是否已经是停止状态 TODO
+                    $.each(checked, function(i, n){
+                        n.value;
+                    });
                     var sendData = "";
                     $.each(checked, function(i, n){
                         sendData += "&id=" + n.value;
@@ -149,7 +158,7 @@
                         sendData,
                         function(json){
                             if(json.deleteOK){
-                                // alert("活动已停止");
+                                alert("活动已停止");
                                 displayActivity(1, $("#cluePagination2").bs_pagination('getOption', 'rowsPerPage'));
                             }else{
                                 alert(json.errorMessage);
@@ -176,7 +185,7 @@
                         sendData,
                         function(json){
                             if(json.deleteOK){
-                                // alert("活动已恢复");
+                                alert("活动已恢复");
                                 displayActivity(1, $("#cluePagination2").bs_pagination('getOption', 'rowsPerPage'));
                             }else{
                                 alert(json.errorMessage);
@@ -216,7 +225,7 @@
                             html += '<td><input type="checkbox" name="id2" value="'+n.activityId+'"/></td>';
                             html += '<td>'+n.itemsId+'</td>';
                             html += '<td>'+n.activityName+'</td>';
-                            html += '<td>'+n.activityType+'</td>';
+                            // html += '<td>'+n.activityType+'</td>';
                             html += '<td>'+n.createTime+'</td>';
                             html += '<td>'+n.startTime+'</td>';
                             html += '<td>'+n.endTime+'</td>';
@@ -330,7 +339,7 @@
                 <h4 class="modal-title">创建活动</h4>
             </div>
 
-            <div class="modal-body" style="height: 300px; float: left;">
+            <div class="modal-body" style="height: 270px; float: left;">
 
                 <div  style="top: 100px;left: 70px;width: 350px">
 
@@ -339,10 +348,10 @@
                         <input id="activity_name" type="text" autocomplete="off" placeholder="*请输入活动名称" class="layui-input">
                     </div>
 
-                    <div class="layui-form-item">
+                    <%--<div class="layui-form-item">
                         <span class="nameSpan">活动类型:</span>
                         <input id="activity_type" type="text" autocomplete="off" placeholder="-请输入活动类型" class="layui-input">
-                    </div>
+                    </div>--%>
 
                     <div class="layui-form-item">
                         <span class="nameSpan"><span class="xingSpan">✲</span>活动编号:</span>
@@ -404,7 +413,7 @@
                     <th style="text-align: center;"><input type="checkbox" id="firstCheckBox2"/></th>
                     <th style="text-align: center;">编号</th>
                     <th style="text-align: center;">名称</th>
-                    <th style="text-align: center;">类别</th>
+                    <%--<th style="text-align: center;">类别</th>--%>
                     <th style="text-align: center;">创建时间</th>
                     <th style="text-align: center;">开始时间</th>
                     <th style="text-align: center;">结束时间</th>

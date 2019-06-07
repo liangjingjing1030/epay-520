@@ -167,12 +167,14 @@
     where mch_id = #{mch_Id}
   </select>
 
-  <!--根据商户号+项目编号查询-->
+  <!--根据商户号+项目编号查询，如果有多个，只取最后那个-->
   <select id="selectAccountFileByMchIdAndItemsId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from epay_account_file
     where mch_id = #{mch_id} and items_id = #{items_id}
+    order by upload_date desc
+    limit 0, 1
   </select>
 
   <!--查询当前商户的所有账单-->

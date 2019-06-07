@@ -70,6 +70,26 @@ public class BillService {
         Map<String, Object> dataMap = new HashMap<>();
         // 1、<模糊查询>查询符合要求的accountFile
         List<AccountFile> accountFileList = accountFileMapper.selectByConditionMapOfBillQuery(conditionMap);
+        //去重，去掉项目编号相同的,保留最后上传的那个
+        String items_id1 = "";
+        for(int i = 0; i < accountFileList.size(); i++) {
+            items_id1 = accountFileList.get(i).getItems_id();
+            for(int j = i + 1; j < accountFileList.size(); j++) {
+                String items_id2 = accountFileList.get(j).getItems_id();
+                if(items_id1.equals(items_id2)) {
+                    String upload_date1 = accountFileList.get(i).getUpload_date();//2019-05-24
+                    String upload_date2 = accountFileList.get(j).getUpload_date();
+                    if(upload_date1.compareTo(upload_date2) > 0) {// 1的时间晚,去掉2
+                        accountFileList.remove(j);
+                        j--;
+                    } else {// 2的时间晚,去掉1
+                        accountFileList.remove(i);
+                        j--;
+                    }
+                }
+            }
+        }
+
         // another method———————————————————————start—————————————————————————————
         /*String mch_id2 = (String) conditionMap.get("mch_id");
         String items_id2 = (String) conditionMap.get("items_id");
@@ -116,6 +136,7 @@ public class BillService {
         // 查询accountBook所属的accountFile
         List<AccountFile> accountFileListForPageShow = new ArrayList<>();
         for(AccountBook accountBook : booklist) {
+            // 如果有多个，取最后那个
             AccountFile af = accountFileMapper.selectAccountFileByMchIdAndItemsId(accountBook.getMch_id(), accountBook.getItems_id());
             accountFileListForPageShow.add(af);
         }

@@ -146,6 +146,26 @@
                 $("#modelEditModal").modal("show");
             });
 
+            // 模板编辑清空
+            $("#editModelClearBtn").click(function () {
+                $("#user_id").val("");
+                $("#userIdPosition").val("");
+                $("#items_money").val("");
+                $("#items_money_position").val("");
+                $("#select1").val("");
+                $("#position1").val("");
+                $("#select2").val("");
+                $("#position2").val("");
+                $("#select3").val("");
+                $("#position3").val("");
+                $("#select4").val("");
+                $("#position4").val("");
+                $("#select5").val("");
+                $("#position5").val("");
+                $("#select6").val("");
+                $("#position6").val("");
+            });
+
             // 模板编辑确认按钮
             $("#editModelBtn").click(function () {
                 if(checkUserId() && checkItemsMoney() && checkSelect1() && checkSelect2() && checkSelect3() && checkSelect4() && checkSelect5()
@@ -200,6 +220,245 @@
                                    "&position10=" + position10;
                     window.location.href = "bill/modelEdit?" + sendData;
                     $("#modelEditModal").modal("hide");
+                }
+            });
+
+            // 列位置默认按钮
+            $("#editModelAutoBtn").click(function () {
+                var user_id = $.trim($("#user_id").val());
+                var items_money = $.trim($("#items_money").val());
+                var select1 = $.trim($("#select1").val());
+                var select2 = $.trim($("#select2").val());
+                var select3 = $.trim($("#select3").val());
+                var select4 = $.trim($("#select4").val());
+                var select5 = $.trim($("#select5").val());
+                var select6 = $.trim($("#select6").val());
+                if(user_id==""&&items_money==""&&select1==""&&select2==""&&select3==""&&select4==""&&select5==""&&select6=="") {
+                    $("#editModelErrorMsg").html("输入列名后列位置自动填写");
+                } else {
+                    $("#editModelErrorMsg").html("");
+                    $("#userIdPosition").val(1);
+                    $("#items_money_position").val(2);
+                    if (select1 != "") { //1不空
+                        $("#position1").val(3);
+                        if (select2 != "") { //1/2不空
+                            $("#position2").val(4);
+                            if (select3 != "") { //1/2/3不空
+                                $("#position3").val(5);
+                                if (select4 != "") { //1/2/3/4不空
+                                    $("#position4").val(6);
+                                    if (select5 != "") { //1/2/3/4/5不空
+                                        $("#position5").val(7);
+                                        if (select6 != "") { //1/2/3/4/5/6不空
+                                            $("#position6").val(8);
+                                        }
+                                    } else { //1/2/3/4不空,5空
+                                        if (select6 != "") {
+                                            $("#position6").val(7);
+                                        }
+                                    }
+                                } else { //1/2/3不空,4空-----------------44444---------------------
+                                    if (select5 != "") { //1/2/3/5不空,4空
+                                        $("#position5").val(6);
+                                        if (select6 != "") { //1/2/3/5/6不空,4空
+                                            $("#position6").val(7);
+                                        }
+                                    } else { //1/2/3不空,4/5空
+                                        if (select6 != "") {  //1/2/3/6不空,4/5空
+                                            $("#position6").val(6);
+                                        }
+                                    }
+                                }//-----------------44444---------------------
+                            } else { //1/2不空,3空-----------------33333---------------------
+                                if (select4 != "") { //1/2/4不空,3空
+                                    $("#position4").val(5);
+                                    if (select5 != "") {  //1/2/4/5不空,3空
+                                        $("#position5").val(6);
+                                        if (select6 != "") {  //1/2/4/5/6不空,3空
+                                            $("#position6").val(7);
+                                        }
+                                    } else {   //1/2/4不空,3/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(6);
+                                        }
+                                    }
+                                } else { //1/2不空,3/4空
+                                    if (select5 != "") { //1/2/5不空,3/4空
+                                        $("#position5").val(5);
+                                        if (select6 != "") {  //1/2/5/6不空,3/4空
+                                            $("#position6").val(6);
+                                        }
+                                    } else {  //1/2不空,3/4/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(5);
+                                        }
+                                    }
+                                }
+                            }//-----------------33333---------------------
+                        } else { //1不空,2空-----------------22222---------------------
+                            if (select3 != "") { //1/3不空,2空
+                                $("#position3").val(4);
+                                if (select4 != "") { //1/3/4不空,2空
+                                    $("#position4").val(5);
+                                    if (select5 != "") { //1/3/4/5不空,2空
+                                        $("#position5").val(6);
+                                        if (select6 != "") { //1/3/4/5/6不空,2空
+                                            $("#position6").val(7);
+                                        }
+                                    } else { //1/3/4不空,2/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(6);
+                                        }
+                                    }
+                                } else { //1/3不空,2/4空
+                                    if (select5 != "") { //1/3/5不空,2/4空
+                                        $("#position5").val(5);
+                                        if (select6 != "") { //1/3/5/6不空,2/4空
+                                            $("#position6").val(6);
+                                        }
+                                    } else { //1/3不空,2/4/5空
+                                        if (select6 != "") {  //1/3/6不空,2/4/5空
+                                            $("#position6").val(5);
+                                        }
+                                    }
+                                }
+                            } else { //1不空,2/3空
+                                if (select4 != "") { //1/4不空,2/3空
+                                    $("#position4").val(4);
+                                    if (select5 != "") { //1/4/5不空,2/3空
+                                        $("#position5").val(5);
+                                        if (select6 != "") { //1/4/5/6不空,2/3空
+                                            $("#position6").val(6);
+                                        }
+                                    } else { //1/4不空,2/3/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(5);
+                                        }
+                                    }
+                                } else { //1不空,2/3/4空
+                                    if (select5 != "") { //1/5不空,2/3/4空
+                                        $("#position5").val(4);
+                                        if (select6 != "") { //1/5/6不空,2/3/4空
+                                            $("#position6").val(5);
+                                        }
+                                    } else { //1不空,2/3/4/5空
+                                        if (select6 != "") {  //
+                                            $("#position6").val(4);
+                                        }
+                                    }
+                                }
+                            }
+                        }//-----------------22222---------------------
+                    } else { //1空-----------------11111---------------------
+                        if (select2 != "") { //2不空,1空
+                            $("#position2").val(3);
+                            if (select3 != "") { //2/3不空,1空
+                                $("#position3").val(4);
+                                if (select4 != "") { //2/3/4不空,1空
+                                    $("#position4").val(5);
+                                    if (select5 != "") { //2/3/4/5不空,1空
+                                        $("#position5").val(6);
+                                        if (select6 != "") { //2/3/4/5/6不空,1空
+                                            $("#position6").val(7);
+                                        }
+                                    } else { //2/3/4不空,1/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(6);
+                                        }
+                                    }
+                                } else { //2/3不空,1/4空
+                                    if (select5 != "") { //2/3/5不空,1/4空
+                                        $("#position5").val(5);
+                                        if (select6 != "") { //2/3/5/6不空,1/4空
+                                            $("#position6").val(6);
+                                        }
+                                    } else { //2/3不空,1/4/5空
+                                        if (select6 != "") {  //
+                                            $("#position6").val(5);
+                                        }
+                                    }
+                                }
+                            } else { //2不空,1/3空
+                                if (select4 != "") { //2/4不空,1/3空
+                                    $("#position4").val(4);
+                                    if (select5 != "") { //2/4/5不空,1/3空
+                                        $("#position5").val(5);
+                                        if (select6 != "") {  //2/4/5/6不空,1/3空
+                                            $("#position6").val(6);
+                                        }
+                                    } else { //2/4不空,1/3/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(5);
+                                        }
+                                    }
+                                } else { //2不空,1/3/4空
+                                    if (select5 != "") { //2/5不空,1/3/4空
+                                        $("#position5").val(4);
+                                        if (select6 != "") { //2/5/6不空,1/3/4空
+                                            $("#position6").val(5);
+                                        }
+                                    } else {  //2不空,1/3/4/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(4);
+                                        }
+                                    }
+                                }
+                            }
+                        } else { //1/2空
+                            if (select3 != "") { //3不空,1/2空
+                                $("#position3").val(3);
+                                if (select4 != "") { //3/4不空,1/2空
+                                    $("#position4").val(4);
+                                    if (select5 != "") { //3/4/5不空,1/2空
+                                        $("#position5").val(5);
+                                        if (select6 != "") { //3/4/5/6不空,1/2空
+                                            $("#position6").val(6);
+                                        }
+                                    } else { //3/4不空,1/2/5空
+                                        if (select6 != "") {
+                                            $("#position6").val(5);
+                                        }
+                                    }
+                                } else { //3不空,1/2/4空
+                                    if (select5 != "") { //3/5不空,1/2/4空
+                                        $("#position5").val(4);
+                                        if (select6 != "") { //
+                                            $("#position6").val(5);
+                                        }
+                                    } else { //
+                                        if (select6 != "") {  //
+                                            $("#position6").val(4);
+                                        }
+                                    }
+                                }
+                            } else { //1/2/3空
+                                if (select4 != "") { //4不空,1/2/3空
+                                    $("#position4").val(3);
+                                    if (select5 != "") { //
+                                        $("#position5").val(4);
+                                        if (select6 != "") { //
+                                            $("#position6").val(5);
+                                        }
+                                    } else { //
+                                        if (select6 != "") {
+                                            $("#position6").val(4);
+                                        }
+                                    }
+                                } else { //1/2/3/4空
+                                    if (select5 != "") { //5不空,1/2/3/4空
+                                        $("#position5").val(3);
+                                        if (select6 != "") { //
+                                            $("#position6").val(4);
+                                        }
+                                    } else { //1/2/3/4/5空
+                                        if (select6 != "") {  //
+                                            $("#position6").val(3);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }//-----------------11111---------------------
                 }
             });
 
@@ -761,7 +1020,7 @@
 
 <!-- 模板编辑的模态窗口 -->
 <div class="modal fade" id="modelEditModal" role="dialog">
-    <div class="modal-dialog" role="document" style="width: 65%;">
+    <div class="modal-dialog" role="document" style="width: 48%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
@@ -770,98 +1029,106 @@
                 <h4 class="modal-title">模板编辑</h4>
             </div>
 
-            <div class="modal-body" style="height: 600px; float: left;">
+            <div class="modal-body" style="height: 430px; float: left;">
 
                 <div  style="top: 100px;left: 70px;">
 
                     <div class="layui-form-item">
                         <span class="nameSpan"><span class="xingSpan">✲</span>必填:&nbsp;</span>
-                        <input id="user_id" type="text" autocomplete="off" placeholder="*请输入能唯一标识一个客户的列名,如身份证号、学号……" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="userIdPosition" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="user_id" type="text" autocomplete="off" placeholder="*请输入唯一标识列名,如学号……" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="userIdPosition" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan"><span class="xingSpan">✲</span>必填:&nbsp;</span>
-                        <input id="items_money" type="text" autocomplete="off" placeholder="*请输入能代表 “应缴金额” 的列名" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="items_money_position" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="items_money" type="text" autocomplete="off" placeholder="*请输入金额列名" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="items_money_position" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填1:&nbsp;</span>
-                        <input id="select1" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position1" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select1" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position1" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填2:&nbsp;</span>
-                        <input id="select2" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position2" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select2" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position2" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填3:&nbsp;</span>
-                        <input id="select3" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position3" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select3" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position3" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填4:&nbsp;</span>
-                        <input id="select4" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position4" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select4" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position4" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填5:&nbsp;</span>
-                        <input id="select5" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position5" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select5" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position5" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填6:&nbsp;</span>
-                        <input id="select6" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position6" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select6" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position6" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
-
+<%--
                     <div class="layui-form-item">
                         <span class="nameSpan">选填7:&nbsp;</span>
-                        <input id="select7" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position7" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select7" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position7" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填8:&nbsp;</span>
-                        <input id="select8" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position8" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select8" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position8" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填9:&nbsp;</span>
-                        <input id="select9" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position9" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
+                        <input id="select9" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position9" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
                     </div>
 
                     <div class="layui-form-item">
                         <span class="nameSpan">选填10:&nbsp;</span>
-                        <input id="select10" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 380px;float: left;">
-                        <span class="nameSpan" style="margin-left: -30px;">列位置:&nbsp;</span>
-                        <input id="position10" type="text" autocomplete="off" placeholder="-请输入本列为第几列" class="layui-input" style="width: 170px;">
-                    </div>
+                        <input id="select10" type="text" autocomplete="off" placeholder="-请输入选填列内容" class="layui-input" style="width: 210px;float: left;">
+                        <span class="nameSpan" style="margin-left: 0px;">列位置:&nbsp;</span>
+                        <input id="position10" type="text" autocomplete="off" placeholder="-第几列？" class="layui-input" style="width: 100px;float: left;">
+                    </div>--%>
 
 
                 </div>
 
-                <button id="editModelBtn" style="margin-top: 40px;margin-left:580px;bottom: 20px;background-color: #135ca1;width: 170px;" class="btn btn-primary">确 定</button>
+                <button id="editModelClearBtn" style="margin-top: 40px;margin-left:210px;bottom: 20px;background-color: #d9534f;color: white;width: 100px;border: none;" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-trash"></span> 清 空
+                </button>
+                <button id="editModelAutoBtn" style="margin-top: 40px;margin-left:5px;bottom: 20px;background-color: #135ca1;width: 110px;" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-pencil"></span> 默认列位置
+                </button>
+                <button id="editModelBtn" style="margin-top: 40px;margin-left:5px;bottom: 20px;background-color: #135ca1;width: 100px;" class="btn btn-primary">
+                    确 定
+                </button>
                 <span id="editModelErrorMsg" style="color: red;font-size: 16px;position: absolute;bottom: 40px;left: 100px"></span>
             </div>
             <div class="modal-footer" style="left: 200px; bottom: -400px">

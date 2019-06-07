@@ -2,6 +2,7 @@ package org.epay.mgr.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.epay.common.constant.Constant;
 import org.epay.common.constant.PayConstant;
 import org.epay.common.util.EPayUtil;
@@ -90,9 +91,11 @@ public class MchInfoController {
             mchInfo.setContact_email(bodyMap.get("contact_email").toString());
             // 处理证件类型
             String certificate_type_id = bodyMap.get("certificate_type").toString();
-            // 根据证件类型主键查询证件类型
-            CertificateType c = certificateTypeService.queryCertificateType(certificate_type_id);
-            mchInfo.setCertificate_type(c.getType());
+            if(StringUtils.isNotBlank(certificate_type_id)) {
+                // 根据证件类型主键查询证件类型
+                CertificateType c = certificateTypeService.queryCertificateType(certificate_type_id);
+                mchInfo.setCertificate_type(c.getType());
+            }
             mchInfo.setCertificate_number(bodyMap.get("certificate_number").toString());
             mchInfo.setBusiness_license(bodyMap.get("business_license").toString());
             mchInfo.setReq_key(bodyMap.get("req_key").toString());

@@ -38,6 +38,14 @@
     where mch_id = #{mch_id} and activity_status = 1
   </select>
 
+  <!---->
+  <select id="selectByMchIdAndItemsId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from epay_activity
+    where mch_id = #{mch_id} and items_id = #{items_id}
+  </select>
+
   <!--分页总数-->
   <select id="getTotalByMchId" resultType="java.lang.Integer" >
     select

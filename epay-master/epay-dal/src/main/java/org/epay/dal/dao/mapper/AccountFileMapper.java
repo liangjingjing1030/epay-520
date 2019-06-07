@@ -66,6 +66,7 @@ public interface AccountFileMapper {
     List<AccountFile> selectByConditionMapOfBillQuery(Map<String, Object> conditionMap);
 
     /**
+     * 如果有多个，只取最后那个
      * @param mch_id
      * @param items_id
      * @return
